@@ -1,0 +1,16 @@
+structure:
+  bindir: bin
+  sourcedir: src
+  testdir: test
+env_defaults:
+  smoacks_app_name: testme
+  smoacks_db_port: 3306
+  smoacks_dev_db_service: mysql-dev
+  smoacks_dev_db_account: dev
+  smoacks_dev_db_password: dev
+  smoacks_test_db_service: mysql-test
+  smoacks_test_db_account: test
+  smoacks_test_db_password: test
+  smoacks_db_service: mysql
+  smoacks_db_account: prod
+  smoacks_db_password: prod

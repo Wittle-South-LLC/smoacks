@@ -10,5 +10,6 @@ Deployment Dependencies
 - Flask for HTTP request handling
 - Connexion for RESTful API validation & routing
 - SQLAlchemy for database persistence
+- Jinja2 for code generation from internal templates; not at runtime
 
 Optional Dependencies
