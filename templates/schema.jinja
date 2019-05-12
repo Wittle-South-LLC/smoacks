@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title: Multimode User Authentication for Microservices
+components:
+  parameters:
+    search_text:
+      in: query
+      name: search_text
+      required: false
+      description: String to filter search with
+      schema:
+        type: string
+        maxLength: 40
+  schemas:
+    BrowserError:
+      type: object
+      required:
+        - short_message
+        - full_message
+        - user_id
+      properties:
+        user_id:
+          type: string
+          description: Unique user identifier
+          minLength: 2
+          maxLength: 200
+        short_message:
+          type: string
+          description: Short error message
+          minLength: 2
+          maxLength: 80
+        full_message:
+          type: string
+          description: Full message (with stack trace)
+          minLength: 2
+          maxLength: 4000
+    Error:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Unique identifier for error message
+        text:
+          type: string
+          description: Default english error message
+        error_code:
+          type: integer
+          description: Error code (equivalent to HTTP status code)
