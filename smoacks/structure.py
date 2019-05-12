@@ -26,7 +26,7 @@ class SmoacksStructure:
              'dir': sconfig['structure']['specdir'],
              'outfile': "schema.yaml"},
             {'template': 'requirements.jinja',
-             'dir': '.',
+             'dir': None,
              'outfile': "requirements.txt"}
         ]
         self.template_dict = sconfig['env_defaults']
@@ -38,9 +38,10 @@ class SmoacksStructure:
         )
         for filespec in self.env:
            template = env.get_template(filespec['template'])
-           if not os.path.isdir(filespec['dir']):
-              os.makedirs(filespec['dir'], exist_ok=True)
-           outfile = open(os.path.join(filespec['dir'], filespec['outfile']), "w")
+           filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if filespec['dir'] else sconfig['structure']['root']
+           if not os.path.isdir(filedir):
+              os.makedirs(filedir, exist_ok=True)
+           outfile = open(os.path.join(filedir, filespec['outfile']), "w")
            try:
                filestring = template.render(self.template_dict)
                outfile.write(filestring)

@@ -1,4 +1,5 @@
 structure:
+  root: .
   bindir: bin
   kubedir: kube-env
   sourcedir: src
