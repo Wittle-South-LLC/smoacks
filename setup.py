@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='smoacks',
-      version='0.1.5',
+      version='0.1.6',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',
@@ -26,6 +26,7 @@ setup(name='smoacks',
           'PyYAML'
       ],
       entry_points={
-          'console_scripts': ['smoacks-setup=smoacks.command_line:main']
+          'console_scripts': ['smoacks-setup=smoacks.command_line:main',
+                              'smoacks-gen=smoacks.command_line.gen']
       },
       zip_safe=False)
