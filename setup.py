@@ -27,6 +27,6 @@ setup(name='smoacks',
       ],
       entry_points={
           'console_scripts': ['smoacks-setup=smoacks.command_line:main',
-                              'smoacks-gen=smoacks.command_line.gen']
+                              'smoacks-gen=smoacks.command_line:gen']
       },
       zip_safe=False)
