@@ -15,7 +15,7 @@ setup(name='smoacks',
                                  'templates/dev-api-server.jinja',
                                  'templates/Dockerfile.jinja',
                                  'templates/ModelApis.jinja',
-                                 'templates/NoseTests.jinja'
+                                 'templates/NoseTests.jinja',
                                  'templates/requirements.jinja',
                                  'templates/schema.jinja',
                                  'templates/server_logging.jinja',
