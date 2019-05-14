@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='smoacks',
-      version='0.1.4',
+      version='0.1.5',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',
@@ -16,7 +16,11 @@ setup(name='smoacks',
                                  'templates/requirements.jinja',
                                  'templates/Dockerfile.jinja',
                                  'templates/server_logging.jinja',
-                                 'templates/schema.jinja'])],
+                                 'templates/schema.jinja',
+                                 'templates/ConnexionApis.jinja',
+                                 'templates/ModelApis.jinja',
+                                 'templates/server.jinja',
+                                 'templates/SQLAlchemyModel.jinja'])],
       install_requires=[
           'jinja2',
           'PyYAML'

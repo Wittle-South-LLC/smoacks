@@ -19,5 +19,6 @@ To ensure no runtime errors before publishing, start a python session, then
 
 `import smoacks.command_line`
 `smoacks.command_line.main()`
+`smoacks.command_line.gen()`
 
-This should run the environment generation.
+This should run the environment and code generation.

@@ -1,0 +1,68 @@
+# pylint: disable-msg=C0321,R0912
+"""Module to handle /{{ name }}s API endpoint """
+import uuid
+from flask import current_app, g
+from flask_jwt_extended import jwt_required
+from dm.{{ name }} import {{ name }}
+
+@jwt_required
+def post(data):
+    """Method to handle POST verb for /{{name}}s endpoint"""
+    new_record = {{ name }}()
+    for key, value in data.items():
+        if hasattr(new_record, key) and key != '{{ name_id }}':
+            setattr(new_record, key, value)
+    g.db_session.add(new_record)
+    g.db_session.commit()
+    return {'{{ name }}_id': new_record.get_uuid()}, 201
+
+@jwt_required
+def search(search_text):
+    """Method to handle GET verb with no URL parameters"""
+    my_search = '%'
+    if search_text:
+        my_search = '%' + search_text + '%'
+    search_list = g.db_session.query({{ name }})\
+                   .filter({{ name }}.name.like(my_search)).all()
+    ret = []
+    for item in search_list:
+        ret.append(item.dump())
+    return ret, 200
+
+@jwt_required
+def delete(id):
+    """Method to handle DELETE verb for /{{ name }}/{{ name_id }} endpoint"""
+    binary_uuid = uuid.UUID(id).bytes
+    find_record = g.db_session.query({{ name }})\
+                   .filter({{ name }}.{{ name_id }} == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    g.db_session.delete(find_record)
+    g.db_session.commit()
+    return '{{ name }} deleted', 204
+
+@jwt_required
+def put(id, data):
+    """Method to handle PUT verb for /{{ name }}/{{ name_id }} endpoint"""
+    binary_uuid = uuid.UUID(id).bytes
+    find_record = g.db_session.query({{ name }})\
+                   .filter({{ name }}.{{ name_id }} == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    for key, value in data.items():
+        if hasattr(find_record, key) and key != '{{ name_id }}':
+            setattr(find_record, key, value)
+    g.db_session.add(find_record)
+    g.db_session.commit()
+    return '{{ name }} Updated', 200
+
+@jwt_required
+def get(id, data):
+    """Method to handle GET verb for /{{ name }}/{{ name_id }} endpoint"""
+    binary_uuid = uuid.UUID(id).bytes
+    find_record = g.db_session.query({{ name }})\
+                   .filter({{ name }}.{{ name_id }} == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    return find_record.dump(True), 200
+

@@ -24,7 +24,7 @@ class SmoacksStructure:
              'outfile': "server_logging.yaml"},
             {'template': 'schema.jinja',
              'dir': sconfig['structure']['specdir'],
-             'outfile': "schema.yaml"},
+             'outfile': sconfig['parameters']['source_spec']},
             {'template': 'requirements.jinja',
              'dir': None,
              'outfile': "requirements.txt"}

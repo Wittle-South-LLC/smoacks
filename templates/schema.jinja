@@ -2,6 +2,43 @@ openapi: 3.0.0
 info:
   version: 0.1.0
   title: Multimode User Authentication for Microservices
+paths:
+  /login:
+    post:
+      summary: Authenticate via JWT or Facebook and hydrate the app
+      tags:
+        - Authentication
+      description: >
+        Authenticate users to the application with either username and password
+        in POST data, or Facebook access_token in post data.
+
+        Returns both an HTTP-only cookie and an authentication token
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Invalid user or password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+tags:
+  - name: Authentication
+    description: APIs associated with application authentication
+servers:
+  - url: /api/v1
+    description: Local development server
 components:
   parameters:
     search_text:
@@ -47,3 +84,60 @@ components:
         error_code:
           type: integer
           description: Error code (equivalent to HTTP status code)
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of user attempting to log in
+        password:
+          type: string
+          description: Password of user attemptingt to log in
+    User:
+      type: object
+      x-wsag-create: User
+      x-wsag-test-data: False
+      description: User
+      required:
+        - username
+      properties:
+        user_id:
+          type: string
+          description: Unique User Identifier
+          readOnly: true
+        username:
+          type: string
+          description: Login user name
+          minLength: 4
+          maxLength: 32
+        email:
+          type: string
+          description: Email address
+          minLength: 4
+          maxLength: 80
+        first_name:
+          type: string
+          description: First Name
+          minLength: 2
+          maxLength: 80
+        full_name:
+          type: string
+          description: Full Name
+          minLength: 5
+          maxLength: 120
+        last_name:
+          type: string
+          description: Last Name
+          minLength: 2
+          maxLength: 80
+        phone:
+          type: string
+          description: Phone number
+          minLength: 10
+          maxLength: 20
+        preferences:
+          description: User Preferences
+          type: object
+        roles:
+          description: User Roles
+          type: string

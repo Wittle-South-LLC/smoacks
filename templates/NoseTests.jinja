@@ -1,0 +1,17 @@
+# pylint: disable-msg=C0103,W0603
+# Note about pylint disables - pylint thinks my globals are constants,
+# and they're not, so disabling C0103. It also doesn't like globals,
+# which I don't care much about because I want to use them here in my
+# tests.
+"""test-{{ snakeName }}-api.py - Tests of {{ name }} APIs"""
+import logging
+from .TestUtil import get_active_session, get_response_with_jwt
+
+TEST_SESSION = get_active_session()
+
+def test_{{ snakeName }}_create():
+    """{{ name }}APIs: Test create API"""
+    create_obj = {{ createObj }}
+    resp = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ snakeName }}s', create_obj)
+    assert resp.status_code == 201
+

@@ -1,0 +1,89 @@
+/{{ snakeName }}s:
+  post:
+    summary: Create a {{ mixedName }}
+    tags:
+    - {{ mixedName }}s
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/{{ identitySchemaName }}'
+    responses:
+      201:
+        description: {{ name }} successfully added
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                {{ snakeName }}_id:
+                  type: string
+      402:
+        description: Object already exists
+  get:
+    summary: Get a list of {{name}}s
+    tags:
+    - {{ mixedName }}s
+    parameters:
+    - $ref: '#/components/parameters/search_text'
+    responses:
+      200:
+        description: List of {{ name }}s found
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/{{ identitySchemaName }}'
+/{{ snakeName }}s/{{ snakeName }}_id:
+  parameters:
+    - name: {{ snakeName }}_id
+      description: {{ mixedName }} ID (UUID) on which the operation should be performed
+      in: path
+      schema:
+        type: string
+        minLength: 4
+        maxLength: 100
+      required: true
+  get:
+    summary: Get information for a specific {{ name }}
+    tags:
+    - {{ mixedName }}s
+    responses:
+      200:
+        description: Details for the requested {{ name }}
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/{{ extendedSchemaName }}'
+      404:
+        description: {{ name }} not found
+  put:
+    summary: Update a {{ name }}
+    tags:
+    - {{ mixedName }}s
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/{{ identitySchemaName }}'
+    responses:
+      200:
+        description: {{ name }} updated successfully
+      400:
+        description: Request error
+      404:
+        description: {{ name }} not found
+  delete:
+    summary: Delete a {{ name }}
+    tags:
+    - {{ mixedName }}s
+    responses:
+      204:
+        description: {{ name }} deleted successfully
+      400:
+        description: Request error
+      404:
+        description: {{ name }} not found
