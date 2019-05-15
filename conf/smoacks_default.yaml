@@ -11,19 +11,28 @@ structure:
   apiobjectdir: src/api
   testdir: tests
 env_defaults:
-  smoacks_app_name: testme
-  smoacks_app_maintener: noone@email.com
-  smoacks_db_port: 3306
-  smoacks_server_container_port: 8180
-  smoacks_server_service_port: 31007
   smoacks_server_base: wittlesouth/api_server:1.3
+  smoacks_app_name: testme
+  smoacks_app_maintainer: noone@email.com
+  smoacks_app_shutdown_key: Eric
+  smoacks_api_path: /api/v1
+  smoacks_db_container_port: 3306
+  smoacks_server_container_port: 8180
+  smoacks_dev_server_service_port: 31501
   smoacks_dev_db_service: mysql-dev
-  smoacks_dev_db_account: dev
-  smoacks_dev_db_password: dev
+  smoacks_dev_db_service_port: $MY_DEV_DB_SPORT
+  smoacks_dev_db_account: $MY_DEV_DB_USER
+  smoacks_dev_db_password: $MY_DEV_DB_PWD
+  smoacks_test_server_service_port: 31502
+  smoacks_test_host: $MY_KUBE_SERVER
   smoacks_test_db_service: mysql-test
-  smoacks_test_db_account: test
-  smoacks_test_db_password: test
+  smoacks_test_db_service_port: $MY_TEST_DB_SPORT
+  smoacks_test_db_account: $MY_TEST_DB_USER
+  smoacks_test_db_password: $MY_TEST_DB_PWD
+  smoacks_test_api_endpoint: login
+  smoacks_server_service_port: 31500
   smoacks_db_service: mysql
+  smoacks_db_service_port: $MY_DB_SPORT
   smoacks_db_account: prod
   smoacks_db_password: prod
   smoacks_app_volume_size: 5Gi

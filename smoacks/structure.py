@@ -25,6 +25,9 @@ class SmoacksStructure:
             {'template': 'schema.jinja',
              'dir': sconfig['structure']['specdir'],
              'outfile': sconfig['parameters']['source_spec']},
+            {'template': 'testme.jinja',
+             'dir': sconfig['structure']['bindir'],
+             'outfile': 'testme'},
             {'template': 'requirements.jinja',
              'dir': None,
              'outfile': "requirements.txt"}

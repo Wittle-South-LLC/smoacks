@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# Initialize variables that could be set by command line
+nose_verbosity=2                  # -v: Default nose verbosity to one line per test (like mocha)
+run_coverage=0                    # -c Default to not run code coverage, -c will turn on
+nose_args='server/tests'          # -a: Optional additional argments to nosetests command
+cover_args=''                     # -d: Optional additional arguments to cover command
+
+# Use getopts to parse arguments
+
+while getopts "a:b:cd:imnv:" opt; do
+    case "$opt" in
+    a)  nose_args=$OPTARG
+    ;;
+    c)  run_coverage=1
+    ;;
+    d)  cover_args=$
+    ;;
+    v)  nose_verbosity=$OPTARG
+    esac
+done
+
+# Drop all processed args so $@ has leftovers
+shift $((OPTIND-1))
+[ "$1" = "--" ] && shift
+
+# Uncomment these to debug command line argument processing
+#echo "run_coverage=$run_coverage, nose_verbosity=$nose_verbosity"
+#echo "nose_args=$nose_args"
+#echo "cover_args=$cover_args"
+#echo "leftovers: $@"
+
+# Ensure that we have the basic environment defined
+source bin/app-env
+export TEST_URL="http://${TEST_HOST}:${APPSERVER_SPORT}${REACT_APP_API_PATH}"
+echo "testme: TEST_URL = $TEST_URL"
+
+# Shut the server down so that Kubernetes restarts the service
+
+# Set variables we'll use to assess what is happening
+server_running=0
+nose_result=0
+
+# If we're not running code coverage, run flask in debug
+# mode. Debug mode screws up code coverage, and I'm not
+# going to spend the time right now to find out why (7/10/17).
+if [ "$run_coverage" -gt "0" ]; then
+  export FLASK_DEBUG=0
+else
+  export FLASK_DEBUG=1
+fi
+
+# Ensure pythonpah is set so module imports work
+# Using . because this script assumes it is running
+# with the project root as the current directory
+export PYTHONPATH=$PYTHONPATH:./src
+
+# If we're running any tests that require the server, clear the DB and re-start the API server
+if [ "$run_nose" -gt "0" ] || [ "$run_integration" -gt "0" ]; then
+  # Ensure that we have a clean database for the test run; will drop and recreate
+  # the test database
+  #mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $TEST_HOST -P $MYSQL_PORT < bin/test-db-setup.sql
+  echo "DROP DATABASE IF EXISTS $APP_DB_NAME;" | mysql -u $APP_DB_ACCOUNT --password=$APP_DB_PASSWORD -h $TEST_HOST -P $APP_DB_SPORT
+  echo "CREATE DATABASE $APP_DB_NAME CHARACTER SET utf8 collate utf8_general_ci;" | mysql -u $APP_DB_ACCOUNT --password=$APP_DB_PASSWORD -h $TEST_HOST -P $APP_DB_SPORT
+
+  # Issue the server shutdown command, which should cause the Kubernetes service
+  # to restart, ensuring that we're running the most recent server code
+  echo "export run_coverage=$run_coverage" > server/coverage/runType.bash
+  echo "export COVERAGE_FILE='/app/server/coverage/server.coverage'" >> coverage/runType.bash
+  if [ -f coverage/server.coverage ]; then
+    rm coverage/server.coverage
+  fi
+  if [ -f coverage/coverage.report ]; then
+    rm coverage/coverage.report
+  fi
+  echo "About to shut down server prior to test run with post to ${TEST_URL}/shutdown"
+  curl -H "Content-type: application/json" -X POST -d '{"key":"Eric"}' ${TEST_URL}/shutdown
+  echo "Starting api server on $TEST_HOST at port $APPSERVER_SPORT"
+
+  # Loop looking for a response from the server API indicating it is up and running
+  for i in {1..100}; do
+    sleep 1
+    if curl -H "Content-Type: application/json" -X POST -d '{"username": "junkout", "password":"junkout00"}' $TEST_URL/{{ smoacks_test_api_endpoint }}; then 
+      server_running=1
+      break
+    fi
+  done
+  if [ "$server_running" -eq "0" ]; then
+    echo "Unable to start server, check kubernetes pods"
+    exit 10
+  fi
+fi
+
+# TEST_URL is used in both nose test and mocha tests now
+echo "TEST_URL = $TEST_URL"
+
+# If we are running nose tests, then do it
+if [ "$server_running" -gt "0" ]; then
+  eval "bin/nosetests --verbosity=$nose_verbosity $nose_args"
+  nose_result=$?
+fi
+
+# If we started the server, and we're running coverage, send the command to shut down the api server
+if [ "$server_running" -gt "0" ] && [ "$run_coverage" -gt "0" ]; then
+  # Test is complete, so stop the test docker image
+  echo "about to post shutdown to ${APPSERVER_SERVICE_PORT}"
+  curl -H "Content-type: application/json" -X POST -d '{"key":"{{ smoacks_app_shutdown_key }}"}' ${TEST_URL}/shutdown
+fi
+
+my_exit=0
+if [ "$nose_result" -eq "0" ]; then
+  if [ "$run_coverage" -gt "0" ]; then
+    sleep 3
+    cat coverage/coverage.report
+  fi
+  echo "All tests successful!"
+else
+  my_exit=1
+  echo "We have a problem: "
+  if [ "$nose_result" -gt "0" ]; then
+    echo "--> Failures in nose tests"
+  fi
+fi
+exit $my_exit
