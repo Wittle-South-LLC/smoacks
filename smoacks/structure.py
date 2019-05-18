@@ -37,6 +37,9 @@ class SmoacksStructure:
              'dir': sconfig['structure']['bindir'],
              'outfile': 'testme',
              'executable': True},
+            {'template': 'test-api-server.jinja',
+             'dir': sconfig['structure']['kubedir'],
+             'outfile': "test-api-server.yaml"},
             {'template': 'TestUtil.jinja',
              'dir': sconfig['structure']['testdir'],
              'outfile': 'TestUtil.py'}

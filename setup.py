@@ -23,6 +23,7 @@ setup(name='smoacks',
                                  'templates/server-loop.jinja',
                                  'templates/server.jinja',
                                  'templates/SQLAlchemyModel.jinja',
+                                 'templates/test-api-server.jinja',
                                  'templates/testme.jinja',
                                  'templates/TestUtil.jinja'])],
       install_requires=[

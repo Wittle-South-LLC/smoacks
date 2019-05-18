@@ -55,40 +55,36 @@ fi
 # with the project root as the current directory
 export PYTHONPATH=$PYTHONPATH:./src
 
-# If we're running any tests that require the server, clear the DB and re-start the API server
-if [ "$run_nose" -gt "0" ] || [ "$run_integration" -gt "0" ]; then
-  # Ensure that we have a clean database for the test run; will drop and recreate
-  # the test database
-  #mysql -u root --password=$MYSQL_ROOT_PASSWORD -h $TEST_HOST -P $MYSQL_PORT < bin/test-db-setup.sql
-  echo "DROP DATABASE IF EXISTS $APP_DB_NAME;" | mysql -u $APP_DB_ACCOUNT --password=$APP_DB_PASSWORD -h $TEST_HOST -P $APP_DB_SPORT
-  echo "CREATE DATABASE $APP_DB_NAME CHARACTER SET utf8 collate utf8_general_ci;" | mysql -u $APP_DB_ACCOUNT --password=$APP_DB_PASSWORD -h $TEST_HOST -P $APP_DB_SPORT
+# Ensure that we have a clean database for the test run; will drop and recreate
+# the test database
+echo "DROP DATABASE IF EXISTS $APP_DB_NAME;" | mysql -u $APP_DB_ACCOUNT --password=$APP_DB_PASSWORD -h $TEST_HOST -P $APP_DB_SPORT
+echo "CREATE DATABASE $APP_DB_NAME CHARACTER SET utf8 collate utf8_general_ci;" | mysql -u $APP_DB_ACCOUNT --password=$APP_DB_PASSWORD -h $TEST_HOST -P $APP_DB_SPORT
 
-  # Issue the server shutdown command, which should cause the Kubernetes service
-  # to restart, ensuring that we're running the most recent server code
-  echo "export run_coverage=$run_coverage" > server/coverage/runType.bash
-  echo "export COVERAGE_FILE='/app/server/coverage/server.coverage'" >> coverage/runType.bash
-  if [ -f coverage/server.coverage ]; then
-    rm coverage/server.coverage
-  fi
-  if [ -f coverage/coverage.report ]; then
-    rm coverage/coverage.report
-  fi
-  echo "About to shut down server prior to test run with post to ${TEST_URL}/shutdown"
-  curl -H "Content-type: application/json" -X POST -d '{"key":"Eric"}' ${TEST_URL}/shutdown
-  echo "Starting api server on $TEST_HOST at port $APPSERVER_SPORT"
+# Issue the server shutdown command, which should cause the Kubernetes service
+# to restart, ensuring that we're running the most recent server code
+echo "export run_coverage=$run_coverage" > server/coverage/runType.bash
+echo "export COVERAGE_FILE='/app/server/coverage/server.coverage'" >> coverage/runType.bash
+if [ -f coverage/server.coverage ]; then
+  rm coverage/server.coverage
+fi
+if [ -f coverage/coverage.report ]; then
+  rm coverage/coverage.report
+fi
+echo "About to shut down server prior to test run with post to ${TEST_URL}/shutdown"
+curl -H "Content-type: application/json" -X POST -d '{"key":"Eric"}' ${TEST_URL}/shutdown
+echo "Starting api server on $TEST_HOST at port $APPSERVER_SPORT"
 
-  # Loop looking for a response from the server API indicating it is up and running
-  for i in {1..100}; do
-    sleep 1
-    if curl -H "Content-Type: application/json" -X POST -d '{"username": "junkout", "password":"junkout00"}' $TEST_URL/{{ smoacks_test_api_endpoint }}; then 
-      server_running=1
-      break
-    fi
-  done
-  if [ "$server_running" -eq "0" ]; then
-    echo "Unable to start server, check kubernetes pods"
-    exit 10
+# Loop looking for a response from the server API indicating it is up and running
+for i in {1..100}; do
+  sleep 1
+  if curl -H "Content-Type: application/json" -X POST -d '{"username": "junkout", "password":"junkout00"}' $TEST_URL/{{ smoacks_test_api_endpoint }}; then 
+    server_running=1
+    break
   fi
+done
+if [ "$server_running" -eq "0" ]; then
+  echo "Unable to start server, check kubernetes pods"
+  exit 10
 fi
 
 # TEST_URL is used in both nose test and mocha tests now
