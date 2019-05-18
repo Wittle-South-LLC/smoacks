@@ -1,5 +1,6 @@
 # structure.py - Routines for generation app structure
 import os
+import stat
 from jinja2 import Environment, Template, TemplateError, UndefinedError, TemplateNotFound, FileSystemLoader
 from smoacks.sconfig import sconfig
 
@@ -18,7 +19,8 @@ class SmoacksStructure:
              'outfile': "dev-api-server.yaml"},
             {'template': 'server-loop.jinja',
              'dir': sconfig['structure']['sourcedir'],
-             'outfile': "server-loop"},
+             'outfile': "server-loop",
+             'executable': True},
             {'template': 'server_logging.jinja',
              'dir': sconfig['structure']['sourcedir'],
              'outfile': "server_logging.yaml"},
@@ -27,7 +29,8 @@ class SmoacksStructure:
              'outfile': sconfig['parameters']['source_spec']},
             {'template': 'testme.jinja',
              'dir': sconfig['structure']['bindir'],
-             'outfile': 'testme'},
+             'outfile': 'testme',
+             'executable': True},
             {'template': 'requirements.jinja',
              'dir': None,
              'outfile': "requirements.txt"}
@@ -48,6 +51,9 @@ class SmoacksStructure:
            try:
                filestring = template.render(self.template_dict)
                outfile.write(filestring)
+               if 'executable' in filespec and filespec['executable']:
+                   perm = os.stat(os.path.join(filedir, filespec['outfile']))
+                   os.chmod(os.path.join(filedir, filespec['outfile']), perm.st_mode | stat.S_IEXEC)
            except TemplateNotFound:
                print('Caught a TemplateNotFoundError on {}'.format(filespec['template']))
            except UndefinedError:

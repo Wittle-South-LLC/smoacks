@@ -55,7 +55,7 @@ spec:
         env:
         - name: NODE_ENV
           value: "development"
-        command: ["/app/server/src/server-loop"]
+        command: ["/app/src/server-loop"]
         ports:
         - containerPort: {{ smoacks_server_container_port }}
 #          name: {{ smoacks_app_name_k }}-dev-server
