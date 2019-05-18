@@ -5,7 +5,7 @@ import logging
 
 structure_overrides = ['SMOACKS_ROOT']
 parameters_overrides = ['SMOACKS_SOURCE_SPEC', 'SMOACKS_DEST_SPEC',
-                        'SMOACKS_SERVER_CONTAINER_PORT']
+                        'SMOACKS_SERVER_CONTAINER_PORT', 'SMOACKS_INCLUDE_LOGIN']
 env_defaults_overrides = ['SMOACKS_APP_NAME']
 
 LOGGER = logging.getLogger('SMOACKS')

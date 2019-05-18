@@ -1,6 +1,7 @@
 parameters:
   source_spec: schema.yaml
   dest_spec: app.yaml
+  include_login: False
 structure:
   root: .
   bindir: bin

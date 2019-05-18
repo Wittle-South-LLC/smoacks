@@ -70,6 +70,12 @@ def generate_code():
                 scr_objects[objectName] = AppObject(objectName, objectDesc)
             scr_objects[objectName].addSchema(scr_schemas[schema])
 
+    # If the parameters say to not include login, remove it from the path output
+    if not sconfig['parameters']['include_login']:
+        print('Removing /login path')
+        OPENAPI_SPEC['paths'].pop('/login')
+        OPENAPI_SPEC['components']['schemas'].pop('Login')
+
     # Generate the schemas
     for object_name in scr_objects:
         print('Handling {}'.format(object_name))
