@@ -15,6 +15,12 @@ To prepare for publishing, you need to clear out the dist directory.
 
 Testing
 -------
+To isoloate generated test code from the source for this project, set the 
+SMOACKS_ROOT environment variable to a subdirectory name for generated
+output:
+
+`export SMOACKS_ROOT=temp`
+
 To ensure no runtime errors before publishing, start a python session, then
 
 `import smoacks.command_line`
