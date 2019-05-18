@@ -53,7 +53,7 @@ spec:
       - image: {{ smoacks_server_base }}
         name: {{ smoacks_app_name_k }}-test-server
         env:
-        - name: NODE_ENV
+        - name: {{ smoacks_app_name_c }}_MODE
           value: "test"
         command: ["/app/src/server-loop"]
         ports:

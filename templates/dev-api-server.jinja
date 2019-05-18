@@ -53,7 +53,7 @@ spec:
       - image: {{ smoacks_server_base }}
         name: {{ smoacks_app_name_k }}-dev-server
         env:
-        - name: NODE_ENV
+        - name: {{ smoacks_app_name_c }}_MODE
           value: "development"
         command: ["/app/src/server-loop"]
         ports:
