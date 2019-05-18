@@ -1,7 +1,7 @@
 parameters:
   source_spec: schema.yaml
   dest_spec: app.yaml
-  include_login: False
+  include_shutdown: True
 structure:
   root: .
   bindir: bin
@@ -40,7 +40,7 @@ env_defaults:
   smoacks_test_db_service_port: $MY_TEST_DB_SPORT
   smoacks_test_db_account: $MY_TEST_DB_USER
   smoacks_test_db_password: $MY_TEST_DB_PWD
-  smoacks_test_api_endpoint: login
+  smoacks_test_api_endpoint: shutdown
   smoacks_server_service_port: 31500
   smoacks_secret_key: ChangeMe!
   smoacks_db_service: mysql

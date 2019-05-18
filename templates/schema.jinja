@@ -3,36 +3,27 @@ info:
   version: 0.1.0
   title: Multimode User Authentication for Microservices
 paths:
-  /login:
+  /shutdown:
     post:
-      summary: Authenticate via JWT or Facebook and hydrate the app
+      description: |
+        Allows for clean server shutdown.
       tags:
-        - Authentication
-      description: >
-        Authenticate users to the application with either username and password
-        in POST data, or Facebook access_token in post data.
-
-        Returns both an HTTP-only cookie and an authentication token
+        - Test Utilities
       responses:
         '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Request error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Server successfully shut down
         '404':
-          description: Invalid user or password
+          description: User not authorized to shut down server
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Login'
+              type: object
+              title: ShutdownKey
+              properties:
+                key:
+                  type: string
+        description: Unique application key to allow shutdown
 tags:
   - name: Authentication
     description: APIs associated with application authentication
@@ -84,15 +75,6 @@ components:
         error_code:
           type: integer
           description: Error code (equivalent to HTTP status code)
-    Login:
-      type: object
-      properties:
-        username:
-          type: string
-          description: Username of user attempting to log in
-        password:
-          type: string
-          description: Password of user attemptingt to log in
     User:
       type: object
       x-smoacks-create: User

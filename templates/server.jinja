@@ -5,6 +5,8 @@ import datetime
 import uuid
 import os.path
 import logging
+import logging.config
+import yaml
 import connexion
 from connexion.resolver import RestyResolver
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies
@@ -18,6 +20,11 @@ from dm.base import Base
 # not already exist in the database.
 {%for dmImport in dmImports %}{{ dmImport }} #pylint: disable=W0611
 {% endfor %}
+
+# Try loading logging configuration, see if we can manage it directly
+with open(os.environ['APP_LOGGING_CONFIG'], 'r') as f:
+    config = yaml.safe_load(f.read())
+    logging.config.dictConfig(config)
 
 # Define constants
 API_REQUIRES_JSON = 'All PUT/POST API requests require JSON, and this request did not'
@@ -43,12 +50,12 @@ JWT = JWTManager(FAPP)
 # according to the API structure. All API modules are in the "api" directory
 APP.add_api(OPENAPI_SPEC, resolver=RestyResolver('api'))
 
-# Get a reference to the logger for the app
-LOGGER = FAPP.logger
-# Set debug logging
-LOGGER.setLevel(logging.DEBUG)
-# Set the app into debug mode
-FAPP.debug = True
+# Set a reference to the app and request loggers created in app_logging.yaml
+LOGGER = logging.getLogger('appLogger')
+REQUEST_LOGGER = logging.getLogger('requestLogger')
+
+# Log the API spec we're using
+LOGGER.info('API Specification: ' + OPENAPI_SPEC)
 
 # Get the database connect string from the environment
 if 'APP_DB_SERVER' in os.environ:
