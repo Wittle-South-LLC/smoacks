@@ -58,7 +58,7 @@ spec:
         command: ["/app/server/src/server-loop"]
         ports:
         - containerPort: {{ smoacks_server_container_port }}
-          name: {{ smoacks_app_name_k }}-dev-server
+#          name: {{ smoacks_app_name_k }}-dev-server
         volumeMounts:
         - name: {{ smoacks_app_name_k }}-dev-server-vol
           mountPath: /app
@@ -78,6 +78,6 @@ spec:
   - port: {{ smoacks_server_container_port }}
     nodePort: {{ smoacks_server_service_port }}
     targetPort: {{ smoacks_server_container_port }}
-    name: {{ smoacks_app_name_k }}-dev-server
+#    name: {{ smoacks_app_name_k }}-dev-server
   selector:
     app: {{ smoacks_app_name_k }}-dev-server
