@@ -38,7 +38,7 @@ while [ "$SERVER_EXIT" -eq "0" ]; do
         # it doesn't clear the coverage results
         echo "export run_coverage=0" > /app/coverage/runType.bash
     else
-        echo "dev-server-loop: starting server..."
+        echo "dev-server-loop: starting server with spec: ${OPENAPI_SPEC}"
         python3.7 /app/src/server.py
         SERVER_EXIT=$?
         echo "dev-server-loop: server exited with result: ${SERVER_EXIT}!"

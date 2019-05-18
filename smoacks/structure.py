@@ -51,6 +51,13 @@ class SmoacksStructure:
         env = Environment(
             loader = FileSystemLoader('templates')
         )
+        # Ensure there is a coverage directory with a runType.bash in it
+        if not os.path.isdir('coverage'):
+              coverpath = os.path.join(sconfig['structure']['root'], 'coverage')
+              os.makedirs(coverpath, exist_ok=True)
+              rtfile = open(os.path.join(coverpath, 'runType.bash'), "w")
+              rtfile.write('export run_coverage=0')
+              rtfile.close()
         for filespec in self.env:
            template = env.get_template(filespec['template'])
            filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if filespec['dir'] else sconfig['structure']['root']
@@ -63,6 +70,7 @@ class SmoacksStructure:
                if 'executable' in filespec and filespec['executable']:
                    perm = os.stat(os.path.join(filedir, filespec['outfile']))
                    os.chmod(os.path.join(filedir, filespec['outfile']), perm.st_mode | stat.S_IEXEC)
+               outfile.close() 
            except TemplateNotFound:
                print('Caught a TemplateNotFoundError on {}'.format(filespec['template']))
            except UndefinedError:
