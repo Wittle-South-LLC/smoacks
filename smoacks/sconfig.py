@@ -27,6 +27,4 @@ with open('conf/smoacks_default.yaml', 'r') as yamlconfig:
     # Promote spec name from parameters into env defaults so it can more easily
     # be used in jinja templates during generation
     sconfig['env_defaults']['dest_spec'] = sconfig['parameters']['dest_spec']
-#    if 'SMOACKS_ROOT' in os.environ:
-#        sconfig['structure']['root'] = os.environ['SMOACKS_ROOT']
 LOGGER.debug('SMOACKS configuration: {}'.format(str(sconfig)))
