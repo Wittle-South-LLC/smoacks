@@ -23,6 +23,7 @@ with open('conf/smoacks_default.yaml', 'r') as yamlconfig:
         if ovr in os.environ:
             sconfig['env_defaults'][ovr.lower()] = os.environ[ovr]
     sconfig['env_defaults']['smoacks_app_name_c'] = sconfig['env_defaults']['smoacks_app_name'].upper()
+    sconfig['env_defaults']['smoacks_app_name_k'] = sconfig['env_defaults']['smoacks_app_name'].replace('_', '-')
 #    if 'SMOACKS_ROOT' in os.environ:
 #        sconfig['structure']['root'] = os.environ['SMOACKS_ROOT']
 LOGGER.debug('SMOACKS configuration: {}'.format(str(sconfig)))
