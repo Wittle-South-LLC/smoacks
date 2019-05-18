@@ -5,29 +5,29 @@
 #
 # Variables with values that are independent of mode
 export APP_DB_NAME="{{ smoacks_app_name }}"
-export APP_DB_CPORT={{ smoacks_db_port }}
+export APP_DB_CPORT={{ smoacks_db_container_port }}
 export REACT_APP_API_PATH="{{ smoacks_api_path }}"
 
-if [ "$SMOACKS_MODE" == "development" ]; then
+if [ "${{ smoacks_app_name_c }}_MODE" == "development" ]; then
   echo "Setting up development environment variables"
   export APP_DB_CNAME='{{ smoacks_dev_db_service }}'
   export APP_DB_ACCOUNT={{ smoacks_dev_db_account }}
   export APP_DB_PASSWORD={{ smoacks_dev_db_password }}
   export APP_DB_SPORT={{ smoacks_dev_db_service_port }}
   export APPSERVER_SPORT={{ smoacks_dev_server_service_port }}
-elif [ "$SMOACKS_MODE" == "test" ]; then
+elif [ "${{ smoacks_app_name_c }}_MODE" == "test" ]; then
   export APP_DB_CNAME='{{ smoacks_test_db_service }}'
   export APP_DB_ACCOUNT={{ smoacks_test_db_account }}
   export APP_DB_PASSWORD={{ smoacks_test_db_password }}
   export APP_DB_SPORT={{ smoacks_test_db_service_port }}
   export APPSERVER_SPORT={{ smoacks_test_server_service_port }}
   export TEST_HOST={{ smoacks_test_host }}
-elif [ "$SMOACKS_MODE" == "production" ]; then
+elif [ "${{ smoacks_app_name_c }}_MODE" == "production" ]; then
   export APP_DB_CNAME='{{ smoacks_db_service }}'
   export APP_DB_ACCOUNT={{ smoacks_db_account }}
   export APP_DB_PASSWORD={{ smoacks_db_password }}
   export APP_DB_SPORT={{ smoacks_db_service_port }}
   export APPSERVER_SPORT={{ smoacks_server_service_port }}
 else
-  echo "Invalid value for SMOACKS_MODE: $SMOAKS_MODE"
+  echo "Invalid value for {{ smoacks_app_name_c }}_MODE: ${{ smoacks_app_name_c }}_MODE"
 fi

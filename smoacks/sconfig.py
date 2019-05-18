@@ -6,6 +6,7 @@ import logging
 structure_overrides = ['SMOACKS_ROOT']
 parameters_overrides = ['SMOACKS_SOURCE_SPEC', 'SMOACKS_DEST_SPEC',
                         'SMOACKS_SERVER_CONTAINER_PORT']
+env_defaults_overrides = ['SMOACKS_APP_NAME']
 
 LOGGER = logging.getLogger('SMOACKS')
 
@@ -18,6 +19,10 @@ with open('conf/smoacks_default.yaml', 'r') as yamlconfig:
     for ovr in parameters_overrides:
         if ovr in os.environ:
             sconfig['parameters'][ovr[8:].lower()] = os.environ[ovr]
+    for ovr in env_defaults_overrides:
+        if ovr in os.environ:
+            sconfig['env_defaults'][ovr[8:].lower()] = os.environ[ovr]
+    sconfig['env_defaults']['smoacks_app_name_c'] = sconfig['env_defaults']['smoacks_app_name'].upper()
 #    if 'SMOACKS_ROOT' in os.environ:
 #        sconfig['structure']['root'] = os.environ['SMOACKS_ROOT']
 
