@@ -60,7 +60,7 @@ CONNECT_STRING = "mysql+mysqldb://" + str(os.environ['APP_DB_ACCOUNT']) +\
                  "@" + APP_DB_SERVER + "/" + str(os.environ['APP_DB_NAME']) +\
                  "?charset=utf8mb4&binary_prefix=True"
 LOGGER.debug('Connect String = ' + CONNECT_STRING)
-APPSERVER_PORT = os.environ['APPSERVER_CONTAINER_PORT']
+APPSERVER_PORT = os.environ['APPSERVER_CPORT']
 LOGGER.info('Running on port: ' + APPSERVER_PORT)
 LOGGER.debug('DebugSetting: ' + str(DEBUG_APP))
 

@@ -28,11 +28,13 @@ env_defaults:
   smoacks_db_container_port: 3306
   smoacks_server_container_port: 8180
   smoacks_dev_server_service_port: 31501
+  smoacks_dev_secret_key: Development
   smoacks_dev_db_service: mysql-dev
   smoacks_dev_db_service_port: $MY_DEV_DB_SPORT
   smoacks_dev_db_account: $MY_DEV_DB_USER
   smoacks_dev_db_password: $MY_DEV_DB_PWD
   smoacks_test_server_service_port: 31502
+  smoacks_test_secret_key: Testing
   smoacks_test_host: $MY_KUBE_SERVER
   smoacks_test_db_service: mysql-test
   smoacks_test_db_service_port: $MY_TEST_DB_SPORT
@@ -40,6 +42,7 @@ env_defaults:
   smoacks_test_db_password: $MY_TEST_DB_PWD
   smoacks_test_api_endpoint: login
   smoacks_server_service_port: 31500
+  smoacks_secret_key: ChangeMe!
   smoacks_db_service: mysql
   smoacks_db_service_port: $MY_DB_SPORT
   smoacks_db_account: prod
