@@ -29,7 +29,7 @@ class SqlAlchemyGenerator:
             else:
                 return "{} = Column(Integer)".format(prop.name)
         elif prop.type == 'object':
-            return "{} = Column(JSON)"
+            return "{} = Column(JSON)".format(prop.name)
         else:
             raise ValueError("Property {} has invalid type {}".format(prop.name, prop.type))
 
