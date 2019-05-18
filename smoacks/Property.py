@@ -1,4 +1,4 @@
-# Property.py - Handles OpenAPI 3.0 properties, with extended WSAG attributes
+# Property.py - Handles OpenAPI 3.0 properties, with extended smoacks attributes
 import json
 from smoacks.util import to_camelcase, to_mixedcase, to_snakecase
 
@@ -12,15 +12,15 @@ class Property:
         self._yaml = propertyYaml
         if 'type' in propertyYaml:
             self.type = propertyYaml['type']
-            self.baseObject = propertyYaml['x-wsag-base-object'] if 'x-wsag-base-object' in propertyYaml else False
-            self.createOnly = propertyYaml['x-wsag-create-only'] if 'x-wsag-create-only' in propertyYaml else False
+            self.baseObject = propertyYaml['x-smoacks-base-object'] if 'x-smoacks-base-object' in propertyYaml else False
+            self.createOnly = propertyYaml['x-smoacks-create-only'] if 'x-smoacks-create-only' in propertyYaml else False
             self.description = propertyYaml['description'] if 'description' in propertyYaml else None
             self.enum = propertyYaml['enum'] if 'enum' in propertyYaml else None
             self.example = propertyYaml['example'] if 'example' in propertyYaml else None
             self.exclusiveMaximum = propertyYaml['exclusiveMaximum'] if 'exclusiveMaximum' in propertyYaml else False
             self.exclusiveMinimum = propertyYaml['exclusiveMinimum'] if 'exclusiveMinimum' in propertyYaml else False
             self.format = propertyYaml['format'] if 'format' in propertyYaml else None
-            self.isId = propertyYaml['x-wsag-model-id'] if 'x-wsag-model-id' in propertyYaml else False
+            self.isId = propertyYaml['x-smoacks-model-id'] if 'x-smoacks-model-id' in propertyYaml else False
             self.maximum = propertyYaml['maximum'] if 'maximum' in propertyYaml else None
             self.maxLength = propertyYaml['maxLength'] if 'maxLength' in propertyYaml else None
             self.minimum = propertyYaml['minimum'] if 'minimum' in propertyYaml else None

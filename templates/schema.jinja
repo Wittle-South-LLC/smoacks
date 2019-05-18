@@ -103,8 +103,12 @@ components:
       properties:
         user_id:
           type: string
-          description: Unique User Identifier
-          readOnly: true
+          x-smoacks-model-id: true
+          description: Unique user identifier
+          readOnly: True
+          minLength: 12
+          maxLength: 40
+          example: b5665877-f9ee-4074-a38b-39219cde6b67
         username:
           type: string
           description: Login user name

@@ -17,10 +17,10 @@ class Schema:
         self._properties = dict()
         self._references = []
         self.description = self._yaml['description'] if 'description' in self._yaml else None
-        self.identityObject = self._yaml['x-wsag-create'] if 'x-wsag-create' in self._yaml else None
-        self.extendedObject = self._yaml['x-wsag-extended'] if 'x-wsag-extended' in self._yaml else None
-        self.updateObject = self._yaml['x-wsag-update'] if 'x-wsag-update' in self._yaml else None
-        self.emitTestData = self._yaml['x-wsag-test-data'] if 'x-wsag-test-data' in self._yaml else True
+        self.identityObject = self._yaml['x-smoacks-create'] if 'x-smoacks-create' in self._yaml else None
+        self.extendedObject = self._yaml['x-smoacks-extended'] if 'x-smoacks-extended' in self._yaml else None
+        self.updateObject = self._yaml['x-smoacks-update'] if 'x-smoacks-update' in self._yaml else None
+        self.emitTestData = self._yaml['x-smoacks-test-data'] if 'x-smoacks-test-data' in self._yaml else True
         propertiesYaml = None
         if 'properties' in self._yaml:
             propertiesYaml = self._yaml['properties']
