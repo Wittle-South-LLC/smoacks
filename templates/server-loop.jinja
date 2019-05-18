@@ -12,7 +12,7 @@
 # is attempting to avoid building the requirements.txt dependencies
 # into the docker image, which would result in a new image each
 # time we change a package version.
-export PYTHONPATH=/app/server/lib/python3.7/site-packages
+export PYTHONPATH=/app/lib/python3.7/site-packages
 SERVER_EXIT=0
 while [ "$SERVER_EXIT" -eq "0" ]; do
     # Set up local development environment variables
@@ -23,23 +23,23 @@ while [ "$SERVER_EXIT" -eq "0" ]; do
     # coverage/runType.bash. Based on the value 'run_coverage', we'll
     # either invoke the server directly, or invoke it in the python
     # coverage tool
-    source /app/server/coverage/runType.bash
+    source /app/coverage/runType.bash
     echo "Run coverage = $run_coverage"
     if [ "$run_coverage" -gt "0" ]; then
         echo "Launching coverage run of server"
-        coverage run -a --source /app/server/src,/app/server/src/dm,/app/server/src/api,/app/server/src/util /app/server/src/server.py
+        coverage run -a --source /app/src,/app/src/dm,/app/src/api,/app/src/util /app/src/server.py
         SERVER_EXIT=$?
         echo "Listing contents of /coverage"
-        ls -al /app/server/coverage
-        cd /app/server/coverage
+        ls -al /app/coverage
+        cd /app/coverage
         echo "About to run coverage report"
         coverage report -m --skip-covered > coverage.report
         # Need to set run coverage back to 0, so that when the server restarts,
         # it doesn't clear the coverage results
-        echo "export run_coverage=0" > /app/server/coverage/runType.bash
+        echo "export run_coverage=0" > /app/coverage/runType.bash
     else
         echo "dev-server-loop: starting server..."
-        python3.7 /app/server/src/server.py
+        python3.7 /app/src/server.py
         SERVER_EXIT=$?
         echo "dev-server-loop: server exited with result: ${SERVER_EXIT}!"
     fi
