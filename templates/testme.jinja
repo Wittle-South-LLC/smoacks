@@ -3,7 +3,7 @@
 # Initialize variables that could be set by command line
 nose_verbosity=2                  # -v: Default nose verbosity to one line per test (like mocha)
 run_coverage=0                    # -c Default to not run code coverage, -c will turn on
-nose_args='server/tests'          # -a: Optional additional argments to nosetests command
+nose_args='tests'                 # -a: Optional additional argments to nosetests command
 cover_args=''                     # -d: Optional additional arguments to cover command
 
 # Use getopts to parse arguments
@@ -31,7 +31,7 @@ shift $((OPTIND-1))
 #echo "leftovers: $@"
 
 # Ensure that we have the basic environment defined
-export {{ smoacks_app_name_c }}='test'
+export {{ smoacks_app_name_c }}_MODE='test'
 source bin/app-env
 export TEST_URL="http://${TEST_HOST}:${APPSERVER_SPORT}${REACT_APP_API_PATH}"
 echo "testme: TEST_URL = $TEST_URL"
@@ -63,8 +63,8 @@ echo "CREATE DATABASE $APP_DB_NAME CHARACTER SET utf8 collate utf8_general_ci;" 
 
 # Issue the server shutdown command, which should cause the Kubernetes service
 # to restart, ensuring that we're running the most recent server code
-echo "export run_coverage=$run_coverage" > server/coverage/runType.bash
-echo "export COVERAGE_FILE='/app/server/coverage/server.coverage'" >> coverage/runType.bash
+echo "export run_coverage=$run_coverage" > coverage/runType.bash
+echo "export COVERAGE_FILE='/app/coverage/server.coverage'" >> coverage/runType.bash
 if [ -f coverage/server.coverage ]; then
   rm coverage/server.coverage
 fi
