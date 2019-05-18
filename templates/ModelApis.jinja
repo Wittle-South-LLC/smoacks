@@ -36,7 +36,7 @@
               type: array
               items:
                 $ref: '#/components/schemas/{{ identitySchemaName }}'
-/{{ snakeName }}s/{{ snakeName }}_id:
+/{{ snakeName }}s/{{'{'}}{{ snakeName }}_id{{'}'}}:
   parameters:
     - name: {{ snakeName }}_id
       description: {{ mixedName }} ID (UUID) on which the operation should be performed
