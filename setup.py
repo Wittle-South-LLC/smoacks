@@ -25,11 +25,14 @@ setup(name='smoacks',
                                  'templates/SQLAlchemyModel.jinja',
                                  'templates/testme.jinja'])],
       install_requires=[
+          'connexion',
           'coverage',
+          'flask_jwt_extended',
           'jinja2',
           'nose',
           'openapi-spec-validator',
-          'PyYAML'
+          'PyYAML',
+          'SQLAlchemy'
           ],
       entry_points={
           'console_scripts': ['smoacks-setup=smoacks.command_line:main',
