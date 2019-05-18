@@ -36,10 +36,7 @@ class SmoacksStructure:
             {'template': 'testme.jinja',
              'dir': sconfig['structure']['bindir'],
              'outfile': 'testme',
-             'executable': True},
-            {'template': 'requirements.jinja',
-             'dir': None,
-             'outfile': "requirements.txt"}
+             'executable': True}
         ]
         self.template_dict = sconfig['env_defaults']
         self.template_dict['smoacks_local_dev_path'] = os.getcwd()
