@@ -32,3 +32,6 @@ elif [ "${{ smoacks_app_name_c }}_MODE" == "production" ]; then
 else
   echo "Invalid value for {{ smoacks_app_name_c }}_MODE: ${{ smoacks_app_name_c }}_MODE"
 fi
+alias dsrestart="curl -H 'Content-type: application/json' -X POST -d '{\"key\":\"{{ smoacks_app_shutdown_key }}\"}' ${REACT_APP_BASE_URL}${REACT_APP_API_PATH}/shutdown"
+alias dlog="kubectl logs \$(kubectl get pod -l \"app={{ smoacks_app_name }}-dev-server\" -o jsonpath='{.items[0].metadata.name}')"
+alias tlog="kubectl logs \$(kubectl get pod -l \"app={{ smoacks_app_name }}-dev-server\" -o jsonpath='{.items[0].metadata.name}')"
