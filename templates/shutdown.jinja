@@ -8,7 +8,7 @@ LOGGER=logging.getLogger('appLogger')
 
 def post(body):
     """Method to handle POST verb for /shutdown API endpoint"""
-    if body['key'] == os.environ['APP_SHUTDOWN_KEY']:
+    if 'key' in body and body['key'] == os.environ['APP_SHUTDOWN_KEY']:
         shutdown_server()
         return 'Server shutting down...\n'
     LOGGER.error("ERROR: Post made to /shutdown endpoint without required key value")

@@ -78,7 +78,7 @@ echo "Starting api server on $TEST_HOST at port $APPSERVER_SPORT"
 # Loop looking for a response from the server API indicating it is up and running
 for i in {1..100}; do
   sleep 1
-  if curl -H "Content-Type: application/json" -X POST -d '{"Key": "junk"}' $TEST_URL/{{ smoacks_test_api_endpoint }}; then 
+  if curl -H "Content-Type: application/json" -X POST -d '{"key": "junk"}' $TEST_URL/{{ smoacks_test_api_endpoint }}; then 
     server_running=1
     break
   fi
