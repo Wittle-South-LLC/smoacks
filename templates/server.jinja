@@ -49,6 +49,10 @@ REQUEST_LOGGER = logging.getLogger('requestLogger')
 # Log the API spec we're using
 LOGGER.info('API Specification: ' + OPENAPI_SPEC)
 
+APPSERVER_PORT = os.environ['APPSERVER_CPORT']
+LOGGER.info('Running on port: ' + APPSERVER_PORT)
+LOGGER.debug('DebugSetting: ' + str(DEBUG_APP))
+
 # Get the secret key from the environment
 FAPP.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 
