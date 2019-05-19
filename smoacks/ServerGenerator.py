@@ -24,9 +24,9 @@ class ServerGenerator:
         env = Environment(
             loader = FileSystemLoader('templates')
         )
-        template = env.get_template('server.jinja')
-        filedir = os.path.join(sconfig['structure']['root'], sconfig['structure']['sourcedir'])
+        template = env.get_template('DataModel.jinja')
+        filedir = os.path.join(sconfig['structure']['root'], sconfig['structure']['datamodeldir'])
         if not os.path.isdir(filedir):
             os.makedirs(filedir, exist_ok=True)
-        outfile = open(os.path.join(filedir, 'server.py'), "w")
+        outfile = open(os.path.join(filedir, 'DataModel.py'), "w")
         outfile.write(template.render(self.getJinjaDict()))
