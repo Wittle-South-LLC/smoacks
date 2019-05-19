@@ -1,0 +1,34 @@
+"""api_util.py - Utility functions to share across APIs"""
+# The intent of this module is to provide shared utility code that works across APIs
+# api_error - Enables internationalization / localization of error messages in the UI by
+#             returning a set of error codes as well as default english error messages
+
+from flask import jsonify
+
+API_ERRORS = {
+    "INSUFFICIENT_PRIVILEGES": "User {} does not have required privileges for this operation",
+    "INVALID_SHUTDOWN_KEY": 'The shutdown key {} is not valid',
+    "CANNOT_ASSIGN_ADMIN": 'Cannot assign Admin role during user creation'
+}
+
+# Error response constants
+
+def api_error(code, msg_key, msg_text=None):
+    """Provides a flask response in error conditions"""
+    resp_obj = {
+        'error_code': code,
+        'key': msg_key
+    }
+    if msg_text:
+        resp_obj['text'] = api_error_msg(msg_key, msg_text)
+    resp = jsonify(resp_obj)
+    resp.status_code = code
+    return resp
+
+def api_error_msg(msg_key, msg_text):
+    """Formats error message with message text based on message key"""
+    if msg_key in API_ERRORS:
+        if '{}' in API_ERRORS[msg_key]:
+            return API_ERRORS[msg_key].format(msg_text)
+        return API_ERRORS[msg_key]
+    return "Unknown error key: " + msg_key #pragma: no cover

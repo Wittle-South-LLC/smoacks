@@ -8,6 +8,9 @@ class SmoacksStructure:
     def __init__(self):
         self.name = 'SmoacksStructure'
         self.env = [
+            {'template': 'api_util.jinja',
+             'dir': sconfig['structure']['utildir'],
+             'outfile': "api_util.py"},
             {'template': 'app-env.jinja',
              'dir': sconfig['structure']['bindir'],
              'outfile': "app-env"},

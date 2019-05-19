@@ -10,6 +10,7 @@ structure:
   specdir: src/spec
   datamodeldir: src/dm
   apiobjectdir: src/api
+  utildir: src/util
   testdir: tests
 env_defaults:
   local_dev_db_user: dev
