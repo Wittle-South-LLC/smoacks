@@ -22,6 +22,7 @@ env_defaults:
   local_test_db_service_port: 30387
   local_kube_server: wsv-dev.wittlesouth.local
   local_network: kubernetes
+  smoacks_api_security: True
   smoacks_server_base: wittlesouth/api_server:1.3
   smoacks_app_name: testme
   smoacks_app_maintainer: noone@email.com
