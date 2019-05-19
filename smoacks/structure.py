@@ -69,6 +69,12 @@ class SmoacksStructure:
               rtfile = open(os.path.join(coverpath, 'runType.bash'), "w")
               rtfile.write('export run_coverage=0')
               rtfile.close()
+        # Ensure there is an __init__.py file in the tests directory
+        tests_module_filename = os.path.join(sconfig['structure']['root'],
+                                             sconfig['structure']['testdir'], '__init__.py')
+        if not os.path.isfile(tests_module_filename):
+            tmfile = open(tests_module_filename, "w")
+            tmfile.close()
         for filespec in self.env:
            template = env.get_template(filespec['template'])
            filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if filespec['dir'] else sconfig['structure']['root']
