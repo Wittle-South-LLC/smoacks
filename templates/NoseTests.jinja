@@ -5,9 +5,9 @@
 # tests.
 """test-{{ snakeName }}-api.py - Tests of {{ name }} APIs"""
 import logging
-from .TestUtil import get_new_session, get_response_with_jwt
+from .TestUtil import get_active_session, get_response_with_jwt
 
-TEST_SESSION = get_new_session()
+TEST_SESSION = get_active_session()
 
 def test_{{ snakeName }}_create():
     """{{ name }}APIs: Test create API"""
