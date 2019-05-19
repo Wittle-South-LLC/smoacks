@@ -21,3 +21,9 @@ Deployment Dependencies for Generated Code
 Dependencies in development for generating code
 - Jinja2 for code generation from internal templates; not at runtime
 - PyYAML for configuration file; 
+
+Version History
+---------------
+
+0.1.X Series - Incrementtal steps to first working version
+0.2.0 - First version generating structure, code, and working unit test
