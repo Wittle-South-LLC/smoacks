@@ -10,6 +10,7 @@ export OPENAPI_SPEC='/app/src/spec/{{ dest_spec }}'
 export REACT_APP_API_PATH="{{ smoacks_api_path }}"
 export APP_LOGGING_CONFIG='/app/src/server_logging.yaml'
 export APPSERVER_CPORT={{ smoacks_server_container_port }}
+export APP_SHUTDOWN_KEY='{{ smoacks_app_shutdown_key }}'
 
 if [ "${{ smoacks_app_name_c }}_MODE" == "development" ]; then
   echo "Setting up development environment variables"
