@@ -25,5 +25,5 @@ Dependencies in development for generating code
 Version History
 ---------------
 
-0.1.X Series - Incrementtal steps to first working version
-0.2.0 - First version generating structure, code, and working unit test
+* 0.1.X Series - Incremental steps to first working version
+* 0.2.0 - First version generating structure, code, and working unit test

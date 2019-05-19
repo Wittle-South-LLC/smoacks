@@ -18,6 +18,7 @@ class ConnexionApiGenerator:
         for prop in properties:
             if prop.isId:
                 result['name_id'] = prop.name
+        result.update(sconfig['env_defaults'])
         return result
 
     def render(self):

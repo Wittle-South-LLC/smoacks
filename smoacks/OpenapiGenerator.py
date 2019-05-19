@@ -18,6 +18,7 @@ class OpenapiGenerator:
             'identitySchemaName': self._app_object.identitySchemaName,
             'extendedSchemaName': self._app_object.extendedSchemaName
         }
+        result.update(sconfig['env_defaults'])
         # Loop through the properties and update the structure where needed
         return result
 

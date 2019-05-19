@@ -5,9 +5,7 @@ from flask import current_app, g
 from flask_jwt_extended import jwt_required
 from dm.{{ name }} import {{ name }}
 
-{% if smoacks_api_security %}
-@jwt_required
-{% endif %}
+{% if smoacks_api_security -%}@jwt_required{%- endif %}
 def post(body):
     """Method to handle POST verb for /{{name}}s endpoint"""
     new_record = {{ name }}()
@@ -18,9 +16,7 @@ def post(body):
     g.db_session.commit()
     return {'{{ name }}_id': new_record.get_uuid()}, 201
 
-{% if smoacks_api_security %}
-@jwt_required
-{% endif %}
+{% if smoacks_api_security -%}@jwt_required{%- endif %}
 def search(search_text):
     """Method to handle GET verb with no URL parameters"""
     my_search = '%'
@@ -33,9 +29,7 @@ def search(search_text):
         ret.append(item.dump())
     return ret, 200
 
-{% if smoacks_api_security %}
-@jwt_required
-{% endif %}
+{% if smoacks_api_security -%}@jwt_required{%- endif %}
 def delete(id):
     """Method to handle DELETE verb for /{{ name }}/{{ name_id }} endpoint"""
     binary_uuid = uuid.UUID(id).bytes
@@ -47,9 +41,7 @@ def delete(id):
     g.db_session.commit()
     return '{{ name }} deleted', 204
 
-{% if smoacks_api_security %}
-@jwt_required
-{% endif %}
+{% if smoacks_api_security -%}@jwt_required{%- endif %}
 def put(id, data):
     """Method to handle PUT verb for /{{ name }}/{{ name_id }} endpoint"""
     binary_uuid = uuid.UUID(id).bytes
@@ -64,9 +56,7 @@ def put(id, data):
     g.db_session.commit()
     return '{{ name }} Updated', 200
 
-{% if smoacks_api_security %}
-@jwt_required
-{% endif %}
+{% if smoacks_api_security -%}@jwt_required{%- endif %}
 def get(id, data):
     """Method to handle GET verb for /{{ name }}/{{ name_id }} endpoint"""
     binary_uuid = uuid.UUID(id).bytes
