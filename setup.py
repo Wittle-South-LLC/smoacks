@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='smoacks',
-      version='0.2.0',
+      version='0.2.1',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',

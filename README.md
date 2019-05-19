@@ -27,3 +27,4 @@ Version History
 
 * 0.1.X Series - Incremental steps to first working version
 * 0.2.0 - First version generating structure, code, and working unit test
+* 0.2.1 - Supports unit testing authenticated endpoints
