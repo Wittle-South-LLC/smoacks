@@ -4,6 +4,7 @@ parameters:
   include_shutdown: True
 structure:
   root: .
+  pvPathRoot: /mnt/hgfs/wsv
   bindir: bin
   kubedir: kube-env
   sourcedir: src
