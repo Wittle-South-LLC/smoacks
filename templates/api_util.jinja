@@ -32,3 +32,59 @@ def api_error_msg(msg_key, msg_text):
             return API_ERRORS[msg_key].format(msg_text)
         return API_ERRORS[msg_key]
     return "Unknown error key: " + msg_key #pragma: no cover
+
+def handle_post(dmo, dmo_pk_name, session, body):
+    """Method to handle POST verbs for data model object APIs"""
+    new_record = dmo()
+    for key, value in body.items():
+        if hasattr(new_record, key) and key != dmo_pk_name:
+            setattr(new_record, key, value)
+    session.add(new_record)
+    session.commit()
+    return {[dmo_pk_name]: new_record.get_uuid()}, 201
+
+def handle_search(dmo, search_field, session, search_text):
+    """Method to handle GET verb with no URL parameters"""
+    my_search = '%'
+    if search_text:
+        my_search = '%' + search_text + '%'
+    search_list = session.query(dmo)\
+                   .filter(search_field.like(my_search)).all()
+    ret = []
+    for item in search_list:
+        ret.append(item.dump())
+    return ret, 200
+
+def handle_delete(dmo, dmo_pk, session, id):
+    """Method to handle DELETE verb for data model object APIs"""
+    binary_uuid = uuid.UUID(id).bytes
+    find_record = session.query(dmo)\
+                   .filter(dmo.dmo_pk == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    session.delete(find_record)
+    session.commit()
+    return dmo.__table_name__ + ' deleted', 204
+
+def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, data):
+    """Method to handle PUT verb for data model object APIs"""
+    binary_uuid = uuid.UUID(id).bytes
+    find_record = session.query(dmo)\
+                   .filter(dmo_pk == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    for key, value in data.items():
+        if hasattr(find_record, key) and key != dmo_pk_name:
+            setattr(find_record, key, value)
+    g.db_session.add(find_record)
+    g.db_session.commit()
+    return dmo.__table_name__ + ' updated', 200
+
+def handle_get(dmo, dmo_pk, session, id):
+    """Method to handle GET verb for data model object APIs"""
+    binary_uuid = uuid.UUID(id).bytes
+    find_record = session.query(dmo)\
+                   .filter(dmo_pk == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    return find_record.dump(True), 200

@@ -18,6 +18,8 @@ class ConnexionApiGenerator:
         for prop in properties:
             if prop.isId:
                 result['name_id'] = prop.name
+            if prop.searchField:
+                result['search_field'] = prop.name
         result.update(sconfig['env_defaults'])
         return result
 
@@ -29,5 +31,8 @@ class ConnexionApiGenerator:
         filedir = os.path.join(sconfig['structure']['root'], sconfig['structure']['apiobjectdir'])
         if not os.path.isdir(filedir):
             os.makedirs(filedir, exist_ok=True)
-        outfile = open(os.path.join(filedir, "{}s.py".format(self._app_object.getSnakeName())), "w")
-        outfile.write(template.render(self.getJinjaDict()))
+        outfilename = os.path.join(filedir, "{}s.py".format(self._app_object.getSnakeName()))
+        if not os.path.isfile(outfilename):
+            outfile = open(outfilename, "w")
+            outfile.write(template.render(self.getJinjaDict()))
+            outfile.close()

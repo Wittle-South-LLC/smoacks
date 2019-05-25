@@ -27,6 +27,7 @@ class Property:
             self.minLength = propertyYaml['minLength'] if 'minLength' in propertyYaml else None
             self.nullable = propertyYaml['nullable'] if 'nullable' in propertyYaml else False
             self.pattern = propertyYaml['pattern'] if 'pattern' in propertyYaml else None
+            self.searchField = propertyYaml['x-smoacks-search-field'] if 'x-smoacks-search-field' in propertyYaml else False
             self.stringFormat = propertyYaml['format'] if 'format' in propertyYaml else None
             self.readOnly = propertyYaml['readOnly'] if 'readOnly' in propertyYaml else False
         elif '$ref' in propertyYaml:
