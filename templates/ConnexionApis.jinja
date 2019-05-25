@@ -1,9 +1,8 @@
 # pylint: disable-msg=C0321,R0912
 """Module to handle /{{ name }}s API endpoint """
-import uuid
 from flask import current_app, g
 from flask_jwt_extended import jwt_required
-from util.api_util import handle_post, handle_search, handle_delete,
+from util.api_util import handle_post, handle_search, handle_delete, \
                           handle_put, handle_get
 from dm.{{ name }} import {{ name }}
 

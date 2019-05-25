@@ -3,6 +3,7 @@
 # api_error - Enables internationalization / localization of error messages in the UI by
 #             returning a set of error codes as well as default english error messages
 
+import uuid
 from flask import jsonify
 
 API_ERRORS = {
@@ -41,7 +42,9 @@ def handle_post(dmo, dmo_pk_name, session, body):
             setattr(new_record, key, value)
     session.add(new_record)
     session.commit()
-    return {[dmo_pk_name]: new_record.get_uuid()}, 201
+    result = {}
+    result[dmo_pk_name] = new_record.get_uuid()
+    return result, 201
 
 def handle_search(dmo, search_field, session, search_text):
     """Method to handle GET verb with no URL parameters"""
@@ -76,8 +79,8 @@ def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, data):
     for key, value in data.items():
         if hasattr(find_record, key) and key != dmo_pk_name:
             setattr(find_record, key, value)
-    g.db_session.add(find_record)
-    g.db_session.commit()
+    session.add(find_record)
+    session.commit()
     return dmo.__table_name__ + ' updated', 200
 
 def handle_get(dmo, dmo_pk, session, id):
