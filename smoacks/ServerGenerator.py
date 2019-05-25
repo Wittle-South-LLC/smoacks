@@ -13,7 +13,8 @@ class ServerGenerator:
     def getJinjaDict(self):
         # Establish constant values and the overall dictionary structure
         result = {
-            'dmImports': []
+            'dmImports': [],
+            'gensubdir': sconfig['structure']['gensubdir']
         }
         # Loop through the properties and update the structure where needed
         for objName in self._app_objects:
