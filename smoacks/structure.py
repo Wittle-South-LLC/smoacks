@@ -31,7 +31,8 @@ class SmoacksStructure:
              'outfile': "local-env"},
             {'template': 'schema.jinja',
              'dir': sconfig['structure']['specdir'],
-             'outfile': sconfig['parameters']['source_spec']},
+             'outfile': sconfig['parameters']['source_spec'],
+             'overwrite': False},
             {'template': 'server-loop.jinja',
              'dir': sconfig['structure']['sourcedir'],
              'outfile': "server-loop",
@@ -74,12 +75,6 @@ class SmoacksStructure:
               rtfile = open(os.path.join(coverpath, 'runType.bash'), "w")
               rtfile.write('export run_coverage=0')
               rtfile.close()
-        # Ensure there is an __init__.py file in the tests directory
-#        tests_module_filename = os.path.join(sconfig['structure']['root'],
-#                                             sconfig['structure']['testdir'], '__init__.py')
-#        if not os.path.isfile(tests_module_filename):
-#            tmfile = open(tests_module_filename, "w")
-#            tmfile.close()
         for filespec in self.env:
            template = env.get_template(filespec['template'])
            filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if filespec['dir'] else sconfig['structure']['root']
@@ -88,19 +83,23 @@ class SmoacksStructure:
               if 'module_dir' in filespec and filespec['module_dir']:
                   tmf_file = open(os.path.join(filedir, '__init__.py'), "w")
                   tmf_file.close()
-           outfile = open(os.path.join(filedir, filespec['outfile']), "w")
-           try:
-               filestring = template.render(self.template_dict)
-               outfile.write(filestring)
-               if 'executable' in filespec and filespec['executable']:
-                   perm = os.stat(os.path.join(filedir, filespec['outfile']))
-                   os.chmod(os.path.join(filedir, filespec['outfile']), perm.st_mode | stat.S_IEXEC)
-               outfile.close() 
-           except TemplateNotFound:
-               print('Caught a TemplateNotFoundError on {}'.format(filespec['template']))
-           except UndefinedError:
-               print('Caught a UndefinedError on {}'.format(filespec['template']))
-           except TemplateError:
-               print('Caught a TemplateError on {}'.format(filespec['template']))
-           except:
-               print('Caught an untyped error on {}'.format(filespec['template']))
+           outfilename = os.path.join(filedir, filespec['outfile'])
+           if not os.path.isfile(outfilename) or 'overwrite' not in filespec or filespec['overwrite']:
+               outfile = open(outfilename, "w")
+               try:
+                   filestring = template.render(self.template_dict)
+                   outfile.write(filestring)
+                   if 'executable' in filespec and filespec['executable']:
+                       perm = os.stat(os.path.join(filedir, filespec['outfile']))
+                       os.chmod(os.path.join(filedir, filespec['outfile']), perm.st_mode | stat.S_IEXEC)
+                   outfile.close() 
+               except TemplateNotFound:
+                   print('Caught a TemplateNotFoundError on {}'.format(filespec['template']))
+               except UndefinedError:
+                   print('Caught a UndefinedError on {}'.format(filespec['template']))
+               except TemplateError:
+                   print('Caught a TemplateError on {}'.format(filespec['template']))
+               except:
+                   print('Caught an untyped error on {}'.format(filespec['template']))
+           else:
+               print('Skipping {} because it exists and should not be overwritten'.format(filespec['outfile']))
