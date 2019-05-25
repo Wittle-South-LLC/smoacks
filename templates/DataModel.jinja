@@ -4,7 +4,7 @@ import os
 import sys
 from sqlalchemy import create_engine, event, exc, select
 from sqlalchemy.orm import sessionmaker
-from dm.base import Base
+from dm.{{ gensubdir}}.base import Base
 {%for dmImport in dmImports %}{{ dmImport }} #pylint: disable=W0611
 {% endfor %}
 LOGGER = logging.getLogger(__name__)
