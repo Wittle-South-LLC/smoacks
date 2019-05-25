@@ -39,7 +39,9 @@ class SqlAlchemyGenerator:
             'name': self.name,
             'snakeName': self._app_object.getSnakeName(),
             'mixedName': self.name,
-            'dmFields': []
+            'dmFields': [],
+            'genprefix': sconfig['structure']['genprefix'],
+            'gensubdir': sconfig['structure']['gensubdir']
         }
         # Loop through the properties and update the structure where needed
         properties = self._app_object.getAllProperties()
@@ -53,8 +55,28 @@ class SqlAlchemyGenerator:
             loader = FileSystemLoader('templates')
         )
         template = env.get_template('SQLAlchemyModel.jinja')
-        filedir = os.path.join(sconfig['structure']['root'], sconfig['structure']['datamodeldir'])
-        if not os.path.isdir(filedir):
-            os.makedirs(filedir, exist_ok=True)
-        outfile = open(os.path.join(filedir, "{}.py".format(self.name)), "w")
+        gendir = os.path.join(sconfig['structure']['root'],
+                              sconfig['structure']['datamodeldir'],
+                              sconfig['structure']['gensubdir'])
+        if not os.path.isdir(gendir):
+            os.makedirs(gendir, exist_ok=True)
+        module_filename = os.path.join(gendir, "__init__.py")
+        if not os.path.isfile(module_filename):
+            initfile = open(module_filename, "w")
+            initfile.close()
+        outfile = open(os.path.join(gendir, "{}{}.py".format(sconfig['structure']['genprefix'], self.name)), "w")
         outfile.write(template.render(self.getJinjaDict()))
+        outfile.close()
+        filedir = os.path.join(sconfig['structure']['root'],
+                               sconfig['structure']['datamodeldir'])
+        module_filename2 = os.path.join(gendir, "__init__.py")
+        if not os.path.isfile(module_filename2):
+            initfile2 = open(module_filename2, "w")
+            initfile2.close()
+        # We should not overwrite customization file if it exists
+        dmo_filename = os.path.join(filedir, "{}.py".format(self.name))
+        if not os.path.isfile(dmo_filename):
+            template2 = env.get_template('DataModelObject.jinja')
+            of2 = open(dmo_filename, "w")
+            of2.write(template2.render(self.getJinjaDict()))
+            of2.close()

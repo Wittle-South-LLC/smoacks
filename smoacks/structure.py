@@ -10,13 +10,15 @@ class SmoacksStructure:
         self.env = [
             {'template': 'api_util.jinja',
              'dir': sconfig['structure']['utildir'],
-             'outfile': "api_util.py"},
+             'outfile': "api_util.py",
+             'module_dir': True},
             {'template': 'app-env.jinja',
              'dir': sconfig['structure']['bindir'],
              'outfile': "app-env"},
             {'template': 'base.jinja',
              'dir': sconfig['structure']['datamodeldir'],
-             'outfile': 'base.py'},
+             'outfile': 'base.py',
+             'module_dir': True},
             {'template': 'dev-api-server.jinja',
              'dir': sconfig['structure']['kubedir'],
              'outfile': "dev-api-server.yaml"},
@@ -41,7 +43,8 @@ class SmoacksStructure:
              'outfile': "server.py"},
             {'template': 'shutdown.jinja',
              'dir': sconfig['structure']['apiobjectdir'],
-             'outfile': "shutdown.py"},
+             'outfile': "shutdown.py",
+             'module_dir': True},
             {'template': 'test-api-server.jinja',
              'dir': sconfig['structure']['kubedir'],
              'outfile': "test-api-server.yaml"},
@@ -51,7 +54,8 @@ class SmoacksStructure:
              'executable': True},
             {'template': 'TestUtil.jinja',
              'dir': sconfig['structure']['testdir'],
-             'outfile': 'TestUtil.py'}
+             'outfile': 'TestUtil.py',
+             'module_dir': True}
         ]
         self.template_dict = sconfig['env_defaults']
 #        self.template_dict['smoacks_local_dev_path'] = os.getcwd()
@@ -70,16 +74,19 @@ class SmoacksStructure:
               rtfile.write('export run_coverage=0')
               rtfile.close()
         # Ensure there is an __init__.py file in the tests directory
-        tests_module_filename = os.path.join(sconfig['structure']['root'],
-                                             sconfig['structure']['testdir'], '__init__.py')
-        if not os.path.isfile(tests_module_filename):
-            tmfile = open(tests_module_filename, "w")
-            tmfile.close()
+#        tests_module_filename = os.path.join(sconfig['structure']['root'],
+#                                             sconfig['structure']['testdir'], '__init__.py')
+#        if not os.path.isfile(tests_module_filename):
+#            tmfile = open(tests_module_filename, "w")
+#            tmfile.close()
         for filespec in self.env:
            template = env.get_template(filespec['template'])
            filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if filespec['dir'] else sconfig['structure']['root']
            if not os.path.isdir(filedir):
               os.makedirs(filedir, exist_ok=True)
+              if 'module_dir' in filespec and filespec['module_dir']:
+                  tmf_file = open(os.path.join(filedir, '__init__.py'), "w")
+                  tmf_file.close()
            outfile = open(os.path.join(filedir, filespec['outfile']), "w")
            try:
                filestring = template.render(self.template_dict)

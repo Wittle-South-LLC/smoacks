@@ -4,9 +4,9 @@ import datetime
 from sqlalchemy import Column, DateTime, JSON, String, text
 from sqlalchemy.dialects.mysql import BINARY
 
-from .base import Base
+from ..base import Base
 
-class {{ mixedName }}(Base):
+class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
     __tablename__ = '{{ mixedName }}'
     __table_args__ = {'mysql_charset':'utf8'}
@@ -21,7 +21,7 @@ class {{ mixedName }}(Base):
 
     def __init__(self, **kwargs):
         """Initializes the ID for newly constructed objects"""
-        super({{ mixedName }}, self).__init__(**kwargs)
+        super({{ genprefix}}{{ mixedName }}, self).__init__(**kwargs)
         self.{{ snakeName }}_id = uuid.uuid4().bytes
 
     def get_uuid(self):

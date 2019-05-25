@@ -13,6 +13,8 @@ structure:
   apiobjectdir: src/api
   utildir: src/util
   testdir: tests
+  gensubdir: smoacks
+  genprefix: SB_
 env_defaults:
   local_dev_db_user: dev
   local_dev_db_pwd: dev
