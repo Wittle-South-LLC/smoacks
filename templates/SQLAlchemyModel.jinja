@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy import Column, DateTime, JSON, String, text
 from sqlalchemy.dialects.mysql import BINARY
 
-from ..base import Base
+from .base import Base
 
 class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
