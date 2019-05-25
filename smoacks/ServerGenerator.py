@@ -27,7 +27,9 @@ class ServerGenerator:
         )
         template = env.get_template('DataModel.jinja')
         filedir = os.path.join(sconfig['structure']['root'], sconfig['structure']['datamodeldir'])
-        if not os.path.isdir(filedir):
-            os.makedirs(filedir, exist_ok=True)
+        tmf_file_name = os.path.join(filedir, '__init__.py') 
+        if not os.path.isfile(tmf_file_name):
+            tmf_file = open(tmf_file_name, "w")
+            tmf_file.close()
         outfile = open(os.path.join(filedir, 'DataModel.py'), "w")
         outfile.write(template.render(self.getJinjaDict()))
