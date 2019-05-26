@@ -17,16 +17,16 @@ def search(search_text):
     return handle_search({{ name }}, {{ name }}.{{ search_field }}, g.db_session, search_text)
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def delete(id):
+def delete({{ name_id }}):
     """Method to handle DELETE verb for /{{ name }}/{{ name_id }} endpoint"""
-    return handle_delete({{ name }}, {{ name }}.{{ name_id }}, g.db_session, id)
+    return handle_delete({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }})
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def put(id, data):
+def put({{ name_id }}, data):
     """Method to handle PUT verb for /{{ name }}/{{ name_id }} endpoint"""
     return handle_put({{ name }}, {{ name }}.{{ name_id }}, g.db_session, id, data)
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def get(id):
+def get({{ name_id}}):
     """Method to handle GET verb for /{{ name }}/{{ name_id }} endpoint"""
-    return handle_get({{ name }}, {{ name }}.{{ name_id }}, g.db_session, id)
+    return handle_get({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }})
