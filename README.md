@@ -29,3 +29,4 @@ Version History
 * 0.2.0 - First version generating structure, code, and working unit test
 * 0.2.1 - Supports unit testing authenticated endpoints
 * 0.2.2 - Allows customization of data model and API objects
+* 0.2.3 - Unit test coverage for all generated endpoints
