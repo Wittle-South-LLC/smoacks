@@ -26,6 +26,9 @@ class SmoacksStructure:
             {'template': 'Dockerfile.jinja',
              'dir': sconfig['structure']['sourcedir'],
              'outfile': "Dockerfile"},
+            {'template': 'gitignore.jinja',
+             'outfile': ".gitignore",
+             'overwrite': False},
             {'template': 'local-env.jinja',
              'dir': sconfig['structure']['bindir'],
              'outfile': "local-env"},
@@ -77,7 +80,7 @@ class SmoacksStructure:
               rtfile.close()
         for filespec in self.env:
            template = env.get_template(filespec['template'])
-           filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if filespec['dir'] else sconfig['structure']['root']
+           filedir = os.path.join(sconfig['structure']['root'], filespec['dir']) if 'dir' in filespec and filespec['dir'] else sconfig['structure']['root']
            if not os.path.isdir(filedir):
               os.makedirs(filedir, exist_ok=True)
               if 'module_dir' in filespec and filespec['module_dir']:
