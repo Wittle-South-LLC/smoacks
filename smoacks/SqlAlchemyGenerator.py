@@ -46,6 +46,8 @@ class SqlAlchemyGenerator:
         # Loop through the properties and update the structure where needed
         properties = self._app_object.getAllProperties()
         for prop in properties:
+            if prop.isId:
+                result['name_id'] = prop.name
             if not prop.isId and not (prop.name in ['record_created', 'record_updated']):
                 result['dmFields'].append(self.getField(prop))
         return result

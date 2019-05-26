@@ -17,7 +17,7 @@
             schema:
               type: object
               properties:
-                {{ snakeName }}_id:
+                {{ name_id }}:
                   type: string
       402:
         description: Object already exists
@@ -36,9 +36,9 @@
               type: array
               items:
                 $ref: '#/components/schemas/{{ identitySchemaName }}'
-/{{ snakeName }}s/{{'{'}}{{ snakeName }}_id{{'}'}}:
+/{{ snakeName }}s/{{'{'}}{{ name_id }}{{'}'}}:
   parameters:
-    - name: {{ snakeName }}_id
+    - name: {{ name_id }}
       description: {{ mixedName }} ID (UUID) on which the operation should be performed
       in: path
       schema:

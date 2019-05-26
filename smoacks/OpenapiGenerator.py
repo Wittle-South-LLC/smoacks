@@ -20,6 +20,10 @@ class OpenapiGenerator:
         }
         result.update(sconfig['env_defaults'])
         # Loop through the properties and update the structure where needed
+        properties = self._app_object.getAllProperties()
+        for prop in properties:
+            if prop.isId:
+                result['name_id'] = prop.name
         return result
 
     def render_to_yaml_obj(self):

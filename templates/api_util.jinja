@@ -62,12 +62,12 @@ def handle_delete(dmo, dmo_pk, session, id):
     """Method to handle DELETE verb for data model object APIs"""
     binary_uuid = uuid.UUID(id).bytes
     find_record = session.query(dmo)\
-                   .filter(dmo.dmo_pk == binary_uuid).one_or_none()
+                   .filter(dmo_pk == binary_uuid).one_or_none()
     if not find_record:
         return 'NOT_FOUND', 404
     session.delete(find_record)
     session.commit()
-    return dmo.__table_name__ + ' deleted', 204
+    return type(dmo).__name__ + ' deleted', 204
 
 def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, data):
     """Method to handle PUT verb for data model object APIs"""
@@ -81,7 +81,7 @@ def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, data):
             setattr(find_record, key, value)
     session.add(find_record)
     session.commit()
-    return dmo.__table_name__ + ' updated', 200
+    return type(dmo).__name__ + ' updated', 200
 
 def handle_get(dmo, dmo_pk, session, id):
     """Method to handle GET verb for data model object APIs"""
