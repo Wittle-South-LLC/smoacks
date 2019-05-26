@@ -15,6 +15,7 @@ class Property:
             self.baseObject = propertyYaml['x-smoacks-base-object'] if 'x-smoacks-base-object' in propertyYaml else False
             self.createOnly = propertyYaml['x-smoacks-create-only'] if 'x-smoacks-create-only' in propertyYaml else False
             self.description = propertyYaml['description'] if 'description' in propertyYaml else None
+            self.editUnitTest = propertyYaml['x-smoacks-edit-unit-test'] if 'x-smoacks-edit-unit-test' in propertyYaml else None
             self.enum = propertyYaml['enum'] if 'enum' in propertyYaml else None
             self.example = propertyYaml['example'] if 'example' in propertyYaml else None
             self.exclusiveMaximum = propertyYaml['exclusiveMaximum'] if 'exclusiveMaximum' in propertyYaml else False
@@ -79,6 +80,28 @@ class Property:
             return 'undefined'
         else:
             return self.example
+
+    # Gets example value in form suitable for Python
+    def getExamplePythonLiteral(self):
+        if self.type == 'string' and self.example:
+            return "'" + self.example + "'"
+        elif self.type == 'object' and self.example:
+            return json.dumps(self.example)
+        elif not self.example:
+            return 'None'
+        else:
+            return self.example
+
+    # Gets example value in form suitable for JavaScript
+    def getUnitTestLiteral(self):
+        if self.type == 'string' and self.editUnitTest:
+            return "'" + self.editUnitTest + "'"
+        elif self.type == 'object' and self.editUnitTest:
+            return json.dumps(self.editUnitTest)
+        elif not self.editUnitTest:
+            return 'None'
+        else:
+            return self.editUnitTest
 
     # Gets invalid value for validation tests
     def getInvalidValue(self):

@@ -25,9 +25,23 @@ class NoseTestGenerator:
             'createObj': self.getCreateObject()
         }
         properties = self._app_object.getAllProperties()
+        getAsserts = []
+        unitTestEditObject = {}
+        unitTestAssert = None
         for prop in properties:
             if prop.isId:
                 result['name_id'] = prop.name
+            # We need to change a value in unit tests of PUT verb
+            elif prop.example:
+                if prop.editUnitTest:
+                    unitTestEditObject[prop.name] = prop.editUnitTest
+                    unitTestAssert = 'assert json["{}"] == {}'.format(prop.name, prop.getUnitTestLiteral())
+                else:
+                    unitTestEditObject[prop.name] = prop.example
+                    getAsserts.append('assert json["{}"] == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+        result['getAsserts'] = getAsserts
+        result['unitTestEditObject'] = str(unitTestEditObject)
+        result['unitTestAssert'] = unitTestAssert
         return result
 
     def render(self):

@@ -24,8 +24,23 @@ def test_{{ snakeName }}_create():
 def test_{{ snakeName }}_get():
     """--> get returns details """
     resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id))
+    log_response_error(resp)
     assert resp.status_code == 200
-    # TODO: Generate validation of all example data
+    json = resp.json()
+    {% for getAssert in getAsserts %}{{ getAssert }}
+    {% endfor %}
+
+def test_{{ snakeName }}_put():
+    """--> put updates object """
+    update_data = {{ unitTestEditObject }}
+    resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName }}s/{}'.format(added_id), update_data)
+    log_response_error(resp)
+    assert resp.status_code == 200
+    resp2 = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id))
+    log_response_error(resp2)
+    assert resp2.status_code == 200
+    json = resp2.json()
+    {{ unitTestAssert }}
 
 def test_{{ snakeName }}_delete():
     """--> delete returns 204"""

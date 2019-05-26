@@ -15,7 +15,7 @@ class AppObject:
     
     def addSchema(self, schema):
         self._schemas.append(schema)
-        if schema.identityObject:
+        if schema.identityObject and not self.identitySchemaName:
             self.identitySchemaName = schema.name
             for prop in schema.getProperties().values():
                 self._properties.append(prop)
