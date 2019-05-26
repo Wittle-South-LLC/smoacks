@@ -19,7 +19,12 @@ with open('conf/smoacks_default.yaml', 'r') as yaml_def_config:
 if os.path.isfile('conf/smoacks.yaml'):
     with open('conf/smoacks.yaml', 'r') as yaml_config:
         custom_config = yaml.load(yaml_config, Loader=yaml.FullLoader)
-        sconfig.update(custom_config)
+        if 'structure' in custom_config:
+            sconfig['structure'].update(custom_config['structure'])
+        if 'env_defaults' in custom_config:
+            sconfig['env_defaults'].update(custom_config['env_defaults'])
+        if 'parameters' in custom_config:
+            sconfig['parameters'].update(custom_config['parameters'])
 
 sconfig['env_defaults']['smoacks_app_name_c'] = sconfig['env_defaults']['smoacks_app_name'].upper()
 sconfig['env_defaults']['smoacks_app_name_k'] = sconfig['env_defaults']['smoacks_app_name'].replace('_', '-')
