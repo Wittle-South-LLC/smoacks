@@ -24,6 +24,10 @@ class NoseTestGenerator:
             'snakeName': self._app_object.getSnakeName(),
             'createObj': self.getCreateObject()
         }
+        properties = self._app_object.getAllProperties()
+        for prop in properties:
+            if prop.isId:
+                result['name_id'] = prop.name
         return result
 
     def render(self):
