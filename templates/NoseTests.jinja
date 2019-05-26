@@ -30,6 +30,17 @@ def test_{{ snakeName }}_get():
     {% for getAssert in getAsserts %}{{ getAssert }}
     {% endfor %}
 
+def test_{{ snakeName }}_search():
+    """--> tests search """
+    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s?search_text=')
+    log_response_error(resp)
+    assert resp.status_code == 200
+    json_list = resp.json()
+    assert len(json_list) == 1
+    json = json_list[0]
+    {% for getAssert in getAsserts %}{{ getAssert }}
+    {% endfor %}
+
 def test_{{ snakeName }}_put():
     """--> put updates object """
     update_data = {{ unitTestEditObject }}
