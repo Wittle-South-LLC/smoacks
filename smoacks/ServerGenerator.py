@@ -17,8 +17,12 @@ class ServerGenerator:
             'gensubdir': sconfig['structure']['gensubdir']
         }
         # Loop through the properties and update the structure where needed
+        set_first_table = False
         for objName in self._app_objects:
             result['dmImports'].append(self.get_import(self._app_objects[objName]))
+            if not set_first_table:
+                set_first_table = True
+                result['first_table_name'] = objName
         return result
 
     def render(self):

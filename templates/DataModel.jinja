@@ -42,12 +42,12 @@ LOGGER.debug('We have created a sessionmaker')
 # Check to see if the schema exists, if not create it
 try:
     LOGGER.debug('Let us check if there is a User table...')
-    if not ENGINE.dialect.has_table(ENGINE, 'User'):
+    if not ENGINE.dialect.has_table(ENGINE, '{{ first_table_name }}'):
         LOGGER.info('No schema, so need to create_all')
         Base.metadata.create_all(ENGINE)
 except exc.SQLAlchemyError: # pragma: no cover
     LOGGER.error('Caught an exception in schema setup: ' + str(exc.SQLAlchemyError))
-LOGGER.debug('We have created or found a User table')
+LOGGER.debug('We have created or found a {{ first_table_name }} table')
 
 def get_session():
     return DBSESSION()
