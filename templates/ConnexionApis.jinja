@@ -22,9 +22,9 @@ def delete({{ name_id }}):
     return handle_delete({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }})
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def put({{ name_id }}, data):
+def put({{ name_id }}, body):
     """Method to handle PUT verb for /{{ name }}/{{ name_id }} endpoint"""
-    return handle_put({{ name }}, {{ name }}.{{ name_id }}, g.db_session, id, data)
+    return handle_put({{ name }}, {{ name }}.{{ name_id }}, '{{ name_id }}', g.db_session, {{ name_id }}, body)
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
 def get({{ name_id}}):

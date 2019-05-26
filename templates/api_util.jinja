@@ -69,14 +69,14 @@ def handle_delete(dmo, dmo_pk, session, id):
     session.commit()
     return type(dmo).__name__ + ' deleted', 204
 
-def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, data):
+def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, body):
     """Method to handle PUT verb for data model object APIs"""
     binary_uuid = uuid.UUID(id).bytes
     find_record = session.query(dmo)\
                    .filter(dmo_pk == binary_uuid).one_or_none()
     if not find_record:
         return 'NOT_FOUND', 404
-    for key, value in data.items():
+    for key, value in body.items():
         if hasattr(find_record, key) and key != dmo_pk_name:
             setattr(find_record, key, value)
     session.add(find_record)
