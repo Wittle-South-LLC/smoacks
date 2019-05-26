@@ -3,7 +3,7 @@ LABEL maintainer="{{ smoacks_app_maintainer }}" project="{{ smoacks_app_name }}"
 COPY requirements.txt app/requirements.txt
 RUN python3.7 -m pip install -r app/requirements.txt
 COPY src/api/* app/api/
-COPY src/dm/* app/dm/
+COPY src/dm/ app/dm/
 COPY src/spec/* app/spec/
 COPY src/util/* app/util/
 COPY src/server_logging.yaml app/

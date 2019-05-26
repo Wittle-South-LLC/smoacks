@@ -24,8 +24,7 @@ class SmoacksStructure:
              'dir': sconfig['structure']['kubedir'],
              'outfile': "dev-api-server.yaml"},
             {'template': 'Dockerfile.jinja',
-             'dir': sconfig['structure']['sourcedir'],
-             'outfile': "Dockerfile"},
+             'outfile': "Dockerfile"}
             {'template': 'gitignore.jinja',
              'outfile': ".gitignore",
              'overwrite': False},
