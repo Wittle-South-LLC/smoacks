@@ -9,7 +9,7 @@ from .base import Base
 
 class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
-    __table_args__ = {'mysql_charset':'utf8'}
+    __tablename__ = '{{ mixedName }}'
     __uuid_list__ = {{ uuid_set }}
     {% for dmField in dmFields %}{{ dmField }}
     {% endfor %}
