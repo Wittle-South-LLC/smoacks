@@ -19,7 +19,7 @@ def setUp():
     create_{{ fkey.name }}_obj = {{ fkey.createObj }}
     resp_{{ fkey.name }} = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ fkey.snakeName }}s', create_{{ fkey.name }}_obj)
     assert resp_{{ fkey.name }}.status_code == 201
-    added{{ fkey.name }} = resp_{{ fkey.name }}.json()['{{ fkey.idField }}']{% endfor %}
+    added_{{ fkey.name }} = resp_{{ fkey.name }}.json()['{{ fkey.idField }}']{% endfor %}
 
 def tearDown():
     {% for fkey in foreignKeys %}
