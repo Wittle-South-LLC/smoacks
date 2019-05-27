@@ -11,14 +11,25 @@ class ConnexionApiGenerator:
     def getJinjaDict(self):
         # Establish constant values and the overall dictionary structure
         result = {
-            'name': self.name
+            'name': self.name,
+            'idList': None,
+            'pkList': None,
+            'idCount': self._app_object._idCount,
+            'hasSearch': False
         }
         # Loop through the properties and update the structure where needed
         properties = self._app_object.getAllProperties()
         for prop in properties:
             if prop.isId:
                 result['name_id'] = prop.name
+                if not result['idList']:
+                    result['idList'] = prop.name
+                    result['pkList'] = self.name + '.' + prop.name
+                else:
+                    result['idList'] += ', ' + prop.name
+                    result['pkList'] += ', ' + self.name + '.' + prop.name
             if prop.searchField:
+                result['hasSearch'] = True
                 result['search_field'] = prop.name
         result.update(sconfig['env_defaults'])
         return result

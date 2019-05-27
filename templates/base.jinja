@@ -17,12 +17,16 @@ class Base(object):
     def __tablename__(cls):
         return cls.__name__
 
+    __uuid_list__ = set()
     __table_args__ = {'mysql_charset':'utf8'}
     record_created = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'))
     record_updated = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'),
                             onupdate=datetime.datetime.now)
+
+    def is_uuid(self, field_name):
+        result = field_name in self.__uuid_list__
 
     def assign_id(self):
         """Initializes the object"""
@@ -38,7 +42,10 @@ class Base(object):
                 continue
             # If the column exists in the field dictionary, update its value
             if column.key in fields:
-                setattr(self, column.key, fields[column.key])
+                if self.is_uuid(column.key):
+                    setattr(self, column.key, uuid.UUID(fields[column.key]).bytes)
+                else:
+                    setattr(self, column.key, fields[column.key])
 
     def get_uuid(self):
         """Returns the text version of the UUID, the binary version is stored in the database"""

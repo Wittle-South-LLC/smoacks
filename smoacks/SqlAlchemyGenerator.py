@@ -11,9 +11,13 @@ class SqlAlchemyGenerator:
     def getField(self, prop):
         if prop.type == 'string':
             if prop.isId:
-                return "{} = Column(BINARY(16), primary_key=True)"
+                fk_text = ", ForeignKey('{}.{}')".format(prop.foreignKey, prop.name) if prop.foreignKey else ""
+                return "{} = Column(BINARY(16){}, primary_key=True)".format(prop.name, fk_text)
             elif prop.format == 'date':
                 return "{} = Column(DateTime)".format(prop.name)
+            elif prop.format == 'uuid':
+                fk_text = ", ForeignKey('{}.{}')".format(prop.foreignKey, prop.name) if prop.foreignKey else ""
+                return "{} = Column(BINARY(16){})".format(prop.name, fk_text)
             elif prop.maxLength and prop.maxLength > 0:
                 return "{} = Column(String({}))".format(prop.name, prop.maxLength)
             else:
@@ -30,6 +34,8 @@ class SqlAlchemyGenerator:
                 return "{} = Column(Integer)".format(prop.name)
         elif prop.type == 'object':
             return "{} = Column(JSON)".format(prop.name)
+        elif prop.type == 'boolean':
+            return "{} = Column(Boolean)".format(prop.name)
         else:
             raise ValueError("Property {} has invalid type {}".format(prop.name, prop.type))
 
@@ -41,15 +47,29 @@ class SqlAlchemyGenerator:
             'mixedName': self.name,
             'dmFields': [],
             'genprefix': sconfig['structure']['genprefix'],
-            'gensubdir': sconfig['structure']['gensubdir']
+            'gensubdir': sconfig['structure']['gensubdir'],
+            'idCount': self._app_object._idCount,
+            'relationships': [],
+            'uuid_set': set()
         }
         # Loop through the properties and update the structure where needed
         properties = self._app_object.getAllProperties()
         for prop in properties:
             if prop.isId:
                 result['name_id'] = prop.name
+                result['dmFields'].append(self.getField(prop))
+                result['uuid_set'].add(prop.name)
             if not prop.isId and not (prop.name in ['record_created', 'record_updated']):
                 result['dmFields'].append(self.getField(prop))
+                if prop.format == 'uuid':
+                    result['uuid_set'].add(prop.name)
+        # Loop through relationships
+        for rel in self._app_object.relationships:
+            result['relationships'].append({
+              'name': rel,
+              'table': self._app_object.relationships[rel]['table'],
+              'field': self._app_object.relationships[rel]['field']
+            })
         return result
 
     def render(self):

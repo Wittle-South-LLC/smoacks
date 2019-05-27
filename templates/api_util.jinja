@@ -46,6 +46,14 @@ def handle_post(dmo, dmo_pk_name, session, body):
     result[dmo_pk_name] = new_record.get_uuid()
     return result, 201
 
+def handle_2key_post(dmo, session, body):
+    """Method to handle POST verbs for many-to-many link object APIs"""
+    new_record = dmo()
+    new_record.apply_update(body)
+    session.add(new_record)
+    session.commit()
+    return {}, 201
+
 def handle_search(dmo, search_field, session, search_text):
     """Method to handle GET verb with no URL parameters"""
     my_search = '%'
@@ -69,6 +77,17 @@ def handle_delete(dmo, dmo_pk, session, id):
     session.commit()
     return type(dmo).__name__ + ' deleted', 204
 
+def handle_2key_delete(dmo, pk1, pk2, session, id1, id2):
+    bid1 = uuid.UUID(id1).bytes
+    bid2 = uuid.UUID(id2).bytes
+    find_record = session.query(dmo)\
+                   .filter(pk1 == bid1, pk2 == bid2).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    session.delete(find_record)
+    session.commit()
+    return type(dmo).__name__ + ' deleted', 204
+
 def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, body):
     """Method to handle PUT verb for data model object APIs"""
     binary_uuid = uuid.UUID(id).bytes
@@ -83,11 +102,32 @@ def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, body):
     session.commit()
     return type(dmo).__name__ + ' updated', 200
 
+def handle_2key_put(dmo, pk1, pk2, session, id1, id2, body)
+    bid1 = uuid.UUID(id1).bytes
+    bid2 = uuid.UUID(id2).bytes
+    find_record = session.query(dmo)\
+                   .filter(pk1 == bid1, pk2 == bid2).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    find_record.apply_update(body)
+    session.add(find_record)
+    session.commit()
+    return type(dmo).__name__ + ' updated', 200
+
 def handle_get(dmo, dmo_pk, session, id):
     """Method to handle GET verb for data model object APIs"""
     binary_uuid = uuid.UUID(id).bytes
     find_record = session.query(dmo)\
                    .filter(dmo_pk == binary_uuid).one_or_none()
+    if not find_record:
+        return 'NOT_FOUND', 404
+    return find_record.dump(True), 200
+
+def handle_2key_get(dmo, pk1, pk2, session, id1, id2)
+    bid1 = uuid.UUID(id1).bytes
+    bid2 = uuid.UUID(id2).bytes
+    find_record = session.query(dmo)\
+                   .filter(pk1 == bid1, pk2 == bid2).one_or_none()
     if not find_record:
         return 'NOT_FOUND', 404
     return find_record.dump(True), 200

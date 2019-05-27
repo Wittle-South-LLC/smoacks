@@ -2,31 +2,38 @@
 """Module to handle /{{ name }}s API endpoint """
 from flask import current_app, g
 from flask_jwt_extended import jwt_required
-from util.api_util import handle_post, handle_search, handle_delete, \
-                          handle_put, handle_get
+{% if idCount == 1 -%}from util.api_util import handle_post, handle_search, handle_delete, \
+                          handle_put, handle_get{% else -%}
+from util.api_util import handle_2key_post, handle_2key_delete, handle_2key_put, \
+                          handle_2key_get{%- endif %}
 from dm.{{ name }} import {{ name }}
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
 def post(body):
     """Method to handle POST verb for /{{name}}s endpoint"""
-    return handle_post({{ name }}, '{{ name_id }}', g.db_session, body)
+    {% if idCount == 1 %}return handle_post({{ name }}, '{{ name_id }}', g.db_session, body){% else -%}
+    return handle_2key_post({{ name }}, g.db_session, body){% endif %}
 
-{% if smoacks_api_security -%}@jwt_required{%- endif %}
+{% if hasSearch %}{% if smoacks_api_security -%}@jwt_required{%- endif %}
 def search(search_text):
     """Method to handle GET verb with no URL parameters"""
     return handle_search({{ name }}, {{ name }}.{{ search_field }}, g.db_session, search_text)
 
+{% endif -%}
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def delete({{ name_id }}):
+def delete({{ idList }}):
     """Method to handle DELETE verb for /{{ name }}/{{ name_id }} endpoint"""
-    return handle_delete({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }})
+    {% if idCount == 1 %}return handle_delete({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }}){% else -%}
+    return handle_2key_delete({{ name }}, {{ pkList }}, g.db_session, {{ idList}}){% endif %}
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def put({{ name_id }}, body):
+def put({{ idList }}, body):
     """Method to handle PUT verb for /{{ name }}/{{ name_id }} endpoint"""
-    return handle_put({{ name }}, {{ name }}.{{ name_id }}, '{{ name_id }}', g.db_session, {{ name_id }}, body)
+    {% if idCount == 1 %}return handle_put({{ name }}, {{ name }}.{{ name_id }}, '{{ name_id }}', g.db_session, {{ name_id }}, body){% else -%}
+    return handle_2key_put({{ name }}, {{ pkList }}, g.db_session, {{ idList}}, body){% endif %}
 
 {% if smoacks_api_security -%}@jwt_required{%- endif %}
-def get({{ name_id}}):
+def get({{ idList }}):
     """Method to handle GET verb for /{{ name }}/{{ name_id }} endpoint"""
-    return handle_get({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }})
+    {% if idCount == 1 %}return handle_get({{ name }}, {{ name }}.{{ name_id }}, g.db_session, {{ name_id }}){% else -%}
+    return handle_2key_get({{ name }}, {{ pkList }}, g.db_session, {{ idList}}){% endif %}

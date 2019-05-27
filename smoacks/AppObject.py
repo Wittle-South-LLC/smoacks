@@ -9,16 +9,24 @@ class AppObject:
         self.description = desc if desc else name
         self._schemas = []
         self._properties = []
+        self._idCount = 0
+        self._idProperty = None
         self.identitySchemaName = None
         self.extendedSchemaName = None
         self.emitTestData = False
+        self.relationships = None
     
     def addSchema(self, schema):
         self._schemas.append(schema)
         if schema.identityObject and not self.identitySchemaName:
             self.identitySchemaName = schema.name
+            if schema.relationships:
+                self.relationships = schema.relationships
             for prop in schema.getProperties().values():
                 self._properties.append(prop)
+                if prop.isId:
+                    self._idProperty = prop
+                    self._idCount += 1
         if schema.extendedObject:
             self.extendedSchemaName = schema.name
     
@@ -30,6 +38,14 @@ class AppObject:
     
     def getMixedName(self):
         return to_mixedcase(self.name)
+
+    def getCreateObject(self):
+        # Loop through the properties and update the structure where needed
+        result = {}
+        for prop in self._properties:
+            if not prop.isId or self._idCount > 1:
+                result[prop.name] = prop.example
+        return result
 
     def getAllProperties(self):
         return self._properties

@@ -41,28 +41,6 @@ components:
         type: string
         maxLength: 40
   schemas:
-    BrowserError:
-      type: object
-      required:
-        - short_message
-        - full_message
-        - user_id
-      properties:
-        user_id:
-          type: string
-          description: Unique user identifier
-          minLength: 2
-          maxLength: 200
-        short_message:
-          type: string
-          description: Short error message
-          minLength: 2
-          maxLength: 80
-        full_message:
-          type: string
-          description: Full message (with stack trace)
-          minLength: 2
-          maxLength: 4000
     Error:
       type: object
       properties:
@@ -75,11 +53,81 @@ components:
         error_code:
           type: integer
           description: Error code (equivalent to HTTP status code)
+    Group:
+      type: object
+      x-smoacks-create: Group
+      x-smoacks-test-data: False
+      x-smoacks-relationships:
+        users:
+          table: UserMember
+          field: group
+      description: Group of users
+      properties:
+        group_id:
+          type: string
+          x-smoacks-model-id: true
+          description: Unique group identifier
+          readOnly: True
+          minLength: 12
+          maxLength: 40
+          format: uuid
+          example: b5665877-f9ee-4074-a38b-39219cde6b70
+        name:
+          type: string
+          description: Description of the group
+          minLength: 4
+          maxLength: 80
+          example: app-users
+          x-smoacks-search-field: True
+    UserMember:
+      type: object
+      x-smoacks-create: UserMember
+      x-smoacks-test-data: False
+      x-smoacks-relationships:
+        user:
+          table: User
+          field: groups
+        group:
+          table: Group
+          field: users
+      description: Membership of user in a group
+      properties:
+        user_id:
+          type: string
+          x-smoacks-model-id: true
+          x-smoacks-foreign-key: User.user_id
+          description: Unique user identifier
+          readOnly: True
+          minLength: 12
+          maxLength: 40
+          format: uuid
+          example: b5665877-f9ee-4074-a38b-39219cde6b67
+        group_id:
+          type: string
+          x-smoacks-model-id: true
+          x-smoacks-foreign-key: Group.group_id
+          description: Unique group identifier
+          readOnly: True
+          minLength: 12
+          maxLength: 40
+          format: uuid
+          example: b5665877-f9ee-4074-a38b-39219cde6b70
+        is_owner:
+          type: boolean
+          description: Indicates if the user is the owner of this group
+          example: false
+        is_admin:
+          type: boolean
+          description: Indicates if the user is an administrator of this group
+          example: false
     User:
       type: object
       x-smoacks-create: User
-      x-smoacks-extended: User
       x-smoacks-test-data: False
+      x-smoacks-relationships:
+        groups:
+          table: UserMember
+          field: user
       description: User
       required:
         - username
@@ -91,6 +139,7 @@ components:
           readOnly: True
           minLength: 12
           maxLength: 40
+          format: uuid
           example: b5665877-f9ee-4074-a38b-39219cde6b67
         username:
           type: string

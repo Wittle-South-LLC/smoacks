@@ -9,7 +9,24 @@ from .TestUtil import get_active_session, get_response_with_jwt, log_response_er
 
 TEST_SESSION = get_active_session()
 added_id = -1
+{% if foreignKeys|length > 0 -%}
+{% for fkey in foreignKeys -%}
+added_{{ fkey.name }} = -1
+{% endfor %}
+def setUp():
+    {% for fkey in foreignKeys %}
+    global added_{{ fkey.name }}
+    create_{{ fkey.name }}_obj = {{ fkey.createObj }}
+    resp_{{ fkey.name }} = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ fkey.snakeName }}s', create_{{ fkey.name }}_obj)
+    assert resp_{{ fkey.name }}.status_code == 201
+    added{{ fkey.name }} = resp_{{ fkey.name }}.json()['{{ fkey.idField }}']{% endfor %}
 
+def tearDown():
+    {% for fkey in foreignKeys %}
+    global added_{{ fkey.name }}
+    resp_{{ fkey.name }} = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ fkey.snakeName }}s/{}'.format(added_{{ fkey.name }}))
+    assert resp_{{ fkey.name }}.status_code == 204{% endfor %}
+{% endif %}
 def test_{{ snakeName }}_create():
     """{{ name }}APIs: Test create API"""
     #pylint: disable=W0603
@@ -17,19 +34,20 @@ def test_{{ snakeName }}_create():
     create_obj = {{ createObj }}
     resp = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ snakeName }}s', create_obj)
     assert resp.status_code == 201
-    json = resp.json()
+    {% if idCount == 1 %}json = resp.json()
     assert json['{{ name_id }}']
-    added_id = json['{{ name_id }}']
+    added_id = json['{{ name_id }}']{% endif %}
 
 def test_{{ snakeName }}_get():
     """--> get returns details """
-    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id))
+    {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
+    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName }}s/{}'.format({{ idsString }})){% endif %}
     log_response_error(resp)
     assert resp.status_code == 200
     json = resp.json()
     {% for getAssert in getAsserts %}{{ getAssert }}
     {% endfor %}
-
+{% if hasSearch -%}
 def test_{{ snakeName }}_search():
     """--> tests search """
     resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s?search_text=')
@@ -39,15 +57,17 @@ def test_{{ snakeName }}_search():
     assert len(json_list) == 1
     json = json_list[0]
     {% for getAssert in getAsserts %}{{ getAssert }}
-    {% endfor %}
+    {% endfor %}{% endif %}
 
 def test_{{ snakeName }}_put():
     """--> put updates object """
     update_data = {{ unitTestEditObject }}
-    resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName }}s/{}'.format(added_id), update_data)
+    {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName}}s/{}'.format(added_id), update_data){% else %}
+    resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName }}s/{}'.format({{ idsString }}), update_data){% endif %}
     log_response_error(resp)
     assert resp.status_code == 200
-    resp2 = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id))
+    {% if idCount == 1 %}resp2 = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
+    resp2 = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName }}s/{}'.format({{ idsString }})){% endif %}
     log_response_error(resp2)
     assert resp2.status_code == 200
     json = resp2.json()
@@ -55,6 +75,7 @@ def test_{{ snakeName }}_put():
 
 def test_{{ snakeName }}_delete():
     """--> delete returns 204"""
-    resp = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ snakeName }}s/{}'.format(added_id))
+    {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
+    resp = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ snakeName }}s/{}'.format({{ idsString }})){% endif %}
     log_response_error(resp)
     assert resp.status_code == 204

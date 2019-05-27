@@ -1,39 +1,33 @@
 """{{ mixedName }}.py - Module containing the {{ mixedName }} class"""
 import uuid
 import datetime
-from sqlalchemy import Column, DateTime, JSON, String, text
+from sqlalchemy import Boolean, Column, ForeignKey, DateTime, JSON, String, text
 from sqlalchemy.dialects.mysql import BINARY
+{% if relationships|length > 0 %}from sqlalchemy.orm import relationship{% endif %}
 
 from .base import Base
 
 class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
-    __tablename__ = '{{ mixedName }}'
     __table_args__ = {'mysql_charset':'utf8'}
-    {{ name_id }} = Column(BINARY(16), primary_key=True)
+    __uuid_list__ = {{ uuid_set }}
     {% for dmField in dmFields %}{{ dmField }}
     {% endfor %}
-    record_created = Column(DateTime,
-                            server_default=text('CURRENT_TIMESTAMP'))
-    record_updated = Column(DateTime,
-                            server_default=text('CURRENT_TIMESTAMP'),
-                            onupdate=datetime.datetime.now)
-
+    {% for rel in relationships %}{{ rel.name }} = relationship('{{ rel.table }}', back_populates='{{ rel.field }}')
+    {% endfor %}
+{% if idCount == 1 %}
     def __init__(self, **kwargs):
         """Initializes the ID for newly constructed objects"""
         super({{ genprefix}}{{ mixedName }}, self).__init__(**kwargs)
         self.{{ name_id }} = uuid.uuid4().bytes
-
-    def get_uuid(self):
-        """Returns the text version of the UUID, the binary version is stored in the database"""
-        return str(uuid.UUID(bytes=self.{{ name_id }}))
+{% endif %}
 
     def dump(self, deep=False):
         """Returns dictionary of fields and values"""
         ret = {}
         for key, value in vars(self).items():
-            if key == '{{ name_id }}':
-                ret[key] = self.get_uuid()
+            if key in self.__uuid_list__:
+                ret[key] = str(uuid.UUID(value))
             elif not key.startswith('_'):
                 ret[key] = value
         return ret

@@ -13,10 +13,12 @@ class OpenapiGenerator:
         # Establish constant values and the overall dictionary structure
         result = {
             'name': self.name,
+            'idList': [],
             'snakeName': self._app_object.getSnakeName(),
             'mixedName': self.name,
             'identitySchemaName': self._app_object.identitySchemaName,
-            'extendedSchemaName': self._app_object.extendedSchemaName
+            'extendedSchemaName': self._app_object.extendedSchemaName,
+            'hasSearch': False
         }
         result.update(sconfig['env_defaults'])
         # Loop through the properties and update the structure where needed
@@ -24,6 +26,9 @@ class OpenapiGenerator:
         for prop in properties:
             if prop.isId:
                 result['name_id'] = prop.name
+                result['idList'].append(prop.name)
+            if prop.searchField:
+                result['hasSearch'] = True
         return result
 
     def render_to_yaml_obj(self):
@@ -31,5 +36,7 @@ class OpenapiGenerator:
             loader = FileSystemLoader('templates')
         )
         template = env.get_template('ModelAPIs.jinja')
-        result = yaml.load(template.render(self.getJinjaDict()), Loader=yaml.FullLoader)
+        rendered_string = template.render(self.getJinjaDict())
+#        print('rendered_string = ', rendered_string)
+        result = yaml.load(rendered_string, Loader=yaml.FullLoader)
         return result

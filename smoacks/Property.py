@@ -20,6 +20,7 @@ class Property:
             self.example = propertyYaml['example'] if 'example' in propertyYaml else None
             self.exclusiveMaximum = propertyYaml['exclusiveMaximum'] if 'exclusiveMaximum' in propertyYaml else False
             self.exclusiveMinimum = propertyYaml['exclusiveMinimum'] if 'exclusiveMinimum' in propertyYaml else False
+            self.foreignKey = propertyYaml['x-smoacks-foreign-key'] if 'x-smoacks-foreign-key' in propertyYaml else None
             self.format = propertyYaml['format'] if 'format' in propertyYaml else None
             self.isId = propertyYaml['x-smoacks-model-id'] if 'x-smoacks-model-id' in propertyYaml else False
             self.maximum = propertyYaml['maximum'] if 'maximum' in propertyYaml else None
@@ -87,7 +88,7 @@ class Property:
             return "'" + self.example + "'"
         elif self.type == 'object' and self.example:
             return json.dumps(self.example)
-        elif not self.example:
+        elif self.example == None:
             return 'None'
         else:
             return self.example
