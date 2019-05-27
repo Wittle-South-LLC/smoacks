@@ -102,7 +102,7 @@ def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, body):
     session.commit()
     return type(dmo).__name__ + ' updated', 200
 
-def handle_2key_put(dmo, pk1, pk2, session, id1, id2, body)
+def handle_2key_put(dmo, pk1, pk2, session, id1, id2, body):
     bid1 = uuid.UUID(id1).bytes
     bid2 = uuid.UUID(id2).bytes
     find_record = session.query(dmo)\
@@ -123,7 +123,7 @@ def handle_get(dmo, dmo_pk, session, id):
         return 'NOT_FOUND', 404
     return find_record.dump(True), 200
 
-def handle_2key_get(dmo, pk1, pk2, session, id1, id2)
+def handle_2key_get(dmo, pk1, pk2, session, id1, id2):
     bid1 = uuid.UUID(id1).bytes
     bid2 = uuid.UUID(id2).bytes
     find_record = session.query(dmo)\
