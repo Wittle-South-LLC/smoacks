@@ -11,6 +11,7 @@ class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
     __tablename__ = '{{ mixedName }}'
     __uuid_list__ = {{ uuid_set }}
+    __primary_key__ = '{{ name_id }}'
     {% for dmField in dmFields %}{{ dmField }}
     {% endfor %}
     {% for rel in relationships %}{{ rel.name }} = relationship('{{ rel.table }}', back_populates='{{ rel.field }}')

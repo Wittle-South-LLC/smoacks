@@ -18,6 +18,7 @@ class Base(object):
         return cls.__name__
 
     __uuid_list__ = set()
+    __primary_key__ = to_snakecase(type(self).__name__) + '_id'
     __table_args__ = {'mysql_charset':'utf8'}
     record_created = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'))
@@ -31,7 +32,7 @@ class Base(object):
     def assign_id(self):
         """Initializes the object"""
         LOGGER.info('assign_id for {}'.format(type(self).__name__))
-        setattr(self, to_snakecase(type(self).__name__) + '_id', uuid.uuid4().bytes)
+        setattr(self, self.__primary_key__, uuid.uuid4().bytes)
 
     def apply_update(self, fields):
         """Applies a dict to the fields in this object"""
@@ -49,6 +50,6 @@ class Base(object):
 
     def get_uuid(self):
         """Returns the text version of the UUID, the binary version is stored in the database"""
-        return str(uuid.UUID(bytes=getattr(self, to_snakecase(type(self).__name__) + '_id')))
+        return str(uuid.UUID(bytes=getattr(self, self.__primary_key__)))
 
 Base = declarative_base(cls=Base)
