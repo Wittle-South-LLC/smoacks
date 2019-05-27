@@ -131,7 +131,7 @@ def after_request(resp):
     # If we have a valid response, create a new access_token to
     # reset the 15 minute clock
     if (resp.status_code) < 400 and 'user' in g and\
-       not request.path in ['/api/v1/logout', '/api/v1/shutdown']:
+       not request.path in ['{{ smoacks_api_path }}/logout', '{{ smoacks_api_path }}/shutdown']:
         access_token = create_access_token(identity=g.user.get_uuid())
         set_access_cookies(resp, access_token, int(datetime.timedelta(minutes=30).total_seconds()))
     g.db_session.close()
