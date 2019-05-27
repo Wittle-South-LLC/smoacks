@@ -34,6 +34,7 @@ def test_{{ snakeName }}_create():
     create_obj = {{ createObj }}
     {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}create_obj['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
     resp = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ snakeName }}s', create_obj)
+    log_response_error(resp)
     assert resp.status_code == 201
     {% if idCount == 1 %}json = resp.json()
     assert json['{{ name_id }}']
