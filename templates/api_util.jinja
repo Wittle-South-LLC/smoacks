@@ -93,9 +93,7 @@ def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, body):
                    .filter(dmo_pk == binary_uuid).one_or_none()
     if not find_record:
         return 'NOT_FOUND', 404
-    for key, value in body.items():
-        if hasattr(find_record, key) and key != dmo_pk_name:
-            setattr(find_record, key, value)
+    find_record.apply_update(body)
     session.add(find_record)
     session.commit()
     return type(dmo).__name__ + ' updated', 200

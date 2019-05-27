@@ -49,7 +49,10 @@ class NoseTestGenerator:
                     getAsserts.append('assert json["{}"] == {}'.format(prop.name, prop.getExamplePythonLiteral()))
                 else:
                     unitTestEditObject[prop.name] = prop.example
-                    getAsserts.append('assert json["{}"] == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+                    if prop.foreignKey:
+                        getAsserts.append('assert json["{}"] == added_{}'.format(prop.name, prop.name))
+                    else:
+                        getAsserts.append('assert json["{}"] == {}'.format(prop.name, prop.getExamplePythonLiteral()))
         result['getAsserts'] = getAsserts
         result['unitTestEditObject'] = str(unitTestEditObject)
         result['unitTestAssert'] = unitTestAssert

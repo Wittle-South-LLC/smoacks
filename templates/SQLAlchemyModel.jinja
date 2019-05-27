@@ -28,7 +28,7 @@ class {{ genprefix}}{{ mixedName }}(Base):
         ret = {}
         for key, value in vars(self).items():
             if key in self.__uuid_list__:
-                ret[key] = str(uuid.UUID(value))
+                ret[key] = str(uuid.UUID(bytes=value))
             elif not key.startswith('_'):
                 ret[key] = value
         return ret

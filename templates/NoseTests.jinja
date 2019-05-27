@@ -63,6 +63,7 @@ def test_{{ snakeName }}_search():
 def test_{{ snakeName }}_put():
     """--> put updates object """
     update_data = {{ unitTestEditObject }}
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}update_data['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
     {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName}}s/{}'.format(added_id), update_data){% else %}
     resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName }}s/{}'.format({{ idsString }}), update_data){% endif %}
     log_response_error(resp)
