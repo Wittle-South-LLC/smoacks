@@ -28,7 +28,7 @@ class Base(object):
                             onupdate=datetime.datetime.now)
 
     def is_uuid(self, field_name):
-        result = field_name in self.__uuid_list__
+        return field_name in self.__uuid_list__
 
     def assign_id(self):
         """Initializes the object"""
