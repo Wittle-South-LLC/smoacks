@@ -16,9 +16,10 @@ class Base(object):
     @declared_attr
     def __tablename__(cls):
         return cls.__name__
-
+    @declared_attr
+    def __primary_key__(cls):
+        return to_snakecase(cls.__name__) + '_id'
     __uuid_list__ = set()
-    __primary_key__ = to_snakecase(type(self).__name__) + '_id'
     __table_args__ = {'mysql_charset':'utf8'}
     record_created = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'))
