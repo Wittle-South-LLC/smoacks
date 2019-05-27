@@ -37,9 +37,7 @@ def api_error_msg(msg_key, msg_text):
 def handle_post(dmo, dmo_pk_name, session, body):
     """Method to handle POST verbs for data model object APIs"""
     new_record = dmo()
-    for key, value in body.items():
-        if hasattr(new_record, key) and key != dmo_pk_name:
-            setattr(new_record, key, value)
+    new_record.apply_update(body)
     session.add(new_record)
     session.commit()
     result = {}
