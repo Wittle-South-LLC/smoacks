@@ -38,9 +38,10 @@ class NoseTestGenerator:
             if prop.isId:
                 result['name_id'] = prop.name
                 if not result['idsString']:
-                    result['idsString'] = 'added_{}'.format(prop.name)
+                    result['idsString'] = 'added_{}'.format(prop.name) if prop.foreignKey else prop.example
                 else:
-                    result['idsString'] += ',' + 'added_{}'.format(prop.name)
+                    result['idsString'] += ','
+                    result['idsString'] += 'added_{}'.format(prop.name) if prop.foreignKey else prop.example
             # We need to change a value in unit tests of PUT verb
             elif prop.example != None:
                 if prop.editUnitTest:

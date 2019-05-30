@@ -42,6 +42,7 @@ def test_{{ snakeName }}_create():
 
 def test_{{ snakeName }}_get():
     """--> get returns details """
+    global added_id
     {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.name }}{% endfor %}{% endif %}
     {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
     resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName }}s/{}'.format({{ idsString }})){% endif %}
@@ -65,6 +66,7 @@ def test_{{ snakeName }}_search():
 
 def test_{{ snakeName }}_put():
     """--> put updates object """
+    global added_id
     {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.name }}{% endfor %}{% endif %}
     update_data = {{ unitTestEditObject }}
     {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}update_data['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
