@@ -43,7 +43,7 @@ class NoseTestGenerator:
                     result['idsString'] += ','
                     result['idsString'] += 'added_{}'.format(prop.name) if prop.foreignKey else "'{}'".format(prop.example)
             # We need to change a value in unit tests of PUT verb
-            elif prop.example != None:
+            elif prop.example != None and not prop.readOnly:
                 if prop.editUnitTest:
                     unitTestEditObject[prop.name] = prop.editUnitTest
                     unitTestAssert = 'assert json["{}"] == {}'.format(prop.name, prop.getUnitTestLiteral())
