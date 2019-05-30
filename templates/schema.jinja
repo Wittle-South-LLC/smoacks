@@ -79,6 +79,18 @@ components:
           maxLength: 80
           example: app-users
           x-smoacks-search-field: True
+        record_created:
+          type: string
+          format: date
+          description: Record creation date
+          readOnly: True
+          example: '1995-08-19T00:00:00.000Z'
+        record_updated:
+          type: string
+          format: date
+          description: Record update date
+          readOnly: true
+          example: '1995-08-19T00:00:00.001Z'
     UserMember:
       type: object
       x-smoacks-create: UserMember
@@ -95,7 +107,7 @@ components:
         user_id:
           type: string
           x-smoacks-model-id: true
-          x-smoacks-foreign-key: User.user_id
+          x-smoacks-foreign-key: User
           description: Unique user identifier
           readOnly: True
           minLength: 12
@@ -105,7 +117,7 @@ components:
         group_id:
           type: string
           x-smoacks-model-id: true
-          x-smoacks-foreign-key: Group.group_id
+          x-smoacks-foreign-key: Group
           description: Unique group identifier
           readOnly: True
           minLength: 12
@@ -120,6 +132,18 @@ components:
           type: boolean
           description: Indicates if the user is an administrator of this group
           example: false
+        record_created:
+          type: string
+          format: date
+          description: Record creation date
+          readOnly: True
+          example: '1995-08-19T00:00:00.000Z'
+        record_updated:
+          type: string
+          format: date
+          description: Record update date
+          readOnly: true
+          example: '1995-08-19T00:00:00.001Z'
     User:
       type: object
       x-smoacks-create: User
@@ -160,6 +184,15 @@ components:
           minLength: 2
           maxLength: 80
           example: 'Tester'
+        enum_test:
+          type: string
+          description: Testing enum generation
+          minLength: 2
+          maxLength: 40
+          enum:
+            - Value1
+            - Value2
+          example: Value1
         full_name:
           type: string
           description: Full Name
@@ -184,3 +217,16 @@ components:
           description: User Preferences
           type: object
           example: {'color': 'red'}
+        record_created:
+          type: string
+          format: date
+          description: Record creation date
+          readOnly: True
+          example: '1995-08-19T00:00:00.000Z'
+        record_updated:
+          type: string
+          format: date
+          description: Record update date
+          readOnly: true
+          example: '1995-08-19T00:00:00.001Z'
+

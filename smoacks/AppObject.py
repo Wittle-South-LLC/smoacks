@@ -43,7 +43,7 @@ class AppObject:
         # Loop through the properties and update the structure where needed
         result = {}
         for prop in self._properties:
-            if not prop.isId or self._idCount > 1:
+            if (not prop.isId or self._idCount > 1) and not prop.readOnly:
                 result[prop.name] = prop.example
         return result
 
