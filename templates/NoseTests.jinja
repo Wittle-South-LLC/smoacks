@@ -42,6 +42,7 @@ def test_{{ snakeName }}_create():
 
 def test_{{ snakeName }}_get():
     """--> get returns details """
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}create_obj['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
     {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
     resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName }}s/{}'.format({{ idsString }})){% endif %}
     log_response_error(resp)
@@ -52,6 +53,7 @@ def test_{{ snakeName }}_get():
 {% if hasSearch -%}
 def test_{{ snakeName }}_search():
     """--> tests search """
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}create_obj['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
     resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s?search_text=')
     log_response_error(resp)
     assert resp.status_code == 200
@@ -63,6 +65,7 @@ def test_{{ snakeName }}_search():
 
 def test_{{ snakeName }}_put():
     """--> put updates object """
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}create_obj['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
     update_data = {{ unitTestEditObject }}
     {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}update_data['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
     {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName}}s/{}'.format(added_id), update_data){% else %}
