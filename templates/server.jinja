@@ -97,7 +97,10 @@ def user_loader_callback(identity):
 @JWT.claims_verification_loader
 def claims_verification_loader(claims):
     """Callback to get claims from token and make them globally available for the request"""
-    g.user_groups = claims['groups']
+    LOGGER.info('User claims: {}'.str(claims))
+    if 'groups' in claims:
+        g.user_groups = claims['groups']
+    return True
 
 # Need to make sure that the use of the database session is
 # scoped to the request to avoid open orm transactions between requests
