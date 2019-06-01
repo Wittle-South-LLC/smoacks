@@ -97,7 +97,7 @@ def user_loader_callback(identity):
 @JWT.claims_verification_loader
 def claims_verification_loader(claims):
     """Callback to get claims from token and make them globally available for the request"""
-    LOGGER.info('User claims: {}'.str(claims))
+    LOGGER.info('User claims: {}'.format(str(claims)))
     if 'groups' in claims:
         g.user_groups = claims['groups']
     return True
