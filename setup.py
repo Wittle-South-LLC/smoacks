@@ -1,5 +1,8 @@
 from setuptools import setup
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setup(name='smoacks',
       version='0.2.5',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
@@ -47,4 +50,6 @@ setup(name='smoacks',
           'console_scripts': ['smoacks-setup=smoacks.command_line:main',
                               'smoacks-gen=smoacks.command_line:gen']
       },
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       zip_safe=False)
