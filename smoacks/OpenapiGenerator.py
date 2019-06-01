@@ -3,6 +3,7 @@ import os
 from jinja2 import Environment, Template, FileSystemLoader
 import yaml
 from smoacks.sconfig import sconfig
+from smoacks.Schema import scr_schemas
 
 class OpenapiGenerator:
     def __init__(self, app_object):
@@ -11,6 +12,7 @@ class OpenapiGenerator:
 
     def getJinjaDict(self):
         # Establish constant values and the overall dictionary structure
+        ao = self._app_object
         result = {
             'name': self.name,
             'idList': [],
@@ -18,7 +20,17 @@ class OpenapiGenerator:
             'mixedName': self.name,
             'identitySchemaName': self._app_object.identitySchemaName,
             'extendedSchemaName': self._app_object.extendedSchemaName,
-            'hasSearch': False
+            'hasSearch': False,
+            'paramVerbSchema': {
+                'post': ao._paramVerbs['post'] if 'post' in ao._paramVerbs else ao.identitySchemaName,
+                'search': 'schemas/{}'.format(ao._paramVerbs['search']) if 'search' in ao._paramVerbs else 'parameters/search_text',
+                'getVerb': ao._paramVerbs['get'] if 'get' in ao._paramVerbs else ao.identitySchemaName,
+                'put': ao._paramVerbs['put'] if 'put' in ao._paramVerbs else ao.identitySchemaName
+            },
+            'respVerbSchema': {
+                'search': ao._respVerbs['search'] if 'search' in ao._respVerbs else ao.identitySchemaName,
+                'getVerb': ao._respVerbs['get'] if 'get' in ao._respVerbs else ao.identitySchemaName
+            },
         }
         result.update(sconfig['env_defaults'])
         # Loop through the properties and update the structure where needed

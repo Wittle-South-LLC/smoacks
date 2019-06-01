@@ -60,15 +60,29 @@ def generate_code():
         # If this schema object updates an AppObject, then create it
         # (if needed), and set the update object property on it
         if scr_schemas[schema].updateObject:
+            print("--> Update Object!")
             objectName = scr_schemas[schema].updateObject
             if objectName not in scr_objects:
                 scr_objects[objectName] = AppObject(objectName, objectDesc)
             scr_objects[objectName].addSchema(scr_schemas[schema])
         if scr_schemas[schema].extendedObject:
+            print("--> Extended Object!")
             objectName = scr_schemas[schema].extendedObject
             if objectName not in scr_objects:
                 scr_objects[objectName] = AppObject(objectName, objectDesc)
             scr_objects[objectName].addSchema(scr_schemas[schema])
+
+    # Now that we know all of the app objects are created, walk through the
+    # schemas again to see if there are any to use for parameters or responses
+    # for specific verbs
+    for schemaName in scr_schemas:
+        schema = scr_schemas[schemaName]
+        if schema.paramVerb:
+            app_object = scr_objects[schema.appObject]
+            app_object.addParamVerb(schema)
+        if schema.respVerb:
+            app_object = scr_objects[schema.appObject]
+            app_object.addRespVerb(schema)
 
     # If the parameters say to not include login, remove it from the path output
     if not sconfig['parameters']['include_shutdown']:

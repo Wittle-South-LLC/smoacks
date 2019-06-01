@@ -35,6 +35,15 @@ The following tags have special meanings for SMOACKS application generation
       beyond those provided in the schema tagged with x-smoacks-create
     - **x-smoacks-fk-relationships** - Defines SQLAlchemy relationships to create
       for the data model object.
+    - **x-smoacks-api-verb-param** - Identifies a schema object that should be the
+      parameter for an API verb for the object specified by **x-smoacks-object**
+      on the same schema. Applies only to POST, SEARCH, GET, PUT verbs.
+    - **x-smoacks-api-verb-resp** - Identifies a schema object that should be the
+      response for an API verb for the object specified by **x-smoacks-object**
+      on the same schema. Applies only to SEARCH and GET verbs.
+    - **x-smoacks-object** - Identifies the data model object associated with a
+      schema. Ignored if **x-smoacks-create** or **x-smoacks-extended** is attached
+      to the same schema. 
 - Property Tags
     - **x-smoacks-model-id** - Boolean flagging a property in the schema as the
       primary key for the data model object set in the schema

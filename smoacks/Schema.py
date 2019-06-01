@@ -20,6 +20,9 @@ class Schema:
         self.identityObject = self._yaml['x-smoacks-create'] if 'x-smoacks-create' in self._yaml else None
         self.extendedObject = self._yaml['x-smoacks-extended'] if 'x-smoacks-extended' in self._yaml else None
         self.updateObject = self._yaml['x-smoacks-update'] if 'x-smoacks-update' in self._yaml else None
+        self.appObject = self._yaml['x-smoacks-object'] if 'x-smoacks-object' in self._yaml else None
+        self.paramVerb = self._yaml['x-smoacks-api-verb-param'] if 'x-smoacks-api-verb-param' in self._yaml else None
+        self.respVerb = self._yaml['x-smoacks-api-verb-resp'] if 'x-smoacks-api-verb-resp' in self._yaml else None
         self.emitTestData = self._yaml['x-smoacks-test-data'] if 'x-smoacks-test-data' in self._yaml else True
         self.relationships = self._yaml['x-smoacks-relationships'] if 'x-smoacks-relationships' in self._yaml else None
         propertiesYaml = None

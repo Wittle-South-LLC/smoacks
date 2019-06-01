@@ -9,6 +9,8 @@ class AppObject:
         self.description = desc if desc else name
         self._schemas = []
         self._properties = []
+        self._paramVerbs = {}
+        self._respVerbs = {}
         self._idCount = 0
         self._idProperty = None
         self.identitySchemaName = None
@@ -29,7 +31,13 @@ class AppObject:
                     self._idCount += 1
         if schema.extendedObject:
             self.extendedSchemaName = schema.name
-    
+
+    def addParamVerb(self, schema):
+        self._paramVerbs[schema.paramVerb] = schema.name
+
+    def addRespVerb(self, schema):
+        self._respVerbs[schema.respVerb] = schema.name
+
     def getSnakeName(self):
         return to_snakecase(self.name)
     

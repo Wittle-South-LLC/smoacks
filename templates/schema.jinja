@@ -53,6 +53,19 @@ components:
         error_code:
           type: integer
           description: Error code (equivalent to HTTP status code)
+    GroupExtended:
+      x-smoacks-api-verb-param: post
+      x-smoacks-api-verb-resp: get
+      x-smoacks-object: Group
+      allOf:
+        - $ref: '#/components/schemas/Group'
+        - type: object
+          properties:
+            test_value:
+              type: string
+              minLength: 2
+              maxLength: 20
+              example: test property for extended schema
     Group:
       type: object
       x-smoacks-create: Group
