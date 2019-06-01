@@ -12,7 +12,7 @@ TEST_SESSION = get_active_session()
 
 def test_login():
     """LoginAPI: Test login API"""
-    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/login')
+    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/login', None, True)
     log_response_error(resp)
     assert resp.status_code == 200
     json = resp.json()

@@ -32,16 +32,24 @@ def get_active_session():
     my_session = requests.session()
     access_token = None
     csrf_token = None
+    my_identity = uuid.UUID(bytes=uuid.uuid4().bytes)
     with APP.app_context():
-        access_token = create_access_token(identity=uuid.UUID(bytes=uuid.uuid4().bytes))
+        access_token = create_access_token(identity=my_identity)
+        refresh_token = create_refresh_token(identity=my_identity)
         csrf_token = get_csrf_token(access_token)
+        csrf_refresh_token = get_csrf_token(refresh_token)
     print('access_token: ', str(access_token))
     print('csrf_token: ', str(csrf_token))
+    print('refresh_token: ', str(refresh_token))
+    print('csrf_refresh_token: ', str(csrf_refresh_token))
     my_access_cookie = requests.cookies.create_cookie(name='access_token_cookie', value=access_token, domain=os.environ['TEST_HOST'])
     my_session.cookies.set_cookie(my_access_cookie)
+    my_refresh_cookie = requests.cookies.create_cookie(name='refresh_token_cookie', value=refresh_token, domain=os.environ['TEST_HOST'])
+    my_session.cookies.set_cookie(my_refresh_cookie)
     return {
         'session': my_session,
-        'csrf_token': csrf_token
+        'csrf_token': csrf_token,
+        'csrf_refresh_token': csrf_refresh_token
     }
 
 def get_refresh_session():
