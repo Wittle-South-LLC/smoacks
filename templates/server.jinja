@@ -87,6 +87,18 @@ FAPP.config['JWT_COOKIE_CSRF_PROTECT'] = True
 # state change operations
 FAPP.config['JWT_CSRF_METHODS'] = ['POST', 'PUT', 'PATCH', 'DELETE', 'GET']
 
+# This method ensures that we have a user object both in global and
+# in the current_user proxy from flask-jwt-extended
+@JWT.user_loader_callback_loader
+def user_loader_callback(identity):
+    """Callback to load user object for requests where jwt_identity is required"""
+    g.user_id = identity
+
+@JWT.claims_verification_loader
+def claims_verification_loader(claims):
+    """Callback to get claims from token and make them globally available for the request"""
+    g.user_groups = claims['groups']
+
 # Need to make sure that the use of the database session is
 # scoped to the request to avoid open orm transactions between requests
 @FAPP.before_request

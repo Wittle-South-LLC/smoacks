@@ -4,7 +4,7 @@
 #             returning a set of error codes as well as default english error messages
 
 import uuid
-from flask import jsonify
+from flask import jsonify, g
 
 API_ERRORS = {
     "INSUFFICIENT_PRIVILEGES": "User {} does not have required privileges for this operation",
@@ -38,6 +38,7 @@ def handle_post(dmo, dmo_pk_name, session, body):
     """Method to handle POST verbs for data model object APIs"""
     new_record = dmo()
     new_record.apply_update(body)
+    new_record.creator_user_id = g.user_id
     session.add(new_record)
     session.commit()
     result = {}
@@ -48,6 +49,7 @@ def handle_2key_post(dmo, session, body):
     """Method to handle POST verbs for many-to-many link object APIs"""
     new_record = dmo()
     new_record.apply_update(body)
+    new_record.creator_user_id = g.user_id
     session.add(new_record)
     session.commit()
     return {}, 201
