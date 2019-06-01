@@ -10,7 +10,7 @@ from .base import Base
 class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
     __tablename__ = '{{ mixedName }}'
-    __uuid_list__ = {{ uuid_set }}
+    Base.__uuid_list__.update({{ uuid_set }})
     __primary_key__ = '{{ name_id }}'
     {% for dmField in dmFields %}{{ dmField }}
     {% endfor %}

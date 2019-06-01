@@ -24,6 +24,13 @@ class AcceptAll(cookiejar.CookiePolicy):
     netscape = True
     rfc2965 = hide_cookie2 = False
 
+@JWT.user_claims_loader
+def add_claims_to_access_token(identity):
+    return {
+        'user_id': identity,
+        'groups': ['Testing']
+    }
+
 # This method attempts to generate valid Flask-JWT-Extended tokens, and set them
 # in the session cookiejar to simulate a valid Flask-JWT-Extended session. Part of
 # the approach came from this stackoverflow answer

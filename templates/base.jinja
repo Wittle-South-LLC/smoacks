@@ -20,14 +20,14 @@ class Base(object):
     @declared_attr
     def __primary_key__(cls):
         return to_snakecase(cls.__name__) + '_id'
-    __uuid_list__ = {'creator_user_id'}
+    __uuid_list__ = {'_creator_user_id'}
     __table_args__ = {'mysql_charset':'utf8'}
     record_created = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'))
     record_updated = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'),
                             onupdate=datetime.datetime.now)
-    creator_user_id = Column(BINARY(16))
+    _creator_user_id = Column(BINARY(16))
 
     def is_uuid(self, field_name):
         return field_name in self.__uuid_list__

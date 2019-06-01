@@ -92,12 +92,12 @@ FAPP.config['JWT_CSRF_METHODS'] = ['POST', 'PUT', 'PATCH', 'DELETE', 'GET']
 @JWT.user_loader_callback_loader
 def user_loader_callback(identity):
     """Callback to load user object for requests where jwt_identity is required"""
-    g.user_id = identity
+    g.user_id = uuid.UUID(identity).bytes
+    return uuid.UUID(identity).bytes
 
 @JWT.claims_verification_loader
 def claims_verification_loader(claims):
     """Callback to get claims from token and make them globally available for the request"""
-    LOGGER.info('User claims: {}'.format(str(claims)))
     if 'groups' in claims:
         g.user_groups = claims['groups']
     return True
