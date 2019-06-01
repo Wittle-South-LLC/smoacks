@@ -1,0 +1,29 @@
+# pylint: disable=C0103
+"""login.py - Module to handle /login API endpoint"""
+import datetime
+import os
+from flask import current_app, g, jsonify
+from flask_jwt_extended import create_access_token, \
+     jwt_refresh_token_required, \
+     create_refresh_token, set_access_cookies, \
+     set_refresh_cookies
+from util.api_util import api_error
+from dm.{{ gensubdir }}.base import Base
+{%for dmImport in dmImports %}{{ dmImport }} #pylint: disable=W0611
+{% endfor %}
+
+# The /login enpoint with the GET verb is intended to be used by client apps
+# to reload the user's application data when needed (e.g. after an application
+# refresh, or browser restart)
+@jwt_refresh_token_required
+def search():
+    """Handles GET verb for /login endpoint"""
+    result = {}
+    {% for obj in objects %}
+    {{obj.snake_name}}_l = []
+    {{obj.snake_name}}_q = g.db_session.query({{obj.table_name}}).all()
+    for {{obj.snake_name}}_item in {{ obj.snake_name }}_q:
+        {{obj.snake_name}}_l.append({{obj.snake_name}}_item.dump(deep=True))
+    result['{{ obj.name}}s'] = {{obj.snake_name}}_l
+    {% endfor %}
+    return result, 200

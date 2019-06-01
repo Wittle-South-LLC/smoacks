@@ -14,6 +14,7 @@ class ServerGenerator:
         # Establish constant values and the overall dictionary structure
         result = {
             'dmImports': [],
+            'objects': [],
             'gensubdir': sconfig['structure']['gensubdir']
         }
         # Loop through the properties and update the structure where needed
@@ -23,6 +24,11 @@ class ServerGenerator:
             if not set_first_table:
                 set_first_table = True
                 result['first_table_name'] = objName
+            result['objects'].append({
+                'name': objName,
+                'snake_name': self._app_objects[objName].getSnakeName() + 's',
+                'table_name': objName
+            })
         return result
 
     def render(self):
@@ -37,3 +43,11 @@ class ServerGenerator:
             tmf_file.close()
         outfile = open(os.path.join(filedir, 'DataModel.py'), "w")
         outfile.write(template.render(self.getJinjaDict()))
+        template2 = env.get_template('login.jinja')
+        filedir2 = os.path.join(sconfig['structure']['root'], sconfig['structure']['apiobjectdir'])
+        outfile2 = open(os.path.join(filedir2, 'login.py'), "w")
+        outfile2.write(template2.render(self.getJinjaDict()))
+        template3 = env.get_template('test-login-api.jinja')
+        filedir3 = os.path.join(sconfig['structure']['root'], sconfig['structure']['testdir'])
+        outfile3 = open(os.path.join(filedir3, 'test-login-api.py'), "w")
+        outfile3.write(template3.render(self.getJinjaDict()))

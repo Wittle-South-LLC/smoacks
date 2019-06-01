@@ -75,8 +75,21 @@ def generate_code():
         print('Removing /shutdown path')
         OPENAPI_SPEC['paths'].pop('/shutdown')
 
+    # Create the schema object that will hold the definition for the /login endpoint
+    LOGIN_SCHEMA = {
+        'schema': {
+            'type': 'object',
+            'properties': {}
+        }
+    }
     # Generate the schemas
     for object_name in scr_objects:
+        LOGIN_SCHEMA['schema']['properties'][object_name + 's'] = {
+            'type': 'array',
+            'items': {
+                '$ref': '#/components/schemas/' + object_name
+            }
+        }
         print('Handling {}'.format(object_name))
         sqlalchemy_generator = SqlAlchemyGenerator(scr_objects[object_name])
         sqlalchemy_generator.render()
@@ -87,6 +100,23 @@ def generate_code():
         openapi_generator = OpenapiGenerator(scr_objects[object_name])
         api_obj = openapi_generator.render_to_yaml_obj()
         OPENAPI_SPEC['paths'].update(api_obj)
+
+    # Build login get path, used to hydrate user data at login
+    OPENAPI_SPEC['paths']['/login'] = {
+        'get': {
+            'summary': 'Hydrate application',
+            'tags': [sconfig['env_defaults']['smoacks_app_name']],
+            'description': 'Returns initial login data for this service',
+            'responses': {
+                '200': {
+                    'description': 'Successful response',
+                    'content': {
+                        'application/json': LOGIN_SCHEMA
+                    }
+                }
+            }
+        }
+    }
 
     server_generator = ServerGenerator(scr_objects)
     server_generator.render()

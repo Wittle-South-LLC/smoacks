@@ -59,4 +59,5 @@ Version History
 * 0.2.2 - Allows customization of data model and API objects
 * 0.2.3 - Unit test coverage for all generated endpoints
 * 0.2.4 - Support for model relationships
+* 0.2.5 - Support for hydration endpoint
 
