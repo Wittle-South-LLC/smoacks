@@ -34,7 +34,8 @@ The following tags have special meanings for SMOACKS application generation
       object to which this tag is attached should extend with additional attributes
       beyond those provided in the schema tagged with x-smoacks-create
     - **x-smoacks-fk-relationships** - Defines SQLAlchemy relationships to create
-      for the data model object.
+      for the data model object. This is a structure that provides the relationship
+      name, table, field, and optionally a cascade setting.
     - **x-smoacks-api-verb-param** - Identifies a schema object that should be the
       parameter for an API verb for the object specified by **x-smoacks-object**
       on the same schema. Applies only to POST, SEARCH, GET, PUT verbs.
@@ -62,12 +63,13 @@ The following tags have special meanings for SMOACKS application generation
 Version History
 ---------------
 
-* 0.1.X Series - Incremental steps to first working version
-* 0.2.0 - First version generating structure, code, and working unit test
-* 0.2.1 - Supports unit testing authenticated endpoints
-* 0.2.2 - Allows customization of data model and API objects
-* 0.2.3 - Unit test coverage for all generated endpoints
-* 0.2.4 - Support for model relationships
+* 0.2.7 - Support cascading database operations on relationships
+* 0.2.6 - Support for assigning custom schemas to specific verbs
 * 0.2.5 - Support for hydration endpoint
-* 0.2.6 - Support for assigning schemas to specific verbs
+* 0.2.4 - Support for model relationships
+* 0.2.3 - Unit test coverage for all generated endpoints
+* 0.2.2 - Allows customization of data model and API objects
+* 0.2.1 - Supports unit testing authenticated endpoints
+* 0.2.0 - First version generating structure, code, and working unit test
+* 0.1.X Series - Incremental steps to first working version
 
