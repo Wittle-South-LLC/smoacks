@@ -65,11 +65,16 @@ class SqlAlchemyGenerator:
                     result['uuid_set'].add(prop.name)
         # Loop through relationships
         for rel in self._app_object.relationships:
-            result['relationships'].append({
+            ao_rel = self._app_object.relationships[rel]
+            rel_data = {
               'name': rel,
-              'table': self._app_object.relationships[rel]['table'],
-              'field': self._app_object.relationships[rel]['field']
-            })
+              'table': ao_rel['table'],
+              'field': ao_rel['field']
+            }
+            if 'cascade' in ao_rel:
+                print('---> cascading {} for {} on {}'.format(ao_rel['cascade'], rel, self._app_object.name))
+                rel_data['cascade'] = ao_rel['cascade']
+            result['relationships'].append(rel_data)
         return result
 
     def render(self):

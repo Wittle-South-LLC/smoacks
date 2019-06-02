@@ -74,6 +74,7 @@ components:
         users:
           table: UserMember
           field: group
+          cascade: all, delete-orphan
       description: Group of users
       properties:
         group_id:

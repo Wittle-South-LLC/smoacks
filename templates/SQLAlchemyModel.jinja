@@ -14,7 +14,7 @@ class {{ genprefix}}{{ mixedName }}(Base):
     __primary_key__ = '{{ name_id }}'
     {% for dmField in dmFields %}{{ dmField }}
     {% endfor %}
-    {% for rel in relationships %}{{ rel.name }} = relationship('{{ rel.table }}', back_populates='{{ rel.field }}')
+    {% for rel in relationships %}{{ rel.name }} = relationship('{{ rel.table }}', back_populates='{{ rel.field }}'{% if rel.cascade %}, cascade='{{ rel.cascade }}'{% endif %})
     {% endfor %}
 {% if idCount == 1 %}
     def __init__(self, **kwargs):
