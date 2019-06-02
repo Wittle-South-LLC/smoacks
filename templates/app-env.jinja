@@ -20,7 +20,7 @@ if [ "${{ smoacks_app_name_c }}_MODE" == "development" ]; then
   export APP_DB_SPORT={{ smoacks_dev_db_service_port }}
   export APPSERVER_SPORT={{ smoacks_dev_server_service_port }}
   export SECRET_KEY={{ smoacks_dev_secret_key }}
-  export REACT_APP_BASE_URL="http://{{ smoacks_local_kube_server }}:${APPSERVER_SPORT}"
+  export REACT_APP_BASE_URL="http://{{ local_kube_server }}:${APPSERVER_SPORT}"
 elif [ "${{ smoacks_app_name_c }}_MODE" == "test" ]; then
   export APP_DB_CNAME='{{ smoacks_test_db_service }}'
   export APP_DB_ACCOUNT={{ smoacks_test_db_account }}
