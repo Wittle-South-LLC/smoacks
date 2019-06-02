@@ -8,7 +8,7 @@ from the schema to create API endpoints and a SQLAlchemy data model.
 The microservice application will include a set of scripts to set up
 environment variables used by the application, yaml files to deploy the
 application as a container, a Dockerfile to package the service as a container,
-as well as generated source files. See [development environment](DEV_ENVIRONMENT.md)
+as well as generated source files. See [development environment](https://github.com/Wittle-South-LLC/smoacks/blob/master/DEV_ENVIRONMENT.md)
 for an explanation of the development environment assumptions.
 
 ## Deployment Dependencies for Generated Code
@@ -69,4 +69,5 @@ Version History
 * 0.2.3 - Unit test coverage for all generated endpoints
 * 0.2.4 - Support for model relationships
 * 0.2.5 - Support for hydration endpoint
+* 0.2.6 - Support for assigning schemas to specific verbs
 
