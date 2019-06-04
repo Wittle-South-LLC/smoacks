@@ -30,13 +30,16 @@ class NoseTestGenerator:
                 result['hasSearch'] = True
             if prop.foreignKey:
                 fk_app_object = scr_objects[prop.foreignKey]
-                result['foreignKeys'].append({
+                fk_result = {
                     'name': prop.name,
                     'createObj': fk_app_object.getCreateObject(),
                     'snakeName': fk_app_object.getSnakeName(),
-                    'idField': fk_app_object._idProperty.name,
-                    'rbacControlled': fk_app_object.getRbacController()
-                })
+                    'idField': fk_app_object._idProperty.name
+                }
+                if fk_app_object.rbacControlled and fk_app_object.rbacControlled != self.name:
+                    print('-----> On {} setting rbacControlled as {}'.format(self.name, fk_app_object.rbacControlled))
+                    fk_result['rbacControlled'] = fk_app_object.getRbacController()
+                result['foreignKeys'].append(fk_result)
             if prop.isId:
                 result['name_id'] = prop.name
                 if not result['idsString']:
