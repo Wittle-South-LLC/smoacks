@@ -45,6 +45,9 @@ The following tags have special meanings for SMOACKS application generation
     - **x-smoacks-object** - Identifies the data model object associated with a
       schema. Ignored if **x-smoacks-create** or **x-smoacks-extended** is attached
       to the same schema. 
+    - **x-smoacks-rbac-controlled** - Identifies a table that has an associated
+      RBAC authorization table. The value of this setting should be the name of the
+      authorization table.
 - Property Tags
     - **x-smoacks-model-id** - Boolean flagging a property in the schema as the
       primary key for the data model object set in the schema
@@ -63,6 +66,7 @@ The following tags have special meanings for SMOACKS application generation
 Version History
 ---------------
 
+* 0.2.8 - Support MUAM style RBAC in default unit tests. See [rbac support](https://github.com/Wittle-South-LLC/smoacks/blob/master/RBAC_SUPPORT.md)
 * 0.2.7 - Support cascading database operations on relationships
 * 0.2.6 - Support for assigning custom schemas to specific verbs
 * 0.2.5 - Support for hydration endpoint
