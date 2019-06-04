@@ -24,22 +24,34 @@ class AcceptAll(cookiejar.CookiePolicy):
     netscape = True
     rfc2965 = hide_cookie2 = False
 
+default_group_ids = {}
+default_user_ids = {}
+user_id_role_map = {}
+{% for role in smoacks_role_list -%}
+default_group_ids['{{role}}'] = uuid.UUID(bytes=uuid.uuid4().bytes)
+default_user_ids['{{role}}'] = uuid.UUID(bytes=uuid.uuid4().bytes)
+user_id_role_map[default_user_ids['{{ role}}']] = '{{ role }}'
+{% endfor %}
+
 @JWT.user_claims_loader
 def add_claims_to_access_token(identity):
-    return {
+    result = {
         'user_id': identity,
-        'groups': ['Testing']
+        'groups': {}
     }
+    if identity in user_id_role_map:
+        result['groups'][user_id_role_map[identity]] = default_group_ids[user_id_role_map[identity]]
+    return result
 
 # This method attempts to generate valid Flask-JWT-Extended tokens, and set them
 # in the session cookiejar to simulate a valid Flask-JWT-Extended session. Part of
 # the approach came from this stackoverflow answer
 # https://stackoverflow.com/questions/17224054/how-to-add-a-cookie-to-the-cookiejar-in-python-requests-library
-def get_active_session():
+def get_active_session(uid=None):
     my_session = requests.session()
     access_token = None
     csrf_token = None
-    my_identity = uuid.UUID(bytes=uuid.uuid4().bytes)
+    my_identity = uuid.UUID(bytes=uuid.uuid4().bytes) if not uid else uid
     with APP.app_context():
         access_token = create_access_token(identity=my_identity)
         refresh_token = create_refresh_token(identity=my_identity)

@@ -99,7 +99,12 @@ def user_loader_callback(identity):
 def claims_verification_loader(claims):
     """Callback to get claims from token and make them globally available for the request"""
     if 'groups' in claims:
-        g.user_groups = claims['groups']
+        g.user_groups = {}
+        for group_id in claims['groups']:
+            g.user_groups[group_id] = {
+                'name': claims['groups'][group_id]['name'],
+                'gid': claims['groups'][group_id]['gid']
+            }
     return True
 
 # Need to make sure that the use of the database session is

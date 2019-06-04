@@ -22,6 +22,7 @@ class Schema:
         self.updateObject = self._yaml['x-smoacks-update'] if 'x-smoacks-update' in self._yaml else None
         self.appObject = self._yaml['x-smoacks-object'] if 'x-smoacks-object' in self._yaml else None
         self.paramVerb = self._yaml['x-smoacks-api-verb-param'] if 'x-smoacks-api-verb-param' in self._yaml else None
+        self.rbacControlled = self._yaml['x-smoacks-rbac-controlled'] if 'x-smoacks-rbac-controlled' in self._yaml else None
         self.respVerb = self._yaml['x-smoacks-api-verb-resp'] if 'x-smoacks-api-verb-resp' in self._yaml else None
         self.emitTestData = self._yaml['x-smoacks-test-data'] if 'x-smoacks-test-data' in self._yaml else True
         self.relationships = self._yaml['x-smoacks-relationships'] if 'x-smoacks-relationships' in self._yaml else None

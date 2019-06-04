@@ -53,19 +53,6 @@ components:
         error_code:
           type: integer
           description: Error code (equivalent to HTTP status code)
-    GroupExtended:
-      x-smoacks-api-verb-param: post
-      x-smoacks-api-verb-resp: get
-      x-smoacks-object: Group
-      allOf:
-        - $ref: '#/components/schemas/Group'
-        - type: object
-          properties:
-            test_value:
-              type: string
-              minLength: 2
-              maxLength: 20
-              example: test property for extended schema
     Group:
       type: object
       x-smoacks-create: Group
@@ -243,4 +230,152 @@ components:
           description: Record update date
           readOnly: true
           example: '1995-08-19T00:00:00.001Z'
+    Test:
+      type: object
+      x-smoacks-create: Test
+      x-smoacks-test-data: False
+      x-smoacks-rbac-controlled: TestAuth
+      x-smoacks-relationships:
+        authorizations:
+          table: TestAuth
+          field: test
+          cascade: all, delete-orphan
+        items:
+          table: TestItem
+          field: test
+      description: Test object with authorizations
+      properties:
+        test_id:
+          type: string
+          x-smoacks-model-id: true
+          description: Unique test identifier
+          readOnly: True
+          minLength: 12
+          maxLength: 40
+          format: uuid
+          example: b5665877-f9ee-4074-a38b-39219cdedddd
+        name:
+          type: string
+          description: Description of the test
+          minLength: 4
+          maxLength: 80
+          example: Test object
+          x-smoacks-search-field: True
+        record_created:
+          type: string
+          format: date
+          description: Record creation date
+          readOnly: True
+          example: '1995-08-19T00:00:00.000Z'
+        record_updated:
+          type: string
+          format: date
+          description: Record update date
+          readOnly: true
+          example: '1995-08-19T00:00:00.001Z'
+    TestExtended:
+      x-smoacks-api-verb-param: post
+      x-smoacks-api-verb-resp: get
+      x-smoacks-object: Test
+      allOf:
+        - $ref: '#/components/schemas/Test'
+        - type: object
+          properties:
+            groups:
+              type: array
+              nullable: true
+              items:
+                $ref: '#/components/schemas/TestAuthBase'
+    TestAuthBase:
+      type: object
+      description: Test Authorizations
+      properties:
+        group_id:
+          type: string
+          format: uuid
+          x-smoacks-model-id: true
+          description: Unique group identifier
+          minLength: 12
+          maxLength: 40
+          example: b5665877-f9ee-4074-a38b-39219cde6bcc
+        role:
+          type: string
+          description: Role the specified group has for the specified tag class
+          minLength: 4
+          maxLength: 40
+          enum:
+            - Owner
+            - Editor
+            - Viewer
+          example: Owner
+        record_created:
+          type: string
+          format: date
+          description: Record creation date
+          readOnly: True
+          example: '1995-08-19T00:00:00.000Z'
+        record_updated:
+          type: string
+          format: date
+          description: Record update date
+          readOnly: true
+          example: '1995-08-19T00:00:00.001Z'
+    TestAuth:
+      x-smoacks-create: TestAuth
+      x-smoacks-test-data: True
+      x-smoacks-relationships:
+        test:
+          table: Test
+          field: authorizations
+      allOf:
+        - $ref: '#/components/schemas/TestAuthBase'
+        - type: object
+          required:
+            - test_id
+          properties:
+            test_id:
+              type: string
+              format: uuid
+              x-smoacks-foreign-key: Test
+              x-smoacks-model-id: true
+              description: Unique test identifier
+              minLength: 12
+              maxLength: 40
+              example: b5665877-f9ee-4074-a38b-39219cdeddde
+    TestItem:
+      x-smoacks-create: TestItem
+      x-smoacks-test-data: True
+      x-smoacks-relationships:
+        test:
+          table: Test
+          field: items
+      description: Test item object
+      properties:
+        test_item_id:
+          type: string
+          format: uuid
+          x-smoacks-model-id: true
+          description: Unique test item identifier
+          readOnly: True
+          minLength: 12
+          maxLength: 40
+          example: b5665877-f9ee-4074-a38b-39219cdedddf
+        test_id:
+          type: string
+          format: uuid
+          description: Unique test identifier
+          minLength: 12
+          maxLength: 40
+          example: b5665877-f9ee-4074-a38b-39219cdeddef
+          x-smoacks-foreign-key: Test
+        name:
+          type: string
+          description: Name of test item in default language
+          minLength: 4
+          maxLength: 40
+          example: 'My Test Item'
+          x-smoacks-search-field: True
+          x-smoacks-edit-unit-test: 'My Test Item - edited'
+
+
 

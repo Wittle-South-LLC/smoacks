@@ -15,6 +15,7 @@ class NoseTestGenerator:
             'name': self.name,
             'hasSearch': False,
             'idCount': self._app_object._idCount,
+            'smoacks_unit_test_default_role': sconfig['env_defaults']['smoacks_unit_test_default_role'],
             'idsString': None,
             'snakeName': self._app_object.getSnakeName(),
             'createObj': self._app_object.getCreateObject(),
@@ -33,7 +34,8 @@ class NoseTestGenerator:
                     'name': prop.name,
                     'createObj': fk_app_object.getCreateObject(),
                     'snakeName': fk_app_object.getSnakeName(),
-                    'idField': fk_app_object._idProperty.name
+                    'idField': fk_app_object._idProperty.name,
+                    'rbacControlled': fk_app_object.getRbacController()
                 })
             if prop.isId:
                 result['name_id'] = prop.name

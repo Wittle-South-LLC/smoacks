@@ -16,12 +16,14 @@ class AppObject:
         self.identitySchemaName = None
         self.extendedSchemaName = None
         self.emitTestData = False
+        self.rbacControlled = None
         self.relationships = None
     
     def addSchema(self, schema):
         self._schemas.append(schema)
         if schema.identityObject and not self.identitySchemaName:
             self.identitySchemaName = schema.name
+            self.rbacControlled = schema.rbacControlled
             if schema.relationships:
                 self.relationships = schema.relationships
             for prop in schema.getProperties().values():
@@ -40,6 +42,12 @@ class AppObject:
 
     def getSnakeName(self):
         return to_snakecase(self.name)
+
+    def getRbacController(self):
+        if self.rbacControlled:
+            return to_snakecase(self.rbacControlled)
+        else:
+            return None
     
     def getCamelName(self):
         return to_camelcase(self.name)
