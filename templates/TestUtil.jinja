@@ -26,10 +26,12 @@ class AcceptAll(cookiejar.CookiePolicy):
 
 default_group_ids = {}
 default_user_ids = {}
+default_group_name = {}
 user_id_role_map = {}
 {% for role in smoacks_role_list -%}
-default_group_ids['{{role}}'] = uuid.UUID(bytes=uuid.uuid4().bytes)
-default_user_ids['{{role}}'] = uuid.UUID(bytes=uuid.uuid4().bytes)
+default_group_ids['{{role}}'] = str(uuid.UUID(bytes=uuid.uuid4().bytes))
+default_group_name['{{role}}'] = '{{ role }} Group'
+default_user_ids['{{role}}'] = str(uuid.UUID(bytes=uuid.uuid4().bytes))
 user_id_role_map[default_user_ids['{{ role}}']] = '{{ role }}'
 {% endfor %}
 
@@ -40,7 +42,11 @@ def add_claims_to_access_token(identity):
         'groups': {}
     }
     if identity in user_id_role_map:
-        result['groups'][user_id_role_map[identity]] = default_group_ids[user_id_role_map[identity]]
+        role_name = user_id_role_map[identity]
+        result['groups'][default_group_ids[role_name]] = {
+            'name': default_group_name[role_name],
+            'gid': 1000
+        }
     return result
 
 # This method attempts to generate valid Flask-JWT-Extended tokens, and set them
@@ -51,7 +57,7 @@ def get_active_session(uid=None):
     my_session = requests.session()
     access_token = None
     csrf_token = None
-    my_identity = uuid.UUID(bytes=uuid.uuid4().bytes) if not uid else uid
+    my_identity = default_user_ids['{{ smoacks_unit_test_default_role }}'] if not uid else uid
     with APP.app_context():
         access_token = create_access_token(identity=my_identity)
         refresh_token = create_refresh_token(identity=my_identity)
