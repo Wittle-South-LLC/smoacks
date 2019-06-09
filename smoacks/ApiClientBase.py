@@ -9,7 +9,24 @@ class ApiClientBase(ABC):
     @abstractmethod
     def get_ids(self):
         pass
+    
+    # This method will primarily be used to update new objects after
+    # they are saved; the POST response to an object create includes
+    # the server-generated UUIDs in the returned JSON
+    def set_ids(self, **kwargs):
+        if not isinstance(self._id_fields, list):
+            if self._id_fields in kwargs:
+                setattr(self, self._id_fields, kwargs[self._id_fields])
+        else:
+            for field in self._id_fields:
+                if field in kwargs:
+                    setattr(self, field, kwargs[field])
+        pass
 
+    # This method creates a JSON object from a potentially nested
+    # object. For child objects, parent_id is generally set to the
+    # field name of the parent ID, so that it can be omitted from
+    # the child JSON, as parent ID is in the parent JSON object
     def toJSON(self, deep=False, parent_id=None):
         result = {}
         for key, value in vars(self).items():
@@ -24,10 +41,9 @@ class ApiClientBase(ABC):
         if resp.status_code == 201:
             # If id_fields is not list, we get a new ID back from create
             # otherwise, we don't need a value from the response
-            if isinstance(self._id_fields, list):
-                return True, None
-            else:
-                return True, resp.json()[self._id_fields]
+            if not isinstance(self._id_fields, list):
+                self.set_ids(**resp.json())
+            return True, None
         return False, resp
 
     def save_update(self, session):
