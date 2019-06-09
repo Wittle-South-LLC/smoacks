@@ -1,16 +1,16 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('README.md') as f:
     long_description = f.read()
 
 setup(name='{{ smoacks_app_name }}',
-      version='0.1.0',
+      version='{{ smoacks_app_version }}',
       description='{{ smoacks_app_description }}',
       url='{{ smoacks_app_url }}',
       author='{{ smoacks_app_author }}',
       author_email='{{ smoacks_app_maintainer }}',
       classifiers= {{ smoacks_app_classifiers }},
-      packages=['{{ smoacks_app_name }}'],
+      packages=find_packages(where='{{ smoacks_app_name }}'),
       include_package_data=True,
       data_files=[('spec', ['src/spec/{{ smoacks_app_name}}.yaml'])],
       install_requires=[

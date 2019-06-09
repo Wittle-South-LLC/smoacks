@@ -63,8 +63,16 @@ class ServerGenerator:
         outfile3 = open(os.path.join(filedir3, 'test-login-api.py'), "w")
         outfile3.write(template3.render(my_dict))
         outfile3.close()
-        template4 = env.get_template('setup.jinja')
-        filedir4 = sconfig['structure']['root']
-        outfile4 = open(os.path.join(filedir4, 'setup.py'), 'w')
-        outfile4.write(template4.render(my_dict))
-        outfile4.close()
+
+        # Confirm there is a dist dir for PyPi packaging
+        distdir = os.path.join(sconfig['structure']['root'], 'dist')
+        if not os.path.isdir(distdir):
+            os.makedirs(distdir, exist_ok=True)
+
+        # Setup file to package generated classes as a pypi module
+        filename4 = os.path.join(sconfig['structure']['root'], 'setup.py')
+        if not os.path.isfile(filename4):
+            template4 = env.get_template('setup.jinja')
+            outfile4 = open(filename4, 'w')
+            outfile4.write(template4.render(my_dict))
+            outfile4.close()

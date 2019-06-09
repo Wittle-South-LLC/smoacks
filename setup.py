@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('README.md') as f:
     long_description = f.read()
@@ -15,7 +15,7 @@ setup(name='smoacks',
           'Programming Language :: Python',
           'Topic :: Software Development :: Libraries'
       ],
-      packages=['smoacks'],
+      packages=find_packages(where='smoacks'),
       include_package_data=True,
       data_files=[('conf', ['conf/smoacks_default.yaml']),
                   ('templates', ['templates/api_util.jinja',
