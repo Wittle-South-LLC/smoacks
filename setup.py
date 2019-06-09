@@ -4,7 +4,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(name='smoacks',
-      version='0.2.8',
+      version='0.2.9',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',
@@ -18,6 +18,7 @@ setup(name='smoacks',
                   ('templates', ['templates/api_util.jinja',
                                  'templates/app-env.jinja',
                                  'templates/base.jinja',
+                                 'templates/ClientApi.jinja',
                                  'templates/ConnexionApis.jinja',
                                  'templates/dev-api-server.jinja',
                                  'templates/DataModel.jinja',

@@ -5,6 +5,7 @@ from smoacks.api_util import call_api
 class ApiClientBase(ABC):
     _api_path = None
     _id_fields = None
+    _ro_fields = set()
 
     @abstractmethod
     def get_ids(self):
@@ -32,7 +33,7 @@ class ApiClientBase(ABC):
         for key, value in vars(self).items():
             if key.startswith('_'): continue
             if key == parent_id: continue
-            if key == self._id_fields: continue
+            if key in self._ro_fields: continue
             result[key] = value
         return result
 

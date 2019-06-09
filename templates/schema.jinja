@@ -80,6 +80,7 @@ components:
           maxLength: 80
           example: app-users
           x-smoacks-search-field: True
+          x-smoacks-edit-unit-test: 'app-users - edited'
         record_created:
           type: string
           format: date
@@ -133,6 +134,7 @@ components:
           type: boolean
           description: Indicates if the user is an administrator of this group
           example: false
+          x-smoacks-edit-unit-test: true
         record_created:
           type: string
           format: date
@@ -185,6 +187,7 @@ components:
           minLength: 2
           maxLength: 80
           example: 'Tester'
+          x-smoacks-edit-unit-test: 'Tester - edited'
         enum_test:
           type: string
           description: Testing enum generation
@@ -261,6 +264,7 @@ components:
           maxLength: 80
           example: Test object
           x-smoacks-search-field: True
+          x-smoacks-edit-unit-test: 'Test object - edited'
         record_created:
           type: string
           format: date

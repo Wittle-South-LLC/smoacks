@@ -1,0 +1,31 @@
+from smoacks.ApiClientBase import ApiClientBase
+{% if rbacControlled %}from {{ app_name }}.{{ rbacClass }} import {{ rbacClass }}
+{% endif %}
+class {{ mixedName}} (ApiClientBase):
+    _id_fields = {{ id_fields }}
+    _api_path = '{{ snakeName }}s'
+    _ro_fields = {{ ro_fields}}
+
+    def __init__(self, **kwargs):
+        {%- for field in fields %}
+        self.{{ field }} = kwargs['{{ field }}'] if '{{ field }}' in kwargs else None{% endfor -%}
+{% if rbacControlled %}
+        self._authorizations = []
+        if 'authorizations' in kwargs:
+            for auth in kwargs['authorizations']:
+                self._authorizations.append({{ rbacClass }}(**auth))
+
+    def toJSON(self, deep=False):
+        result = super().toJSON(deep)
+        if deep:
+            result['authorizations'] = []
+            for child in self._authorizations:
+                result['authorizations'].append(child.toJSON(parent_id=self._id_fields[0]))
+        return result
+
+    def add_auth(self, role, group_id):
+        self._authorizations.append({{ rbacClass }}(role=role, group_id=group_id))
+{% endif %}
+
+    def get_ids(self):
+        return [{{ get_ids }}]

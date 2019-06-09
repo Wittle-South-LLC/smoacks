@@ -42,6 +42,7 @@ class SqlAlchemyGenerator:
     def getJinjaDict(self):
         # Establish constant values and the overall dictionary structure
         result = {
+            'app_name': sconfig['env_defaults']['smoacks_app_name'],
             'name': self.name,
             'snakeName': self._app_object.getSnakeName(),
             'mixedName': self.name,
@@ -50,19 +51,34 @@ class SqlAlchemyGenerator:
             'gensubdir': sconfig['structure']['gensubdir'],
             'idCount': self._app_object._idCount,
             'relationships': [],
+            'fields': [],
+            'rbacControlled': False,
             'uuid_set': set()
         }
+        # If app object is rbac controlled, set values needed for client APIs
+        if self._app_object.rbacControlled:
+            result['rbacControlled'] = True
+            result['rbacClass'] = self._app_object.rbacControlled
         # Loop through the properties and update the structure where needed
+        read_only_fields = []
+        id_fields = []
         properties = self._app_object.getAllProperties()
         for prop in properties:
+            result['fields'].append(prop.name)
+            if prop.readOnly:
+                read_only_fields.append(prop.name)
             if prop.isId:
+                id_fields.append(prop.name)
                 result['name_id'] = prop.name
                 result['dmFields'].append(self.getField(prop))
                 result['uuid_set'].add(prop.name)
-            if not prop.isId and not (prop.name in ['record_created', 'record_updated']):
+            if not prop.isId and not (prop.name in {'record_created', 'record_updated'}):
                 result['dmFields'].append(self.getField(prop))
                 if prop.format == 'uuid':
                     result['uuid_set'].add(prop.name)
+        result['ro_fields'] = "{'" + "', '".join(read_only_fields) + "'}" if len(read_only_fields) > 0 else 'set()'
+        result['id_fields'] = "{'" + "', '".join(id_fields) + "'}" if len(id_fields) > 1 else "'{}'".format(id_fields[0])
+        result['get_ids'] = "self." + ", self.".join(id_fields)
         # Loop through relationships
         for rel in self._app_object.relationships:
             ao_rel = self._app_object.relationships[rel]
@@ -81,6 +97,9 @@ class SqlAlchemyGenerator:
         env = Environment(
             loader = FileSystemLoader('templates')
         )
+        jinja_dict = self.getJinjaDict()
+
+        # Render generated data model objects
         template = env.get_template('SQLAlchemyModel.jinja')
         gendir = os.path.join(sconfig['structure']['root'],
                               sconfig['structure']['datamodeldir'],
@@ -92,8 +111,10 @@ class SqlAlchemyGenerator:
             initfile = open(module_filename, "w")
             initfile.close()
         outfile = open(os.path.join(gendir, "{}{}.py".format(sconfig['structure']['genprefix'], self.name)), "w")
-        outfile.write(template.render(self.getJinjaDict()))
+        outfile.write(template.render(jinja_dict))
         outfile.close()
+
+        # Render data model customization objects (if needed)
         filedir = os.path.join(sconfig['structure']['root'],
                                sconfig['structure']['datamodeldir'])
         module_filename2 = os.path.join(gendir, "__init__.py")
@@ -105,5 +126,20 @@ class SqlAlchemyGenerator:
         if not os.path.isfile(dmo_filename):
             template2 = env.get_template('DataModelObject.jinja')
             of2 = open(dmo_filename, "w")
-            of2.write(template2.render(self.getJinjaDict()))
+            of2.write(template2.render(jinja_dict))
             of2.close()
+
+        # Render API client objects
+        clientdir = os.path.join(sconfig['structure']['root'],
+                                 sconfig['env_defaults']['smoacks_app_name'])
+        if not os.path.isdir(clientdir):
+            os.makedirs(clientdir, exist_ok=True)
+        module_filename3 = os.path.join(clientdir, "__init__.py")
+        if not os.path.isfile(module_filename3):
+            initfile3 = open(module_filename3, "w")
+            initfile3.close()
+        co_filename = os.path.join(clientdir, "{}.py".format(self.name))
+        co_template = env.get_template('ClientApi.jinja')
+        co_file = open(co_filename, "w")
+        co_file.write(co_template.render(jinja_dict))
+        co_file.close()

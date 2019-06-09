@@ -5,99 +5,98 @@
 # tests.
 """test-{{ snakeName }}-api.py - Tests of {{ name }} APIs"""
 import logging
-from .TestUtil import get_active_session, get_response_with_jwt, \
-                      log_response_error, default_group_ids
+from smoacks.api_util import call_api
+from {{ app_name }}.{{ name }} import {{ name }}
+{% if foreignKeys|length > 0 %}{% for fkey in foreignKeys -%}
+from {{ app_name }}.{{ fkey.mixedName }} import {{ fkey.mixedName }}
+{% if fkey.rbacControlled %}from {{ app_name }}.{{ fkey.rbacControlled }} import {{ fkey.rbacControlled }} {% endif %}
+{% endfor %}{% endif -%}
+from .TestUtil import mock_login, log_response_error, default_group_ids
 
 LOGGER = logging.getLogger()
-TEST_SESSION = get_active_session()
-added_id = -1
+TEST_SESSION = mock_login()
+added_obj = None
 {% if foreignKeys|length > 0 -%}
 {% for fkey in foreignKeys -%}
-added_{{ fkey.name }} = -1
+added_{{ fkey.snakeName }} = None
 {% endfor %}
 def setUp():
     {% for fkey in foreignKeys %}
-    global added_{{ fkey.name }}
-    create_{{ fkey.name }}_obj = {{ fkey.createObj }}
-    resp_{{ fkey.name }} = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ fkey.snakeName }}s', create_{{ fkey.name }}_obj)
-    assert resp_{{ fkey.name }}.status_code == 201
-    added_{{ fkey.name }} = resp_{{ fkey.name }}.json()['{{ fkey.idField }}']
+    global added_{{ fkey.snakeName }}
+    added_{{ fkey.snakeName }} = {{ fkey.mixedName }}(**{{ fkey.createObj }})
+    success, resp = added_{{ fkey.snakeName }}.save_new(TEST_SESSION)
+    assert success
     {% if fkey.rbacControlled %}
     create_auth_obj = {
-        '{{ fkey.name }}': added_{{ fkey.name }},
+        '{{ fkey.name }}': added_{{ fkey.snakeName }}.{{ fkey.name }},
         'role': '{{ smoacks_unit_test_default_role }}',
         'group_id': default_group_ids['{{ smoacks_unit_test_default_role }}']
     }
-    auth_resp = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ fkey.rbacControlled }}s', create_auth_obj)
-    assert auth_resp.status_code == 201
+    auth_obj = {{ fkey.rbacControlled }}(**create_auth_obj)
+    success, auth_resp = auth_obj.save_new(TEST_SESSION)
+    assert success
     {% endif %}{% endfor %}
 
 def tearDown():
     {% for fkey in foreignKeys %}
-    global added_{{ fkey.name }}
-    resp_{{ fkey.name }} = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ fkey.snakeName }}s/{}'.format(added_{{ fkey.name }}))
-    assert resp_{{ fkey.name }}.status_code == 204{% endfor %}
+    global added_{{ fkey.snakeName }}
+    success, resp = added_{{ fkey.snakeName }}.save_delete(TEST_SESSION)
+    assert success {% endfor %}
 {% endif %}
 def test_{{ snakeName }}_create():
     """{{ name }}APIs: Test create API"""
     #pylint: disable=W0603
-    global added_id
-    create_obj = {{ createObj }}
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}create_obj['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
-    resp = get_response_with_jwt(TEST_SESSION, 'POST', '/{{ snakeName }}s', create_obj)
-    log_response_error(resp)
-    assert resp.status_code == 201
-    {% if idCount == 1 %}json = resp.json()
-    assert json['{{ name_id }}']
-    added_id = json['{{ name_id }}']{% endif %}
+    global added_obj
+    test_obj = {{ name }}()
+    {% for createAssignment in createAssignments %}{{ createAssignment }}
+    {% endfor %}{% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}test_obj.{{ fkey.name}} = added_{{ fkey.snakeName }}.{{ fkey.name }}{% endfor %}{% endif %}
+    success, resp = test_obj.save_new(TEST_SESSION)
+    if not success: log_response_error(resp)
+    assert success
+    added_obj = test_obj
 
 def test_{{ snakeName }}_get():
     """--> get returns details """
-    global added_id
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.name }}{% endfor %}{% endif %}
-    {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
-    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName }}s/{}/{}'.format({{ idsString }})){% endif %}
-    log_response_error(resp)
-    assert resp.status_code == 200
-    json = resp.json()
-    LOGGER.debug('json: {}'.format(json))
+    global added_obj
+    assert added_obj
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}{% endfor %}{% endif %}
+    success, resp = {{ name }}.get(TEST_SESSION, added_obj.{{ name_id }})
+    if not success: log_response_error(resp)
+    assert success
     {% for getAssert in getAsserts %}{{ getAssert }}
     {% endfor %}
 {% if hasSearch -%}
 def test_{{ snakeName }}_search():
     """--> tests search """
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.name }}{% endfor %}{% endif %}
-    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s?search_text=')
-    log_response_error(resp)
-    assert resp.status_code == 200
-    json_list = resp.json()
-    LOGGER.debug('json_list: {}'.format(json_list))
-    assert len(json_list) == 1
-    json = json_list[0]
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}{% endfor %}{% endif %}
+    success, resp_list = {{ name }}.search(TEST_SESSION, '')
+    if not success: log_response_error(resp_list)
+    assert success
+    LOGGER.debug('search result: {}'.format(str(resp_list)))
+    assert len(resp_list) == 1
+    resp = resp_list[0]
     {% for getAssert in getAsserts %}{{ getAssert }}
     {% endfor %}{% endif %}
 
 def test_{{ snakeName }}_put():
     """--> put updates object """
-    global added_id
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.name }}{% endfor %}{% endif %}
-    update_data = {{ unitTestEditObject }}
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}update_data['{{ fkey.name}}'] = added_{{ fkey.name }}{% endfor %}{% endif %}
-    {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName}}s/{}'.format(added_id), update_data){% else %}
-    resp = get_response_with_jwt(TEST_SESSION, 'PUT', '/{{ snakeName }}s/{}/{}'.format({{ idsString }}), update_data){% endif %}
-    log_response_error(resp)
-    assert resp.status_code == 200
-    {% if idCount == 1 %}resp2 = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
-    resp2 = get_response_with_jwt(TEST_SESSION, 'GET', '/{{ snakeName }}s/{}/{}'.format({{ idsString }})){% endif %}
-    log_response_error(resp2)
-    assert resp2.status_code == 200
-    json = resp2.json()
-    LOGGER.debug('json: {}'.format(json))
+    global added_obj
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}{% endfor %}{% endif %}
+    # Change a value
+    {{ editUnitTestAssignment }}
+    # Save the change a value
+    success, resp = added_obj.save_update(TEST_SESSION)
+    if not success: log_response_error(resp)
+    assert success
+    # Read the object again
+    success, resp = {{ name }}.get(TEST_SESSION, added_obj.{{ name_id }})
+    if not success: log_response_error(resp)
+    assert success
+    # Confirm the values we read match what we wrote
     {{ unitTestAssert }}
 
 def test_{{ snakeName }}_delete():
     """--> delete returns 204"""
-    {% if idCount == 1 %}resp = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ snakeName}}s/{}'.format(added_id)){% else %}
-    resp = get_response_with_jwt(TEST_SESSION, 'DELETE', '/{{ snakeName }}s/{}/{}'.format({{ idsString }})){% endif %}
-    log_response_error(resp)
-    assert resp.status_code == 204
+    success, resp = added_obj.save_delete(TEST_SESSION)
+    if not success: log_response_error(resp)
+    assert success

@@ -93,7 +93,7 @@ class Property:
         else:
             return self.example
 
-    # Gets example value in form suitable for JavaScript
+    # Gets example value in form suitable for Python
     def getUnitTestLiteral(self):
         if self.type == 'string' and self.editUnitTest:
             return "'" + self.editUnitTest + "'"

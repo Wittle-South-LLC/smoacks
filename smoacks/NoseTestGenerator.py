@@ -12,6 +12,7 @@ class NoseTestGenerator:
     def getJinjaDict(self):
         # Establish constant values and the overall dictionary structure
         result = {
+            'app_name': sconfig['env_defaults']['smoacks_app_name'],
             'name': self.name,
             'hasSearch': False,
             'idCount': self._app_object._idCount,
@@ -23,6 +24,7 @@ class NoseTestGenerator:
         }
         properties = self._app_object.getAllProperties()
         getAsserts = []
+        createAssignments = []
         unitTestEditObject = {}
         unitTestAssert = None
         for prop in properties:
@@ -32,13 +34,15 @@ class NoseTestGenerator:
                 fk_app_object = scr_objects[prop.foreignKey]
                 fk_result = {
                     'name': prop.name,
+                    'mixedName': prop.foreignKey,
                     'createObj': fk_app_object.getCreateObject(),
                     'snakeName': fk_app_object.getSnakeName(),
                     'idField': fk_app_object._idProperty.name
                 }
                 if fk_app_object.rbacControlled and fk_app_object.rbacControlled != self.name:
                     print('-----> On {} setting rbacControlled as {}'.format(self.name, fk_app_object.rbacControlled))
-                    fk_result['rbacControlled'] = fk_app_object.getRbacController()
+#                    fk_result['rbacControlled'] = fk_app_object.getRbacController()
+                    fk_result['rbacControlled'] = fk_app_object.rbacControlled
                 result['foreignKeys'].append(fk_result)
             if prop.isId:
                 result['name_id'] = prop.name
@@ -49,17 +53,21 @@ class NoseTestGenerator:
                     result['idsString'] += 'added_{}'.format(prop.name) if prop.foreignKey else "'{}'".format(prop.example)
             # We need to change a value in unit tests of PUT verb
             elif prop.example != None and not prop.readOnly:
+                createAssignments.append('test_obj.{} = {}'.format(prop.name, prop.getExamplePythonLiteral()))
                 if prop.editUnitTest:
                     unitTestEditObject[prop.name] = prop.editUnitTest
-                    unitTestAssert = 'assert json["{}"] == {}'.format(prop.name, prop.getUnitTestLiteral())
-                    getAsserts.append('assert json["{}"] == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+                    result['editUnitTestAssignment'] = 'added_obj.{} = {}'.format(prop.name, prop.getUnitTestLiteral())
+                    unitTestAssert = 'assert resp.{} == added_obj.{}'.format(prop.name, prop.name)
+                    getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
                 else:
                     unitTestEditObject[prop.name] = prop.example
                     if prop.foreignKey:
-                        getAsserts.append('assert json["{}"] == added_{}'.format(prop.name, prop.name))
+                        fk_app_object = scr_objects[prop.foreignKey]
+                        getAsserts.append('assert resp.{} == added_{}.{}'.format(prop.name, fk_app_object.getSnakeName(), prop.name))
                     else:
-                        getAsserts.append('assert json["{}"] == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+                        getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
         result['getAsserts'] = getAsserts
+        result['createAssignments'] = createAssignments
         result['unitTestEditObject'] = str(unitTestEditObject)
         result['unitTestAssert'] = unitTestAssert
         return result
