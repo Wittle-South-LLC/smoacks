@@ -16,6 +16,7 @@ class ServerGenerator:
             'dmImports': [],
             'objects': [],
             'clis': [],
+            'clisubdir': sconfig['structure']['clisubdir'],
             'gensubdir': sconfig['structure']['gensubdir']
         }
         # Loop through the properties and update the structure where needed

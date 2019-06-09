@@ -10,7 +10,7 @@ setup(name='{{ smoacks_app_name }}',
       author='{{ smoacks_app_author }}',
       author_email='{{ smoacks_app_maintainer }}',
       classifiers= {{ smoacks_app_classifiers }},
-      packages=find_packages(where='{{ smoacks_app_name }}'),
+      packages=['{{ smoacks_app_name }}', '{{ smoacks_app_name }}/{{clisubdir}}'],
       include_package_data=True,
       data_files=[('spec', ['src/spec/{{ smoacks_app_name}}.yaml'])],
       install_requires=[
