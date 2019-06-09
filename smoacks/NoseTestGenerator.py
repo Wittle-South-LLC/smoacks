@@ -64,9 +64,9 @@ class NoseTestGenerator:
                     else:
                         getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
         if len(id_list) == 1:
-            result['idsString'] = id_list[0]
+            result['idsString'] = 'added_obj.{}'.format(id_list[0])
         else:
-            result['idsString'] = '[' + ', '.join(id_list) + ']'
+            result['idsString'] = '[added_obj.' + ', added_obj.'.join(id_list) + ']'
         result['getAsserts'] = getAsserts
         result['createAssignments'] = createAssignments
         result['unitTestEditObject'] = str(unitTestEditObject)
