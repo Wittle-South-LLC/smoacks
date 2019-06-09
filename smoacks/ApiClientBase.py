@@ -44,7 +44,7 @@ class ApiClientBase(ABC):
         if resp.status_code == 201:
             # If id_fields is not list, we get a new ID back from create
             # otherwise, we don't need a value from the response
-            if not isinstance(self._id_fields, list):
+            if not isinstance(self._id_fields, set):
                 self.set_ids(**resp.json())
             return True, None
         return False, resp
