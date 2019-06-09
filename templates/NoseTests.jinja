@@ -59,8 +59,9 @@ def test_{{ snakeName }}_get():
     """--> get returns details """
     global added_obj
     assert added_obj
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}{% endfor %}{% endif %}
-    success, resp = {{ name }}.get(TEST_SESSION, added_obj.{{ name_id }})
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}
+    {% endfor %}{% endif %}
+    success, resp = {{ name }}.get(TEST_SESSION, {{ idsString }})
     if not success: log_response_error(resp)
     assert success
     {% for getAssert in getAsserts %}{{ getAssert }}
@@ -68,7 +69,8 @@ def test_{{ snakeName }}_get():
 {% if hasSearch -%}
 def test_{{ snakeName }}_search():
     """--> tests search """
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}{% endfor %}{% endif %}
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}
+    {% endfor %}{% endif %}
     success, resp_list = {{ name }}.search(TEST_SESSION, '')
     if not success: log_response_error(resp_list)
     assert success
@@ -81,7 +83,8 @@ def test_{{ snakeName }}_search():
 def test_{{ snakeName }}_put():
     """--> put updates object """
     global added_obj
-    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}{% endfor %}{% endif %}
+    {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}global added_{{ fkey.snakeName }}
+    {% endfor %}{% endif %}
     # Change a value
     {{ editUnitTestAssignment }}
     # Save the change a value
@@ -89,7 +92,7 @@ def test_{{ snakeName }}_put():
     if not success: log_response_error(resp)
     assert success
     # Read the object again
-    success, resp = {{ name }}.get(TEST_SESSION, added_obj.{{ name_id }})
+    success, resp = {{ name }}.get(TEST_SESSION, {{ idsString }})
     if not success: log_response_error(resp)
     assert success
     # Confirm the values we read match what we wrote

@@ -26,6 +26,7 @@ class NoseTestGenerator:
         getAsserts = []
         createAssignments = []
         unitTestEditObject = {}
+        id_list = []
         unitTestAssert = None
         for prop in properties:
             if prop.searchField:
@@ -46,11 +47,7 @@ class NoseTestGenerator:
                 result['foreignKeys'].append(fk_result)
             if prop.isId:
                 result['name_id'] = prop.name
-                if not result['idsString']:
-                    result['idsString'] = 'added_{}'.format(prop.name) if prop.foreignKey else "'{}'".format(prop.example)
-                else:
-                    result['idsString'] += ','
-                    result['idsString'] += 'added_{}'.format(prop.name) if prop.foreignKey else "'{}'".format(prop.example)
+                id_list.append(prop.name)
             # We need to change a value in unit tests of PUT verb
             elif prop.example != None and not prop.readOnly:
                 createAssignments.append('test_obj.{} = {}'.format(prop.name, prop.getExamplePythonLiteral()))
@@ -66,6 +63,10 @@ class NoseTestGenerator:
                         getAsserts.append('assert resp.{} == added_{}.{}'.format(prop.name, fk_app_object.getSnakeName(), prop.name))
                     else:
                         getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+        if len(id_list) == 1:
+            result['idsString'] = id_list[0]
+        else:
+            result['idsString'] = '[' + ', '.join(id_list) + ']'
         result['getAsserts'] = getAsserts
         result['createAssignments'] = createAssignments
         result['unitTestEditObject'] = str(unitTestEditObject)
