@@ -15,7 +15,7 @@ setup(name='smoacks',
           'Programming Language :: Python',
           'Topic :: Software Development :: Libraries'
       ],
-      packages=find_packages(where='smoacks'),
+      packages=['smoacks'],
       include_package_data=True,
       data_files=[('conf', ['conf/smoacks_default.yaml']),
                   ('templates', ['templates/api_util.jinja',
