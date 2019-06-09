@@ -53,7 +53,7 @@ class ApiClientBase(ABC):
         resp = call_api(session, 'PUT',
                         '/{}/{}'.format(self._api_path, '/'.join(self.get_ids())),
                         self.toJSON(False))
-        if resp.status_code == 201:
+        if resp.status_code == 200:
             return True, None
         return False, resp
 
