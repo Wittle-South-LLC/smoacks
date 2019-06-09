@@ -43,6 +43,7 @@ class SqlAlchemyGenerator:
         # Establish constant values and the overall dictionary structure
         result = {
             'app_name': sconfig['env_defaults']['smoacks_app_name'],
+            'app_prefix': sconfig['env_defaults']['smoacks_app_api_prefix'],
             'name': self.name,
             'snakeName': self._app_object.getSnakeName(),
             'mixedName': self.name,

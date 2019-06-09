@@ -3,7 +3,7 @@ from smoacks.ApiClientBase import ApiClientBase
 {% endif %}
 class {{ mixedName}} (ApiClientBase):
     _id_fields = {{ id_fields }}
-    _api_path = '{{ snakeName }}s'
+    _api_path = '{{ app_prefix }}/{{ snakeName }}s'
     _ro_fields = {{ ro_fields}}
 
     def __init__(self, **kwargs):

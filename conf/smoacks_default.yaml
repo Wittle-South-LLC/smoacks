@@ -38,6 +38,7 @@ env_defaults:
   smoacks_app_author: Wittle South Ventures, LLC
   smoacks_app_classifiers: ['License :: OSI Approved :: MIT License']
   smoacks_app_cli_prefix: tst
+  smoacks_app_api_prefix: tst
   smoacks_app_version: 0.1.0
   smoacks_app_maintainer: noone@email.com
   smoacks_app_shutdown_key: Eric
