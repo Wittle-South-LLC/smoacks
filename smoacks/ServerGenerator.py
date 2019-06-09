@@ -28,8 +28,8 @@ class ServerGenerator:
             result['clis'].append(
                 "'" + sconfig['env_defaults']['smoacks_app_cli_prefix'] + \
                 '_add_{}'.format(self._app_objects[objName].getSnakeName()) + \
-                '={}.cli.add_{}'.format(sconfig['env_defaults']['smoacks_app_name'],
-                                        self._app_objects[objName].getSnakeName()) + "'"
+                '={}.cli.add_{}:add'.format(sconfig['env_defaults']['smoacks_app_name'],
+                                            self._app_objects[objName].getSnakeName()) + "'"
             )
             result['objects'].append({
                 'name': objName,
