@@ -41,13 +41,13 @@ class NoseTestGenerator:
                     'idField': fk_app_object._idProperty.name
                 }
                 if fk_app_object.rbacControlled and fk_app_object.rbacControlled != self.name:
-                    print('-----> On {} setting rbacControlled as {}'.format(self.name, fk_app_object.rbacControlled))
-#                    fk_result['rbacControlled'] = fk_app_object.getRbacController()
                     fk_result['rbacControlled'] = fk_app_object.rbacControlled
                 result['foreignKeys'].append(fk_result)
             if prop.isId:
                 result['name_id'] = prop.name
                 id_list.append(prop.name)
+                if not prop.readOnly and prop.example != None:
+                    createAssignments.append('test_obj.{} = {}'.format(prop.name, prop.getExamplePythonLiteral()))
             # We need to change a value in unit tests of PUT verb
             elif prop.example != None and not prop.readOnly:
                 createAssignments.append('test_obj.{} = {}'.format(prop.name, prop.getExamplePythonLiteral()))
