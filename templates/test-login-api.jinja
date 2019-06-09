@@ -5,14 +5,15 @@
 # tests.
 """test-login-api.py - Tests of Login API"""
 import logging
-from .TestUtil import get_active_session, get_response_with_jwt, log_response_error
+from smoacks.api_util import call_api
+from .TestUtil import mock_login, log_response_error
 
 LOGGER = logging.getLogger()
-TEST_SESSION = get_active_session()
+TEST_SESSION = mock_login()
 
 def test_login():
     """LoginAPI: Test login API"""
-    resp = get_response_with_jwt(TEST_SESSION, 'GET', '/login', None, True)
+    resp = call_api(TEST_SESSION, 'GET', '/login', None, True)
     log_response_error(resp)
     assert resp.status_code == 200
     json = resp.json()
