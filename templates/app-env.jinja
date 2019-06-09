@@ -29,6 +29,7 @@ elif [ "${{ smoacks_app_name_c }}_MODE" == "test" ]; then
   export APPSERVER_SPORT={{ smoacks_test_server_service_port }}
   export TEST_HOST={{ smoacks_test_host }}
   export SECRET_KEY={{ smoacks_test_secret_key }}
+  export REACT_APP_BASE_URL="http://{{ local_kube_server }}:${APPSERVER_SPORT}"
 elif [ "${{ smoacks_app_name_c }}_MODE" == "production" ]; then
   export APP_DB_CNAME='{{ smoacks_db_service }}'
   export APP_DB_ACCOUNT={{ smoacks_db_account }}

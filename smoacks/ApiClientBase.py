@@ -30,8 +30,10 @@ class ApiClientBase(ABC):
     def toJSON(self, deep=False, parent_id=None):
         result = {}
         for key, value in vars(self).items():
-            if not key.startswith('_') and not key == parent_id:
-                result[key] = value
+            if key.startswith('_'): continue
+            if key == parent_id: continue
+            if key == self._id_fields: continue
+            result[key] = value
         return result
 
     def save_new(self, session):
