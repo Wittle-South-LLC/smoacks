@@ -1,0 +1,24 @@
+# add-{{ snakeName }}.py - Adds a {{ mixedName }}
+import logging
+import sys
+from smoacks.cli_util import get_opts, get_session
+from {{ app_name }}.{{ mixedName }} import {{ mixedName }}
+
+logging.basicConfig(level=logging.DEBUG)
+LOGGER = logging.getLogger()
+
+opts = get_opts('add_{{ snakeName }}', 'Adds {{ mixedName }} to a {{ app_name }}',
+                { {% for field in write_fields %}'{{ field }}': '{{ field }}',
+                {% endfor %} })
+
+MY_SESSION = get_session(opts)
+if not MY_SESSION:
+    sys.exit('Invalid username/password.')
+
+add_item = {{ mixedName }}(**opts)
+success, resp = add_item.save_new(MY_SESSION)
+
+if success:
+    print('Added {{ mixedName }} with id: {}'.format(','.join(add_item.getIds())))
+else:
+    print('Add failed with code {} and message: {}'.format(resp.status_code, resp.text))

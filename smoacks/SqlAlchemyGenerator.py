@@ -52,6 +52,7 @@ class SqlAlchemyGenerator:
             'idCount': self._app_object._idCount,
             'relationships': [],
             'fields': [],
+            'write_fields': [],
             'rbacControlled': False,
             'uuid_set': set()
         }
@@ -67,6 +68,8 @@ class SqlAlchemyGenerator:
             result['fields'].append(prop.name)
             if prop.readOnly:
                 read_only_fields.append(prop.name)
+            else:
+                result['write_fields'].append(prop.name)
             if prop.isId:
                 id_fields.append(prop.name)
                 result['name_id'] = prop.name
@@ -143,3 +146,20 @@ class SqlAlchemyGenerator:
         co_file = open(co_filename, "w")
         co_file.write(co_template.render(jinja_dict))
         co_file.close()
+
+        # Render Add CLI object
+        clidir = os.path.join(sconfig['structure']['root'],
+                              sconfig['env_defaults']['smoacks_app_name'],
+                              sconfig['structure']['clisubdir'])
+        if not os.path.isdir(clidir):
+            os.makedirs(clidir, exist_ok=True)
+        module_filename4 = os.path.join(clidir, "__init__.py")
+        if not os.path.isfile(module_filename4):
+            initfile4 = open(module_filename4, "w")
+            initfile4.close()
+        add_cli_filename = os.path.join(clidir, "add_{}.py".format(self._app_object.getSnakeName()))
+        if not os.path.isfile(add_cli_filename):
+            add_cli_template = env.get_template('cli_add.jinja')
+            add_cli = open(add_cli_filename, "w")
+            add_cli.write(add_cli_template.render(jinja_dict))
+            add_cli.close()

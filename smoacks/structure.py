@@ -62,7 +62,6 @@ class SmoacksStructure:
              'module_dir': True}
         ]
         self.template_dict = sconfig['env_defaults']
-#        self.template_dict['smoacks_local_dev_path'] = os.getcwd()
         self.template_dict['smoacks_local_dev_path'] = os.path.join(sconfig['structure']['pvPathRoot'],
                                                                     sconfig['env_defaults']['smoacks_app_name'])
 

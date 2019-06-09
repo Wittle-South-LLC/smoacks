@@ -1,0 +1,30 @@
+from setuptools import setup
+
+with open('README.md') as f:
+    long_description = f.read()
+
+setup(name='{{ smoacks_app_name }}',
+      version='0.1.0',
+      description='{{ smoacks_app_description }}',
+      url='{{ smoacks_app_url }}',
+      author='{{ smoacks_app_author }}',
+      author_email='{{ smoacks_app_maintainer }}',
+      classifiers= {{ smoacks_app_classifiers }},
+      packages=['{{ smoacks_app_name }}'],
+      include_package_data=True,
+      data_files=[('spec', ['src/spec/{{ smoacks_app_name}}.yaml'])],
+      install_requires=[
+          'coverage',
+          'nose',
+          'PyYAML',
+          'smoacks'
+          ],
+      entry_points={
+          'console_scripts': [
+              {% for cli in clis %}{{ cli }},
+              {% endfor %}
+          ]
+      },
+      long_description=long_description,
+      long_description_content_type='text/markdown',
+      zip_safe=False)
