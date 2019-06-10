@@ -13,7 +13,7 @@ TEST_SESSION = mock_login()
 
 def test_login():
     """LoginAPI: Test login API"""
-    resp = call_api(TEST_SESSION, 'GET', '/login', None, True)
+    resp = call_api(TEST_SESSION, 'GET', '/{{ smoacks_app_api_prefix}}/login', None, True)
     log_response_error(resp)
     assert resp.status_code == 200
     json = resp.json()
