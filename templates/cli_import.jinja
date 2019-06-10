@@ -1,0 +1,40 @@
+# import_{{ snakeName }}s.py - Reads a comma-separated list of {{ mixedName }} and adds them
+import csv
+import logging
+import os
+import sys
+from smoacks.cli_util import get_opts, get_session
+from {{ app_name }}.{{ mixedName }} import {{ mixedName }}
+
+logging.basicConfig(level=logging.DEBUG)
+LOGGER = logging.getLogger()
+
+def import(self):
+    opts = get_opts('import_{{ snakeName }}', 'Adds list of {{ mixedName }} to a {{ app_name }}',
+                    {'f': 'filename'})
+
+    if not os.path.isfile(opts.filename):
+        sys.exit('Filename {} does not exist or is not a file.'.format(opts.filename))
+
+    session = get_session(opts)
+
+    field_map = {}
+
+    with open(opts.filename, "r") as csvfile:
+        tagreader = csv.reader(csvfile)
+        rowcount = 0
+        for row in tagreader:
+            rowcount += 1
+            if rowcount == 1:
+                fieldcount = 0
+                for field in row:
+                    field_map[field] = fieldcount
+            obj_data = {}
+            for field in field_map:
+                obj_data[field] = row[field_map[field]]
+            new_obj = {{ mixedName }}(**obj_data)
+            success, resp = new_obj.save_new(session)
+            if success:
+                print('row {} id: {}'.format(str(rowcount), new_obj.get_ids()))
+            else:
+                sys.exit('Add failed, code: {}, text: {}'.format(resp.status_code, resp.text))

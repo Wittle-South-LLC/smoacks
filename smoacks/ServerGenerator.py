@@ -32,6 +32,19 @@ class ServerGenerator:
                 '={}.cli.add_{}:add'.format(sconfig['env_defaults']['smoacks_app_name'],
                                             self._app_objects[objName].getSnakeName()) + "'"
             )
+            result['clis'].append(
+                "'" + sconfig['env_defaults']['smoacks_app_cli_prefix'] + \
+                '_import_{}'.format(self._app_objects[objName].getSnakeName()) + \
+                '={}.cli.import_{}:import'.format(sconfig['env_defaults']['smoacks_app_name'],
+                                            self._app_objects[objName].getSnakeName()) + "'"
+            )
+            if self._app_objects[objName].hasSearch:
+                result['clis'].append(
+                    "'" + sconfig['env_defaults']['smoacks_app_cli_prefix'] + \
+                    '_search_{}'.format(self._app_objects[objName].getSnakeName()) + \
+                    '={}.cli.search_{}:search'.format(sconfig['env_defaults']['smoacks_app_name'],
+                                                self._app_objects[objName].getSnakeName()) + "'"
+                )
             result['objects'].append({
                 'name': objName,
                 'snake_name': self._app_objects[objName].getSnakeName() + 's',

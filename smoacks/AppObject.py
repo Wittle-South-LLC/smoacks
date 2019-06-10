@@ -13,6 +13,7 @@ class AppObject:
         self._respVerbs = {}
         self._idCount = 0
         self._idProperty = None
+        self.hasSearch = False
         self.identitySchemaName = None
         self.extendedSchemaName = None
         self.emitTestData = False
@@ -31,6 +32,8 @@ class AppObject:
                 if prop.isId:
                     self._idProperty = prop
                     self._idCount += 1
+                if prop.searchField:
+                    self.hasSearch = True
         if schema.extendedObject:
             self.extendedSchemaName = schema.name
 

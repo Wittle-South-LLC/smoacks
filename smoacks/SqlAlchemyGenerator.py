@@ -47,6 +47,8 @@ class SqlAlchemyGenerator:
             'name': self.name,
             'snakeName': self._app_object.getSnakeName(),
             'mixedName': self.name,
+            'search_field': None,
+            'hasSearch': False,
             'dmFields': [],
             'genprefix': sconfig['structure']['genprefix'],
             'gensubdir': sconfig['structure']['gensubdir'],
@@ -71,6 +73,9 @@ class SqlAlchemyGenerator:
                 read_only_fields.append(prop.name)
             else:
                 result['write_fields'].append(prop.name)
+            if prop.searchField:
+                result['search_field'] = prop.name
+                result['hasSearch'] = True
             if prop.isId:
                 id_fields.append(prop.name)
                 result['name_id'] = prop.name
@@ -148,7 +153,7 @@ class SqlAlchemyGenerator:
         co_file.write(co_template.render(jinja_dict))
         co_file.close()
 
-        # Render Add CLI object
+        # Render Add CLI object directory
         clidir = os.path.join(sconfig['structure']['root'],
                               sconfig['env_defaults']['smoacks_app_name'],
                               sconfig['structure']['clisubdir'])
@@ -158,9 +163,28 @@ class SqlAlchemyGenerator:
         if not os.path.isfile(module_filename4):
             initfile4 = open(module_filename4, "w")
             initfile4.close()
+        
+        # Add modules
         add_cli_filename = os.path.join(clidir, "add_{}.py".format(self._app_object.getSnakeName()))
         if not os.path.isfile(add_cli_filename):
             add_cli_template = env.get_template('cli_add.jinja')
             add_cli = open(add_cli_filename, "w")
             add_cli.write(add_cli_template.render(jinja_dict))
             add_cli.close()
+
+        # Import modules
+        imp_cli_filename = os.path.join(clidir, "imp_{}.py".format(self._app_object.getSnakeName()))
+        if not os.path.isfile(imp_cli_filename):
+            imp_cli_template = env.get_template('cli_import.jinja')
+            imp_cli = open(imp_cli_filename, "w")
+            imp_cli.write(imp_cli_template.render(jinja_dict))
+            imp_cli.close()
+
+        # Search modules
+        if jinja_dict['hasSearch']:
+            search_cli_filename = os.path.join(clidir, "search_{}.py".format(self._app_object.getSnakeName()))
+            if not os.path.isfile(search_cli_filename):
+                search_cli_template = env.get_template('cli_search.jinja')
+                search_cli = open(search_cli_filename, "w")
+                search_cli.write(search_cli_template.render(jinja_dict))
+                search_cli.close()
