@@ -11,12 +11,13 @@ import connexion
 from connexion.resolver import RestyResolver
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies
 from flask import request, g, abort
-from dm.DataModel import get_session
 
 # Try loading logging configuration, see if we can manage it directly
 with open(os.environ['APP_LOGGING_CONFIG'], 'r') as f:
     config = yaml.safe_load(f.read())
     logging.config.dictConfig(config)
+
+from dm.DataModel import get_session
 
 # Define constants
 API_REQUIRES_JSON = 'All PUT/POST API requests require JSON, and this request did not'
@@ -151,7 +152,8 @@ def after_request(resp):
     # If we have a valid response, create a new access_token to
     # reset the 15 minute clock
     if (resp.status_code) < 400 and 'user' in g and\
-       not request.path in ['{{ smoacks_api_path }}/logout', '{{ smoacks_api_path }}/shutdown']:
+       not request.path in ['{{ smoacks_api_path }}/{{ smoacks_app_api_prefix}}/logout',
+                            '{{ smoacks_api_path }}/{{ smoacks_app_api_prefix}}/shutdown']:
         access_token = create_access_token(identity=g.user.get_uuid())
         set_access_cookies(resp, access_token, int(datetime.timedelta(minutes=30).total_seconds()))
     g.db_session.close()

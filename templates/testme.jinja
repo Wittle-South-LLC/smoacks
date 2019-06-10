@@ -33,7 +33,7 @@ shift $((OPTIND-1))
 # Ensure that we have the basic environment defined
 export {{ smoacks_app_name_c }}_MODE='test'
 source bin/app-env
-export TEST_URL="http://${TEST_HOST}:${APPSERVER_SPORT}${REACT_APP_API_PATH}"
+export TEST_URL="http://${TEST_HOST}:${APPSERVER_SPORT}${REACT_APP_API_PATH}/{{ smoacks_app_api_prefix}}"
 echo "testme: TEST_URL = $TEST_URL"
 
 # Shut the server down so that Kubernetes restarts the service
