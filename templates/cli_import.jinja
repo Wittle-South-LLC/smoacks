@@ -9,7 +9,7 @@ from {{ app_name }}.{{ mixedName }} import {{ mixedName }}
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger()
 
-def import_csv(self):
+def import_csv():
     opts = get_opts('import_{{ snakeName }}', 'Adds list of {{ mixedName }} to a {{ app_name }}',
                     {'f': 'filename'})
 
@@ -29,6 +29,7 @@ def import_csv(self):
                 fieldcount = 0
                 for field in row:
                     field_map[field] = fieldcount
+                continue
             obj_data = {}
             for field in field_map:
                 obj_data[field] = row[field_map[field]]
