@@ -35,7 +35,7 @@ class ServerGenerator:
             result['clis'].append(
                 "'" + sconfig['env_defaults']['smoacks_app_cli_prefix'] + \
                 '_import_{}'.format(self._app_objects[objName].getSnakeName()) + \
-                '={}.cli.import_{}:import'.format(sconfig['env_defaults']['smoacks_app_name'],
+                '={}.cli.import_{}:import_csv'.format(sconfig['env_defaults']['smoacks_app_name'],
                                             self._app_objects[objName].getSnakeName()) + "'"
             )
             if self._app_objects[objName].hasSearch:
