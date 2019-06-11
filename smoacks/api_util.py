@@ -87,3 +87,17 @@ def call_api(app_session, method, url, payload=None, use_refresh_csrf=False):
     if resp and app_session and 'csrf_refresh_token' in resp.cookies:
         app_session['csrf_refresh_token'] = resp.cookies['csrf_refresh_token']
     return resp
+
+# Find the group ID for a gid based on groups in user session
+def get_id_from_gid(session, gid):
+    group_dict = session['claims']['user_claims']['groups']
+    for group_id in group_dict:
+        if group_dict[group_id]['gid'] == gid:
+            return group_id
+
+# Find the group ID for a group name based on groups in user session
+def get_id_from_name(session, name):
+    group_dict = session['claims']['user_claims']['groups']
+    for group_id in group_dict:
+        if group_dict[group_id]['name'] == name:
+            return group_id

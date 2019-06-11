@@ -3,6 +3,7 @@ import csv
 import logging
 import os
 import sys
+from smoacks.api_util import get_id_from_name
 from smoacks.cli_util import get_opts, get_session
 from {{ app_name }}.{{ mixedName }} import {{ mixedName }}
 
@@ -32,7 +33,17 @@ def import_csv():
                 continue
             obj_data = {}
             for field in field_map:
-                obj_data[field] = row[field_map[field]]
+                if field == 'authorizations':
+                    auth_list = row[2].split(', ')
+                    for auth_item in auth_list:
+                        auth_data = auth_item.split(':')
+                        auth_gid = get_id_from_name(session, auth_data[0])
+                        obj_data['authorizations'].append({
+                            'group_id': auth_gid,
+                            'role': auth_data[1]
+                        })
+                else:
+                    obj_data[field] = row[field_map[field]]
             new_obj = {{ mixedName }}(**obj_data)
             success, resp = new_obj.save_new(session)
             if success:
