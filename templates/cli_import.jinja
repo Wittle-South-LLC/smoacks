@@ -14,17 +14,18 @@ LOGGER = logging.getLogger()
 def get_id(session, field, search_val):
 {% for fkey_import in fkey_imports %}
     if field == '{{ fkey_import.table }}.{{ fkey_import.search_field }}':
-        res = {{ fkey_import.table }}.search(session, search_val)
-        for item in res:
-            if item.{{ fkey_import.search_field }} == search_val:
-                return item.{{ fkey_import.fkey_field }} {% endfor %}
+        success, res = {{ fkey_import.table }}.search(session, search_val)
+        if success:
+            for item in res:
+                if item.{{ fkey_import.search_field }} == search_val:
+                    return item.{{ fkey_import.fkey_field }} {% endfor %}
     return False
 
 def import_csv():
     opts = get_opts('import_{{ snakeName }}', 'Adds list of {{ mixedName }} to a {{ app_name }}',
                     {'f': 'filename'})
 
-    if not os.path.isfile(opts.filename):
+    if not opts.filename or not os.path.isfile(opts.filename):
         sys.exit('Filename {} does not exist or is not a file.'.format(opts.filename))
 
     session = get_session(opts)

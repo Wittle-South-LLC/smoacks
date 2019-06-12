@@ -37,14 +37,13 @@ def login(user, pwd):
         'csrf_refresh_token': None
     }
     resp = call_api(app_session, 'POST', '/us/login', {'username': user, 'password': pwd})
-#    LOGGER.debug("login: resp.status_code = {}".format(str(resp.status_code)))
     if not resp or resp.status_code != 200:
         print('Bad news, login failed!')
         return None
     json = resp.json()
     app_session['user_id'] = json['Users'][0]['user_id']
     claims = jwt.decode(app_session['session'].cookies['access_token_cookie'], verify=False)
-#    LOGGER.debug('claims = ' + str(claims))
+    LOGGER.debug('claims = ' + str(claims))
     app_session['claims'] = claims
     return app_session
 
