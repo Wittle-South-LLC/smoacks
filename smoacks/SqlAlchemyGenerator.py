@@ -2,6 +2,7 @@
 import os
 from jinja2 import Environment, Template, FileSystemLoader
 from smoacks.sconfig import sconfig
+from smoacks.AppObject import scr_objects
 
 class SqlAlchemyGenerator:
     def __init__(self, app_object):
@@ -57,7 +58,8 @@ class SqlAlchemyGenerator:
             'fields': [],
             'write_fields': [],
             'rbacControlled': False,
-            'uuid_set': set()
+            'uuid_set': set(),
+            'fkey_imports': []
         }
         # If app object is rbac controlled, set values needed for client APIs
         if self._app_object.rbacControlled:
@@ -72,7 +74,15 @@ class SqlAlchemyGenerator:
             if prop.readOnly:
                 read_only_fields.append(prop.name)
             else:
-                result['write_fields'].append(prop.name)
+                if not prop.foreignKey:
+                    result['write_fields'].append(prop.name)
+                else:
+                    # We need to know the table name, and the search field for that table
+                    fk_table_name = prop.foreignKey
+                    fk_ao = scr_objects[fk_table_name]
+                    fk_search_field = fk_ao.searchField
+                    result['write_fields'].append('{}.{}'.format(fk_table_name, fk_search_field))
+                    result['fkey_imports'].append({'table': fk_table_name, 'search_field': fk_search_field, 'fkey_field': prop.name})
             if prop.searchField:
                 result['search_field'] = prop.name
                 result['hasSearch'] = True

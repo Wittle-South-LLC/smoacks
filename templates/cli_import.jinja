@@ -6,9 +6,19 @@ import sys
 from smoacks.api_util import get_id_from_name
 from smoacks.cli_util import get_opts, get_session
 from {{ app_name }}.{{ mixedName }} import {{ mixedName }}
+{% for fkey_import in fkey_imports %}from {{ app_name }}.{{ fkey_import.table }} import {{ fkey_import.table }}{% endfor %}
 
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger()
+
+def get_id(session, field, search_val):
+{% for fkey_import in fkey_imports %}
+    if field == '{{ fkey_import.table }}.{{ fkey_import.search_field }}':
+        res = {{ fkey_import.table }}.search(session, search_val)
+        for item in res:
+            if item.{{ fkey_import.search_field }} == search_val:
+                return item.{{ fkey_import.fkey_field }} {% endfor %}
+    return False
 
 def import_csv():
     opts = get_opts('import_{{ snakeName }}', 'Adds list of {{ mixedName }} to a {{ app_name }}',
@@ -44,7 +54,8 @@ def import_csv():
                             'role': auth_data[1]
                         })
                 else:
-                    obj_data[field] = row[field_map[field]]
+                    lookup_res = get_id(session, field, row[field_map[field]])
+                    obj_data[field] = lookup_res if lookup_res else row[field_map[field]]
             new_obj = {{ mixedName }}(**obj_data)
             success, resp = new_obj.save_new(session)
             if success:

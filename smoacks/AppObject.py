@@ -19,6 +19,7 @@ class AppObject:
         self.emitTestData = False
         self.rbacControlled = None
         self.relationships = None
+        self.searchField = None
     
     def addSchema(self, schema):
         self._schemas.append(schema)
@@ -34,6 +35,7 @@ class AppObject:
                     self._idCount += 1
                 if prop.searchField:
                     self.hasSearch = True
+                    self.searchField = prop.name
         if schema.extendedObject:
             self.extendedSchemaName = schema.name
 
