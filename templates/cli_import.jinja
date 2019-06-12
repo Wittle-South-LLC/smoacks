@@ -34,6 +34,7 @@ def import_csv():
             obj_data = {}
             for field in field_map:
                 if field == 'authorizations':
+                    obj_data['authorizations'] = []
                     auth_list = row[2].split(', ')
                     for auth_item in auth_list:
                         auth_data = auth_item.split(':')
