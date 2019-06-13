@@ -41,6 +41,7 @@ def import_csv():
                 fieldcount = 0
                 for field in row:
                     field_map[field] = fieldcount
+                    fieldcount += 1
                 continue
             obj_data = {}
             for field in field_map:
