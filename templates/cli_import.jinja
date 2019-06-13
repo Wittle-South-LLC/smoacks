@@ -46,7 +46,7 @@ def import_csv():
             for field in field_map:
                 if field == 'authorizations':
                     obj_data['authorizations'] = []
-                    auth_list = row[2].split(', ')
+                    auth_list = row[field_map[field]].split(', ')
                     for auth_item in auth_list:
                         auth_data = auth_item.split(':')
                         auth_gid = get_id_from_name(session, auth_data[0])
