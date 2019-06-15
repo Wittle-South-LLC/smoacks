@@ -93,5 +93,5 @@ def process_spec(spec_dict):
     spec_dict['paths'] = new_paths
 
     for schema in spec_dict['components']['schemas']:
-        if 'x-smoacks-create' in schema:
-            schema['x-orim-api-prefix'] = path_prefix
+        if 'x-smoacks-create' in spec_dict['components']['schemas'][schema]:
+            spec_dict['components']['schemas'][schema]['x-orim-api-prefix'] = path_prefix
