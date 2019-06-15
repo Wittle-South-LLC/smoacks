@@ -42,7 +42,15 @@ def merge_apis():
         process_spec(spec_dict)
 
         # Merge in the spec to the output
-        out_dict.update(spec_dict)
+        if not out_dict['info']:
+            out_dict['info'] = spec_dict['info']
+        if not out_dict['openapi']:
+            out_dict['openapi'] = spec_dict['openapi']
+        if not out_dict['servers']:
+            out_dict['servers'] = spec_dict['servers']
+        out_dict['components'].update(spec_dict['components'])
+        out_dict['paths'].update(spec_dict['paths'])
+        out_dict['tags'].update(spec_dict['tags'])
 
     # Set the title if it exists
     if (opts.title):
@@ -61,9 +69,10 @@ def process_spec(spec_dict):
     # Remove the trailing specification path
     path_parts = root_path.split('/')
     path_prefix = path_parts.pop()
+    print('Found path prefix: {}'.format(path_prefix))
 
     # Save the new path
-    new_path = '/'.join(path_parts)
+    new_path = '/' + '/'.join(path_parts)
     spec_dict['servers'][0]['url'] = new_path
 
     # Iterate through paths and update them 
