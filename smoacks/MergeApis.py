@@ -42,11 +42,11 @@ def merge_apis():
         process_spec(spec_dict)
 
         # Merge in the spec to the output
-        if not out_dict['info']:
+        if not 'info' in out_dict:
             out_dict['info'] = spec_dict['info']
-        if not out_dict['openapi']:
+        if not 'openapi' in out_dict:
             out_dict['openapi'] = spec_dict['openapi']
-        if not out_dict['servers']:
+        if not 'servers' in out_dict:
             out_dict['servers'] = spec_dict['servers']
         out_dict['components'].update(spec_dict['components'])
         out_dict['paths'].update(spec_dict['paths'])
