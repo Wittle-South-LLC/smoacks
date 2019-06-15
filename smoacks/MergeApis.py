@@ -30,7 +30,10 @@ def merge_apis():
     
     # Create the output dictionary that will hold the merged spec
     out_dict = {
-        'components': {},
+        'components': {
+            'schemas': {},
+            'parameters': {}
+        },
         'tags': {},
         'paths': {}
     }
@@ -52,7 +55,8 @@ def merge_apis():
             out_dict['openapi'] = spec_dict['openapi']
         if not 'servers' in out_dict:
             out_dict['servers'] = spec_dict['servers']
-        out_dict['components'].update(spec_dict['components'])
+        out_dict['components']['schemas'].update(spec_dict['components']['schemas'])
+        out_dict['components']['parameters'].update(spec_dict['components']['parameters'])
         out_dict['paths'].update(spec_dict['paths'])
         out_dict['tags'].update(spec_dict['tags'])
 
