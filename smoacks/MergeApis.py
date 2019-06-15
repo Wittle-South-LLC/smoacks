@@ -91,3 +91,7 @@ def process_spec(spec_dict):
         print('----> New API path for {} is {}'.format(path, new_key))
         new_paths[new_key] = spec_dict['paths'][path]
     spec_dict['paths'] = new_paths
+
+    for schema in spec_dict['components']['schemas']:
+        if 'x-smoacks-create' in schema:
+            schema['x-orim-api-prefix'] = path_prefix
