@@ -80,7 +80,7 @@ def process_spec(spec_dict):
     print('Found path prefix: {}'.format(path_prefix))
 
     # Save the new path
-    new_path = '/' + '/'.join(path_parts)
+    new_path = '/'.join(path_parts)
     print('--> new path: {}'.format(new_path))
     spec_dict['servers'][0]['url'] = new_path
 
