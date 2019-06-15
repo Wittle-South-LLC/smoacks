@@ -29,7 +29,11 @@ def merge_apis():
         sys.exit('Cannot open {} for writing'.format(opts.output_spec))
     
     # Create the output dictionary that will hold the merged spec
-    out_dict = {}
+    out_dict = {
+        'components': {},
+        'tags': {},
+        'paths': {}
+    }
 
     # Iterate through specs and merge them into the output dictionary
     for spec_file in spec_files:
