@@ -4,7 +4,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(name='smoacks',
-      version='0.2.9',
+      version='0.2.10',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',
@@ -58,7 +58,8 @@ setup(name='smoacks',
           ],
       entry_points={
           'console_scripts': ['smoacks-setup=smoacks.command_line:main',
-                              'smoacks-gen=smoacks.command_line:gen']
+                              'smoacks-gen=smoacks.command_line:gen',
+                              'smoacks-merge=smoacks.command_line:merge_apis']
       },
       long_description=long_description,
       long_description_content_type='text/markdown',

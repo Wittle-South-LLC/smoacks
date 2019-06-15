@@ -1,6 +1,7 @@
 from smoacks.sconfig import sconfig
 from smoacks.structure import SmoacksStructure
 from smoacks.ApiGenerator import generate_code
+from smoacks.MergeApis import merge_apis
 
 def main():
     my_struct = SmoacksStructure()
@@ -9,3 +10,6 @@ def main():
 
 def gen():
     generate_code()
+
+def merge():
+    merge_apis()

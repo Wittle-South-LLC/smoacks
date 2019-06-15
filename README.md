@@ -66,6 +66,7 @@ The following tags have special meanings for SMOACKS application generation
 Version History
 ---------------
 
+* 0.2.10 - Adds ability to merge multiple API specs into one
 * 0.2.9 - Generates CLI utilities and API client objects
 * 0.2.8 - Support MUAM style RBAC in default unit tests. See [rbac support](https://github.com/Wittle-South-LLC/smoacks/blob/master/RBAC_SUPPORT.md)
 * 0.2.7 - Support cascading database operations on relationships
