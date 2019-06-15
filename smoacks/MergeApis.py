@@ -56,7 +56,7 @@ def process_spec(spec_dict):
     """Changes the paths for the spec"""
 
     # Get the root path for this spec from the URL attribute
-    root_path = spec_dict['servers']['url']
+    root_path = spec_dict['servers'][0]['url']
 
     # Remove the trailing specification path
     path_parts = root_path.split('/')
@@ -64,7 +64,7 @@ def process_spec(spec_dict):
 
     # Save the new path
     new_path = path_parts.join('/')
-    spec_dict['servers']['url'] = new_path
+    spec_dict['servers'][0]['url'] = new_path
 
     # Iterate through paths and update them 
     for path in spec_dict['paths']:
