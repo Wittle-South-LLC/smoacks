@@ -63,7 +63,7 @@ def process_spec(spec_dict):
     path_prefix = path_parts.pop()
 
     # Save the new path
-    new_path = path_parts.join('/')
+    new_path = '/'.join(path_parts)
     spec_dict['servers'][0]['url'] = new_path
 
     # Iterate through paths and update them 
