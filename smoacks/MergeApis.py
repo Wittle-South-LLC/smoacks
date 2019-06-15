@@ -83,8 +83,7 @@ def process_spec(spec_dict):
     # Iterate through paths and update them
     new_paths = {}
     for path in spec_dict['paths']:
-        path_data = spec_dict['paths'].pop(path)
         new_key = '/' + path_prefix + path
         print('----> New API path for {} is {}'.format(path, new_key))
-        new_paths[new_key] = path_data
+        new_paths[new_key] = spec_dict['paths'][path]
     spec_dict['paths'] = new_paths
