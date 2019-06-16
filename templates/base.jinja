@@ -1,5 +1,6 @@
 """base.py - Module creating shared declarative base for object-relational model"""
 import datetime
+import dateutil.parser
 import re
 import logging
 import uuid
@@ -48,6 +49,8 @@ class Base(object):
             if column.key in fields:
                 if self.is_uuid(column.key):
                     setattr(self, column.key, uuid.UUID(fields[column.key]).bytes)
+                elif str(column.columns[0].type) == 'DATETIME':
+                    setattr(self, column.key, dateutil.parser.parse(fields[column.key]))
                 else:
                     setattr(self, column.key, fields[column.key])
 

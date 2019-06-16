@@ -53,6 +53,7 @@ setup(name='smoacks',
           'jinja2',
           'nose',
           'openapi-spec-validator',
+          'python-dateutil',
           'PyYAML',
           'SQLAlchemy'
           ],
