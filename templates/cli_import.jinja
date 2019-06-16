@@ -18,8 +18,8 @@ def get_id(session, field, search_val):
         if success:
             for item in res:
                 if item.{{ fkey_import.search_field }} == search_val:
-                    return item.{{ fkey_import.fkey_field }} {% endfor %}
-    return False
+                    return (item.{{ fkey_import.fkey_field }}, '{{ fkey_import.fkey_field }}') {% endfor %}
+    return (False, '{{ fkey_import.fkey_field }}')
 
 def import_csv():
     opts = get_opts('import_{{ snakeName }}', 'Adds list of {{ mixedName }} to a {{ app_name }}',
@@ -56,8 +56,11 @@ def import_csv():
                             'role': auth_data[1]
                         })
                 else:
-                    lookup_res = get_id(session, field, row[field_map[field]])
-                    obj_data[field] = lookup_res if lookup_res else row[field_map[field]]
+                    lookup_res, lookup_field = get_id(session, field, row[field_map[field]])
+                    if lookup_res:
+                        obj_data[lookup_field] = lookup_res
+                    else:
+                        obj_data[field] = row[field_map[field]]
             new_obj = {{ mixedName }}(**obj_data)
             success, resp = new_obj.save_new(session)
             if success:

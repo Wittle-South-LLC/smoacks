@@ -66,16 +66,17 @@ The following tags have special meanings for SMOACKS application generation
 Version History
 ---------------
 
+* 0.2.11 - Various bug fixes around data import
 * 0.2.10 - Adds ability to merge multiple API specs into one
-* 0.2.9 - Generates CLI utilities and API client objects
-* 0.2.8 - Support MUAM style RBAC in default unit tests. See [rbac support](https://github.com/Wittle-South-LLC/smoacks/blob/master/RBAC_SUPPORT.md)
-* 0.2.7 - Support cascading database operations on relationships
-* 0.2.6 - Support for assigning custom schemas to specific verbs
-* 0.2.5 - Support for hydration endpoint
-* 0.2.4 - Support for model relationships
-* 0.2.3 - Unit test coverage for all generated endpoints
-* 0.2.2 - Allows customization of data model and API objects
-* 0.2.1 - Supports unit testing authenticated endpoints
-* 0.2.0 - First version generating structure, code, and working unit test
+* 0.2.9  - Generates CLI utilities and API client objects
+* 0.2.8  - Support MUAM style RBAC in default unit tests. See [rbac support](https://github.com/Wittle-South-LLC/smoacks/blob/master/RBAC_SUPPORT.md)
+* 0.2.7  - Support cascading database operations on relationships
+* 0.2.6  - Support for assigning custom schemas to specific verbs
+* 0.2.5  - Support for hydration endpoint
+* 0.2.4  - Support for model relationships
+* 0.2.3  - Unit test coverage for all generated endpoints
+* 0.2.2  - Allows customization of data model and API objects
+* 0.2.1  - Supports unit testing authenticated endpoints
+* 0.2.0  - First version generating structure, code, and working unit test
 * 0.1.X Series - Incremental steps to first working version
 
