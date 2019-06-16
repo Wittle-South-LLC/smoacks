@@ -19,7 +19,7 @@ def get_id(session, field, search_val):
             for item in res:
                 if item.{{ fkey_import.search_field }} == search_val:
                     return (item.{{ fkey_import.fkey_field }}, '{{ fkey_import.fkey_field }}') {% endfor %}
-    return (False, '{{ fkey_import.fkey_field }}')
+    return (False, None)
 
 def import_csv():
     opts = get_opts('import_{{ snakeName }}', 'Adds list of {{ mixedName }} to a {{ app_name }}',
