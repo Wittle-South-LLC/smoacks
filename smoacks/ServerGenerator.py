@@ -17,7 +17,8 @@ class ServerGenerator:
             'objects': [],
             'clis': [],
             'clisubdir': sconfig['structure']['clisubdir'],
-            'gensubdir': sconfig['structure']['gensubdir']
+            'gensubdir': sconfig['structure']['gensubdir'],
+            'needsLoginPost': sconfig['parameters']['include_login_post']
         }
         # Loop through the properties and update the structure where needed
         set_first_table = False

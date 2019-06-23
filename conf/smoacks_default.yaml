@@ -2,6 +2,7 @@ parameters:
   source_spec: schema.yaml
   dest_spec: app.yaml
   include_shutdown: True
+  include_login_post: False
 structure:
   root: .
   pvPathRoot: /mnt/hgfs/wsv
