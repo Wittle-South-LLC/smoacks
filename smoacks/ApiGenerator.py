@@ -116,17 +116,19 @@ def generate_code():
         OPENAPI_SPEC['paths'].update(api_obj)
 
     # Build login get path, used to hydrate user data at login
-    OPENAPI_SPEC['paths']['/login'] = {
-        'get': {
-            'summary': 'Hydrate application',
-            'tags': [sconfig['env_defaults']['smoacks_app_name']],
-            'description': 'Returns initial login data for this service',
-            'responses': {
-                '200': {
-                    'description': 'Successful response',
-                    'content': {
-                        'application/json': LOGIN_SCHEMA
-                    }
+    if '/login' not in OPENAPI_SPEC['paths']:
+        OPENAPI_SPEC['paths']['/login'] = {
+            'get': {}
+        }
+    OPENAPI_SPEC['paths']['/login']['get'] = {
+        'summary': 'Hydrate application',
+        'tags': [sconfig['env_defaults']['smoacks_app_name']],
+        'description': 'Returns initial login data for this service',
+        'responses': {
+            '200': {
+                'description': 'Successful response',
+                'content': {
+                    'application/json': LOGIN_SCHEMA
                 }
             }
         }
