@@ -1,7 +1,7 @@
 """{{ mixedName }}.py - Module containing the {{ mixedName }} class"""
 import uuid
 import datetime
-from sqlalchemy import Boolean, Column, ForeignKey, DateTime, JSON, String, text
+from sqlalchemy import Boolean, Column, ForeignKey, DateTime, Integer, JSON, String, text
 from sqlalchemy.dialects.mysql import BINARY
 {% if relationships|length > 0 %}from sqlalchemy.orm import relationship{% endif %}
 
