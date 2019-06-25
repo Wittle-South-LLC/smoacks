@@ -49,7 +49,8 @@ def test_{{ snakeName }}_create():
     global added_obj
     test_obj = {{ name }}()
     {% for createAssignment in createAssignments %}{{ createAssignment }}
-    {% endfor %}{% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}test_obj.{{ fkey.name}} = added_{{ fkey.snakeName }}.{{ fkey.name }}{% endfor %}{% endif %}
+    {% endfor %}{% if foreignKeys|length > 0 %}{% for fkey in foreignKeys %}test_obj.{{ fkey.name}} = added_{{ fkey.snakeName }}.{{ fkey.name }}
+    {% endfor %}{% endif %}
     success, resp = test_obj.save_new(TEST_SESSION)
     if not success: log_response_error(resp)
     assert success
