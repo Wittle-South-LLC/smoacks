@@ -34,7 +34,7 @@ class ApiClientBase(ABC):
             if key.startswith('_'): continue
             if key == parent_id: continue
             if key in self._ro_fields: continue
-            if not value: continue
+            if value === None: continue
             result[key] = value
         return result
 
