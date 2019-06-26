@@ -38,7 +38,7 @@ def handle_post(dmo, dmo_pk_name, session, body):
     """Method to handle POST verbs for data model object APIs"""
     new_record = dmo()
     new_record.apply_update(body)
-    new_record._reator_user_id = g.user_id
+    new_record._creator_user_id = g.user_id
     session.add(new_record)
     session.commit()
     result = {}
