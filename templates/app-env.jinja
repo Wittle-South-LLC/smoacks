@@ -5,6 +5,7 @@
 #
 # Variables with values that are independent of mode
 export APP_DB_NAME="{{ smoacks_app_name }}"
+export APP_DB_SNAME={{ smoacks_test_host }}
 export APP_DB_CPORT={{ smoacks_db_container_port }}
 export OPENAPI_SPEC='/app/src/spec/{{ dest_spec }}'
 export REACT_APP_API_PATH="{{ smoacks_api_path }}"
