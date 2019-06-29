@@ -22,6 +22,7 @@ class Base(object):
     def __primary_key__(cls):
         return to_snakecase(cls.__name__) + '_id'
     __uuid_list__ = {'_creator_user_id'}
+    __wo_fields__ = set()
     __table_args__ = {'mysql_charset':'utf8'}
     record_created = Column(DateTime,
                             server_default=text('CURRENT_TIMESTAMP'))
@@ -57,5 +58,15 @@ class Base(object):
     def get_uuid(self):
         """Returns the text version of the UUID, the binary version is stored in the database"""
         return str(uuid.UUID(bytes=getattr(self, self.__primary_key__)))
+
+    def dump(self, deep=False):
+        """Returns dictionary of fields and values"""
+        ret = {}
+        for key, value in vars(self).items():
+            if key in self.__uuid_list__ and value:
+                ret[key] = str(uuid.UUID(bytes=value))
+            elif not key.startswith('_') and not key in self.__wo_fields__:
+                ret[key] = value
+        return ret
 
 Base = declarative_base(cls=Base)

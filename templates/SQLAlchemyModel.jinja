@@ -11,6 +11,7 @@ class {{ genprefix}}{{ mixedName }}(Base):
     """Data model object representing a {{ mixedName }}"""
     __tablename__ = '{{ mixedName }}'
     __uuid_list__ = {{ uuid_set }}
+    __wo_fields__ = {{ wo_fields_set }}
     __primary_key__ = '{{ name_id }}'
     {% for dmField in dmFields %}{{ dmField }}
     {% endfor %}
@@ -22,13 +23,3 @@ class {{ genprefix}}{{ mixedName }}(Base):
         super({{ genprefix}}{{ mixedName }}, self).__init__(**kwargs)
         self.{{ name_id }} = uuid.uuid4().bytes
 {% endif %}
-
-    def dump(self, deep=False):
-        """Returns dictionary of fields and values"""
-        ret = {}
-        for key, value in vars(self).items():
-            if key in self.__uuid_list__ and value:
-                ret[key] = str(uuid.UUID(bytes=value))
-            elif not key.startswith('_'):
-                ret[key] = value
-        return ret

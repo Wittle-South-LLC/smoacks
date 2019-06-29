@@ -67,10 +67,13 @@ class SqlAlchemyGenerator:
             result['rbacClass'] = self._app_object.rbacControlled
         # Loop through the properties and update the structure where needed
         read_only_fields = []
+        write_only_fields = []
         id_fields = []
         properties = self._app_object.getAllProperties()
         for prop in properties:
             result['fields'].append(prop.name)
+            if prop.writeOnly:
+                write_only_fields.append(prop.name)
             if prop.readOnly:
                 read_only_fields.append(prop.name)
             else:
@@ -96,6 +99,7 @@ class SqlAlchemyGenerator:
                 if prop.format == 'uuid':
                     result['uuid_set'].add(prop.name)
         result['ro_fields'] = "{'" + "', '".join(read_only_fields) + "'}" if len(read_only_fields) > 0 else 'set()'
+        result['wo_fields_set'] = "{'" + "', '".join(write_only_fields) + "'}" if len(write_only_fields) > 0 else 'set()'
         result['id_fields'] = "{'" + "', '".join(id_fields) + "'}" if len(id_fields) > 1 else "'{}'".format(id_fields[0])
         result['get_ids'] = "self." + ", self.".join(id_fields)
         # Loop through relationships

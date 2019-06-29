@@ -32,6 +32,7 @@ class Property:
             self.searchField = propertyYaml['x-smoacks-search-field'] if 'x-smoacks-search-field' in propertyYaml else False
             self.stringFormat = propertyYaml['format'] if 'format' in propertyYaml else None
             self.readOnly = propertyYaml['readOnly'] if 'readOnly' in propertyYaml else False
+            self.writeOnly = propertyYaml['writeOnly'] if 'writeOnly' in propertyYaml else False
         elif '$ref' in propertyYaml:
             self.ref = propertyYaml['$ref']
 

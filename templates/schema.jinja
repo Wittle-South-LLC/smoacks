@@ -202,6 +202,13 @@ components:
           maxLength: 120
           example: 'Tester, Unit X'
           x-smoacks-search-field: True
+        password:
+          type: string
+          description: password
+          writeOnly: True
+          minLength: 6
+          maxLength: 60
+          example: 'MyPassword'
         last_name:
           type: string
           description: Last Name

@@ -55,14 +55,17 @@ class NoseTestGenerator:
                     unitTestEditObject[prop.name] = prop.editUnitTest
                     result['editUnitTestAssignment'] = 'added_obj.{} = {}'.format(prop.name, prop.getUnitTestLiteral())
                     unitTestAssert = 'assert resp.{} == added_obj.{}'.format(prop.name, prop.name)
-                    getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+                    if not prop.writeOnly:
+                        getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
                 else:
                     unitTestEditObject[prop.name] = prop.example
                     if prop.foreignKey:
                         fk_app_object = scr_objects[prop.foreignKey]
-                        getAsserts.append('assert resp.{} == added_{}.{}'.format(prop.name, fk_app_object.getSnakeName(), prop.name))
+                        if not prop.writeOnly:
+                            getAsserts.append('assert resp.{} == added_{}.{}'.format(prop.name, fk_app_object.getSnakeName(), prop.name))
                     else:
-                        getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
+                        if not prop.writeOnly:
+                            getAsserts.append('assert resp.{} == {}'.format(prop.name, prop.getExamplePythonLiteral()))
         if len(id_list) == 1:
             result['idsString'] = 'added_obj.{}'.format(id_list[0])
         else:
