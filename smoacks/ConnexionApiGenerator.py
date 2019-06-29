@@ -24,9 +24,11 @@ class ConnexionApiGenerator:
                 result['name_id'] = prop.name
                 if not result['idList']:
                     result['idList'] = prop.name
+                    result['idStrings'] = "'" + prop.name + "'"
                     result['pkList'] = self.name + '.' + prop.name
                 else:
                     result['idList'] += ', ' + prop.name
+                    result['idStrings'] += ", '" + prop.name + "'"
                     result['pkList'] += ', ' + self.name + '.' + prop.name
             if prop.searchField:
                 result['hasSearch'] = True
@@ -34,9 +36,11 @@ class ConnexionApiGenerator:
         if self._app_object._idCount == 1:
             result['primary_keys'] = result['pkList']
             result['id_list'] = result['idList']
+            result['id_strings'] = result['idStrings']
         else:
             result['primary_keys'] = '[' + result['pkList'] + ']'
             result['id_list'] = '[' + result['idList'] + ']'
+            result['id_strings'] = '[' + result['idStrings'] + ']'
         result.update(sconfig['env_defaults'])
         return result
 

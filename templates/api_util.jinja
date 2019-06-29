@@ -42,7 +42,7 @@ def new_dm_object(dmo, body):
 
 def existing_dm_object(dmo, session, keys, ids):
     find_record = None
-    if isinstance(keys, basestring):
+    if isinstance(keys, str):
         find_record = session.query(dmo)\
                        .filter(keys == uuid.UUID(ids).bytes).one_or_none()
     else:
@@ -53,11 +53,11 @@ def existing_dm_object(dmo, session, keys, ids):
     return find_record
 
 def persist_dm_object(obj, session):
-    session.add(new_record)
+    session.add(obj)
     session.commit()
 
 def delete_dm_object(obj, session):
-    session.delete(new_record)
+    session.delete(obj)
     session.commit()
 
 def post_response(obj, keys):
@@ -68,8 +68,8 @@ def post_response(obj, keys):
     # a string rather than a list, we should return the object's UUID in
     # the response. For multiple-field primary key objects, the assumption
     # is that object creation requires providing existing keys
-    if isinstance(keys, basestring):
-        result[keys] = new_record.get_uuid()
+    if isinstance(keys, str):
+        result[keys] = obj.get_uuid()
     return result, 201
 
 def handle_search(dmo, search_field, session, search_text):
