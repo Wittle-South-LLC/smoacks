@@ -34,25 +34,43 @@ def api_error_msg(msg_key, msg_text):
         return API_ERRORS[msg_key]
     return "Unknown error key: " + msg_key #pragma: no cover
 
-def handle_post(dmo, dmo_pk_name, session, body):
-    """Method to handle POST verbs for data model object APIs"""
+def new_dm_object(dmo, body):
     new_record = dmo()
     new_record.apply_update(body)
     new_record._creator_user_id = g.user_id
-    session.add(new_record)
-    session.commit()
-    result = {}
-    result[dmo_pk_name] = new_record.get_uuid()
-    return result, 201
+    return new_record
 
-def handle_2key_post(dmo, session, body):
-    """Method to handle POST verbs for many-to-many link object APIs"""
-    new_record = dmo()
-    new_record.apply_update(body)
-    new_record._creator_user_id = g.user_id
+def existing_dm_object(dmo, session, keys, ids):
+    find_record = None
+    if isinstance(keys, basestring):
+        find_record = session.query(dmo)\
+                       .filter(keys == uuid.UUID(ids).bytes).one_or_none()
+    else:
+        bid1 = uuid.UUID(ids[0]).bytes
+        bid2 = uuid.UUID(ids[1]).bytes
+        find_record = session.query(dmo)\
+                       .filter(keys[0] == bid1, keys[1] == bid2).one_or_none()
+    return find_record
+
+def persist_dm_object(obj, session):
     session.add(new_record)
     session.commit()
-    return {}, 201
+
+def delete_dm_object(obj, session):
+    session.delete(new_record)
+    session.commit()
+
+def post_response(obj, keys):
+    """Method to handle POST verbs for data model object APIs"""
+    result = {}
+    # Based on SMOACKS model assumptions, new IDs are generated only for
+    # data model objects with a single primary key. Therefore, if keys is
+    # a string rather than a list, we should return the object's UUID in
+    # the response. For multiple-field primary key objects, the assumption
+    # is that object creation requires providing existing keys
+    if isinstance(keys, basestring):
+        result[keys] = new_record.get_uuid()
+    return result, 201
 
 def handle_search(dmo, search_field, session, search_text):
     """Method to handle GET verb with no URL parameters"""
@@ -65,67 +83,3 @@ def handle_search(dmo, search_field, session, search_text):
     for item in search_list:
         ret.append(item.dump())
     return ret, 200
-
-def handle_delete(dmo, dmo_pk, session, id):
-    """Method to handle DELETE verb for data model object APIs"""
-    binary_uuid = uuid.UUID(id).bytes
-    find_record = session.query(dmo)\
-                   .filter(dmo_pk == binary_uuid).one_or_none()
-    if not find_record:
-        return 'NOT_FOUND', 404
-    session.delete(find_record)
-    session.commit()
-    return type(dmo).__name__ + ' deleted', 204
-
-def handle_2key_delete(dmo, pk1, pk2, session, id1, id2):
-    bid1 = uuid.UUID(id1).bytes
-    bid2 = uuid.UUID(id2).bytes
-    find_record = session.query(dmo)\
-                   .filter(pk1 == bid1, pk2 == bid2).one_or_none()
-    if not find_record:
-        return 'NOT_FOUND', 404
-    session.delete(find_record)
-    session.commit()
-    return type(dmo).__name__ + ' deleted', 204
-
-def handle_put(dmo, dmo_pk, dmo_pk_name, session, id, body):
-    """Method to handle PUT verb for data model object APIs"""
-    binary_uuid = uuid.UUID(id).bytes
-    find_record = session.query(dmo)\
-                   .filter(dmo_pk == binary_uuid).one_or_none()
-    if not find_record:
-        return 'NOT_FOUND', 404
-    find_record.apply_update(body)
-    session.add(find_record)
-    session.commit()
-    return type(dmo).__name__ + ' updated', 200
-
-def handle_2key_put(dmo, pk1, pk2, session, id1, id2, body):
-    bid1 = uuid.UUID(id1).bytes
-    bid2 = uuid.UUID(id2).bytes
-    find_record = session.query(dmo)\
-                   .filter(pk1 == bid1, pk2 == bid2).one_or_none()
-    if not find_record:
-        return 'NOT_FOUND', 404
-    find_record.apply_update(body)
-    session.add(find_record)
-    session.commit()
-    return type(dmo).__name__ + ' updated', 200
-
-def handle_get(dmo, dmo_pk, session, id):
-    """Method to handle GET verb for data model object APIs"""
-    binary_uuid = uuid.UUID(id).bytes
-    find_record = session.query(dmo)\
-                   .filter(dmo_pk == binary_uuid).one_or_none()
-    if not find_record:
-        return 'NOT_FOUND', 404
-    return find_record.dump(True), 200
-
-def handle_2key_get(dmo, pk1, pk2, session, id1, id2):
-    bid1 = uuid.UUID(id1).bytes
-    bid2 = uuid.UUID(id2).bytes
-    find_record = session.query(dmo)\
-                   .filter(pk1 == bid1, pk2 == bid2).one_or_none()
-    if not find_record:
-        return 'NOT_FOUND', 404
-    return find_record.dump(True), 200
