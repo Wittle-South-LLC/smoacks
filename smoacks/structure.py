@@ -2,7 +2,7 @@
 import os
 import stat
 from jinja2 import Environment, Template, TemplateError, UndefinedError, TemplateNotFound, FileSystemLoader
-from smoacks.sconfig import sconfig
+from smoacks.sconfig import custom_config, sconfig
 
 class SmoacksStructure:
     def __init__(self):
@@ -62,8 +62,11 @@ class SmoacksStructure:
              'module_dir': True}
         ]
         self.template_dict = sconfig['env_defaults']
-        self.template_dict['smoacks_local_dev_path'] = os.path.join(sconfig['structure']['pvPathRoot'],
-                                                                    sconfig['env_defaults']['smoacks_app_name'])
+        if 'structure' in custom_config and 'pvPath' in custom_config['structure']:
+            self.template_dict['smoacks_local_dev_path'] = custom_config['structure']['pvPath']
+        else:
+            self.template_dict['smoacks_local_dev_path'] = os.path.join(sconfig['structure']['pvPathRoot'],
+                                                                        sconfig['env_defaults']['smoacks_app_name'])
 
     def renderEnvironment(self):
         env = Environment(
