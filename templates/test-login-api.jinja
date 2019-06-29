@@ -5,11 +5,11 @@
 # tests.
 """test-login-api.py - Tests of Login API"""
 import logging
-from smoacks.api_util import call_api
-from .TestUtil import mock_login, log_response_error
+from smoacks.api_util import call_api{% if smoacks_test_login == 'real'%}, login{% endif %}
+from .TestUtil import {% if smoacks_test_login == 'mock' %}mock_login, {% endif %}log_response_error
 
 LOGGER = logging.getLogger()
-TEST_SESSION = mock_login()
+TEST_SESSION = {% if smoacks_test_login == 'mock' %}mock_login(){% else %}login('{{ smoacks_test_user }}', '{{ smoacks_test_password}}'){% endif %}
 
 def test_login():
     """LoginAPI: Test login API"""

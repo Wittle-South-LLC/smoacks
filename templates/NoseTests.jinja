@@ -25,6 +25,7 @@ def setUp():
     global added_{{ fkey.snakeName }}
     added_{{ fkey.snakeName }} = {{ fkey.mixedName }}(**{{ fkey.createObj }})
     success, resp = added_{{ fkey.snakeName }}.save_new(TEST_SESSION)
+    if not success: log_response_error(resp)
     assert success
     {% if fkey.rbacControlled %}
     create_auth_obj = {
@@ -34,6 +35,7 @@ def setUp():
     }
     auth_obj = {{ fkey.rbacControlled }}(**create_auth_obj)
     success, auth_resp = auth_obj.save_new(TEST_SESSION)
+    if not success: log_response_error(resp)
     assert success
     {% endif %}{% endfor %}
 
