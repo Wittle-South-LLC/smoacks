@@ -71,6 +71,7 @@ class SqlAlchemyGenerator:
         id_fields = []
         properties = self._app_object.getAllProperties()
         for prop in properties:
+            if prop.noPersist: continue
             result['fields'].append(prop.name)
             if prop.writeOnly:
                 write_only_fields.append(prop.name)

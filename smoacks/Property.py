@@ -27,6 +27,7 @@ class Property:
             self.maxLength = propertyYaml['maxLength'] if 'maxLength' in propertyYaml else None
             self.minimum = propertyYaml['minimum'] if 'minimum' in propertyYaml else None
             self.minLength = propertyYaml['minLength'] if 'minLength' in propertyYaml else None
+            self.noPersist = propertyYaml['x-smoacks-no-persist'] if 'x-smoacks-no-persist' in propertyYaml else False
             self.nullable = propertyYaml['nullable'] if 'nullable' in propertyYaml else False
             self.pattern = propertyYaml['pattern'] if 'pattern' in propertyYaml else None
             self.searchField = propertyYaml['x-smoacks-search-field'] if 'x-smoacks-search-field' in propertyYaml else False
