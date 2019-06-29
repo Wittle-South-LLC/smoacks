@@ -2,7 +2,7 @@
 """Module to handle /{{ name }}s API endpoint """
 from flask import current_app, g
 from flask_jwt_extended import jwt_required
-from util.api_util import new_dm_object, existing_dm_object, persist_dm_object \
+from util.api_util import new_dm_object, existing_dm_object, persist_dm_object, \
                           delete_dm_object, post_response, handle_search
 from dm.{{ name }} import {{ name }}
 
