@@ -42,7 +42,7 @@ def new_dm_object(dmo, body):
 
 def existing_dm_object(dmo, session, keys, ids):
     find_record = None
-    if isinstance(keys, str):
+    if not isinstance(keys, list):
         find_record = session.query(dmo)\
                        .filter(keys == uuid.UUID(ids).bytes).one_or_none()
     else:
