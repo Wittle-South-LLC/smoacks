@@ -18,4 +18,4 @@ def test_login():
     assert resp.status_code == 200
     json = resp.json()
     {% for obj in objects %}
-    assert len(json['{{obj.name}}s']) == 0{% endfor %}
+    assert len(json['{{obj.name}}s']) == {% if obj.name != 'Users' %}0{% else %}1{% endif %}{% endfor %}
