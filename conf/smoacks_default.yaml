@@ -60,6 +60,9 @@ env_defaults:
   smoacks_test_db_account: $MY_TEST_DB_USER
   smoacks_test_db_password: $MY_TEST_DB_PWD
   smoacks_test_api_endpoint: shutdown
+  smoacks_test_login: mock
+  smoacks_test_user: admin
+  smoacks_test_password: testing0
   smoacks_server_service_port: 31500
   smoacks_secret_key: ChangeMe!
   smoacks_db_service: mysql

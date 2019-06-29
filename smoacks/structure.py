@@ -55,14 +55,15 @@ class SmoacksStructure:
             {'template': 'testme.jinja',
              'dir': sconfig['structure']['bindir'],
              'outfile': 'testme',
-             'executable': True},
+             'executable': True,
+             'overwrite': False },
             {'template': 'TestUtil.jinja',
              'dir': sconfig['structure']['testdir'],
              'outfile': 'TestUtil.py',
              'module_dir': True}
         ]
         self.template_dict = sconfig['env_defaults']
-        if 'structure' in custom_config and 'pvPath' in custom_config['structure']:
+        if custom_config and 'structure' in custom_config and 'pvPath' in custom_config['structure']:
             self.template_dict['smoacks_local_dev_path'] = custom_config['structure']['pvPath']
         else:
             self.template_dict['smoacks_local_dev_path'] = os.path.join(sconfig['structure']['pvPathRoot'],

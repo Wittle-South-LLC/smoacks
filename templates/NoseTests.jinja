@@ -5,16 +5,16 @@
 # tests.
 """test-{{ snakeName }}-api.py - Tests of {{ name }} APIs"""
 import logging
-from smoacks.api_util import call_api
+from smoacks.api_util import call_api{% if smoacks_test_login == 'real'%}, login{% endif %}
 from {{ app_name }}.{{ name }} import {{ name }}
 {% if foreignKeys|length > 0 %}{% for fkey in foreignKeys -%}
 from {{ app_name }}.{{ fkey.mixedName }} import {{ fkey.mixedName }}
 {% if fkey.rbacControlled %}from {{ app_name }}.{{ fkey.rbacControlled }} import {{ fkey.rbacControlled }} {% endif %}
 {% endfor %}{% endif -%}
-from .TestUtil import mock_login, log_response_error, default_group_ids
+from .TestUtil import {% if smoacks_test_login == 'mock' %}mock_login, {% endif %}log_response_error, default_group_ids
 
 LOGGER = logging.getLogger()
-TEST_SESSION = mock_login()
+TEST_SESSION = {% if smoacks_test_login == 'mock' %}mock_login(){% else %}login('{{ smoacks_test_user }}', '{{ smoacks_test_password}}'){% endif %}
 added_obj = None
 {% if foreignKeys|length > 0 -%}
 {% for fkey in foreignKeys -%}
