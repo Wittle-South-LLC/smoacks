@@ -71,7 +71,6 @@ class SqlAlchemyGenerator:
         id_fields = []
         properties = self._app_object.getAllProperties()
         for prop in properties:
-            if prop.noPersist: continue
             result['fields'].append(prop.name)
             if prop.writeOnly:
                 write_only_fields.append(prop.name)
@@ -96,7 +95,8 @@ class SqlAlchemyGenerator:
                 result['dmFields'].append(self.getField(prop))
                 result['uuid_set'].add(prop.name)
             if not prop.isId and not (prop.name in {'record_created', 'record_updated'}):
-                result['dmFields'].append(self.getField(prop))
+                if not prop.noPersist:
+                    result['dmFields'].append(self.getField(prop))
                 if prop.format == 'uuid':
                     result['uuid_set'].add(prop.name)
         result['ro_fields'] = "{'" + "', '".join(read_only_fields) + "'}" if len(read_only_fields) > 0 else 'set()'
