@@ -73,3 +73,13 @@ def log_response_error(resp, log_success=False):
     """Shared method for logging response errors"""
     if resp.status_code >= 400 or log_success:
         LOGGER.debug('Response code: {}, text: {}'.format(resp.status_code, resp.text))
+
+def get_new_session():
+    """Sets up a new session object that contains a requests session and a saved csrf token"""
+    my_session = requests.session()
+    my_session.cookies.set_policy(AcceptAll())
+    return {
+        'session': my_session,
+        'csrf_token': None,
+        'csrf_refresh_token': None
+    }
