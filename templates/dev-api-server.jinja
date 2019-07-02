@@ -55,6 +55,10 @@ spec:
         env:
         - name: {{ smoacks_app_name_c }}_MODE
           value: "development"
+        - name: ACCESS_CONTROL_ORIGIN
+          value: "{{ smoacks_access_control_origin }}"
+        - name: COOKIE_DOMAIN
+          value: "{{ smoacks_cookie_domain }}"
         command: ["/app/src/server-loop"]
         ports:
         - containerPort: {{ smoacks_server_container_port }}

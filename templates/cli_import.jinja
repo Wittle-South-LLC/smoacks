@@ -29,6 +29,8 @@ def import_csv():
         sys.exit('Filename {} does not exist or is not a file.'.format(opts.filename))
 
     session = get_session(opts)
+    if not session:
+        sys.exit('Invalid username/password.')
 
     field_map = {}
 

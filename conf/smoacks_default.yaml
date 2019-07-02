@@ -43,6 +43,8 @@ env_defaults:
   smoacks_app_version: 0.1.0
   smoacks_app_maintainer: noone@email.com
   smoacks_app_shutdown_key: Eric
+  smoacks_access_control_origin: http://eric.wittlesouth.local:3000
+  smoacks_cookie_domain: .wittlesouth.local
   smoacks_api_path: /api/v1
   smoacks_db_container_port: 3306
   smoacks_server_container_port: 8180

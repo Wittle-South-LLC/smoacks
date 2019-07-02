@@ -75,9 +75,10 @@ FAPP.config['JWT_ACCESS_COOKIE_PATH'] = '/'
 FAPP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(minutes=30)
 # Adding domain so that CORS works
 if 'NODE_ENV' in os.environ and os.environ['NODE_ENV'] == 'development':
-    FAPP.config['JWT_COOKIE_DOMAIN'] = '.wittlesouth.local'
+    FAPP.config['JWT_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
     LOGGER.info('Setting JWT_COOKIE_DOMAIN to: %s', FAPP.config['JWT_COOKIE_DOMAIN'])
 FAPP.config['JWT_REFRESH_COOKIE_PATH'] = os.environ['REACT_APP_API_PATH']
+LOGGER.info('Setting JWT_REFRESH_COOKE_PATH to %s', os.environ['REACT_APP_API_PATH'])
 FAPP.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=30)
 FAPP.config['JWT_SESSION_COOKIE'] = False
 # Enable csrf double submit protection. See this for a thorough
@@ -140,7 +141,7 @@ def after_request(resp):
     # TODO: Remove when proxy in create_react_app is fixed. Note that the next
     #       four lines are specific to enviornments where CORS is required.
     if 'NODE_ENV' in os.environ and os.environ['NODE_ENV'] == 'development':
-        resp.headers['Access-Control-Allow-Origin'] = 'http://eric.wittlesouth.local:3000'
+        resp.headers['Access-Control-Allow-Origin'] = os.environ['ACCESS_CONTROL_ORIGIN']
         resp.headers['Access-Control-Allow-Methods'] = "GET,HEAD,OPTIONS,POST,PUT"
         resp.headers['Access-Control-Allow-Credentials'] = "true" 
         resp.headers['Access-Control-Allow-Headers'] = "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Allow-Methods, Accept, X-Requested-With, Content-Type, Set-Cookie, Access-Control-Request-Method, Access-Control-Request-Headers, X-CSRF-TOKEN"
