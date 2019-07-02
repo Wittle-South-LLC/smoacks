@@ -81,6 +81,10 @@ components:
           example: app-users
           x-smoacks-search-field: True
           x-smoacks-edit-unit-test: 'app-users - edited'
+        gid:
+          type: integer
+          description: Numeric group ID for POSIX compatibility
+          example: 300
         record_created:
           type: string
           format: date
@@ -378,6 +382,12 @@ components:
           maxLength: 40
           example: b5665877-f9ee-4074-a38b-39219cdeddef
           x-smoacks-foreign-key: Test
+        test_int:
+          type: integer
+          description: Test integer case
+        test_float:
+          type: number
+          description: Float test case
         name:
           type: string
           description: Name of test item in default language

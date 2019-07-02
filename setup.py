@@ -4,7 +4,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(name='smoacks',
-      version='0.2.29',
+      version='0.2.30',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',

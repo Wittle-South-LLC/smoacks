@@ -6,6 +6,8 @@ class ApiClientBase(ABC):
     _api_path = None
     _id_fields = None
     _ro_fields = set()
+    _float_fields = set()
+    _int_fields = set()
 
     @abstractmethod
     def get_ids(self):
@@ -35,7 +37,12 @@ class ApiClientBase(ABC):
             if key == parent_id: continue
             if key in self._ro_fields: continue
             if value == None: continue
-            result[key] = value
+            if key in self._float_fields:
+                result[key] = float(value)
+            elif key in self._int_fields:
+                result[key] = int(value)
+            else:
+                result[key] = value
         return result
 
     def save_new(self, session):
