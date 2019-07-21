@@ -15,7 +15,7 @@ class SqlAlchemyGenerator:
                 fk_text = ", ForeignKey('{}.{}')".format(prop.foreignKey, prop.name) if prop.foreignKey else ""
                 return "{} = Column(BINARY(16){}, primary_key=True)".format(prop.name, fk_text)
             elif prop.format == 'date':
-                return "{} = Column(DATETIME(fsp-3))".format(prop.name)
+                return "{} = Column(DATETIME(fsp=3))".format(prop.name)
             elif prop.format == 'uuid':
                 fk_text = ", ForeignKey('{}.{}')".format(prop.foreignKey, prop.name) if prop.foreignKey else ""
                 return "{} = Column(BINARY(16){})".format(prop.name, fk_text)
