@@ -1,12 +1,11 @@
 """base.py - Module creating shared declarative base for object-relational model"""
 import datetime
-import dateutil.parser
 import re
 import logging
 import uuid
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from sqlalchemy import Column, DateTime, inspect, text
-from sqlalchemy.dialects.mysql import BINARY
+from sqlalchemy import Column, inspect, text
+from sqlalchemy.dialects.mysql import BINARY, DATETIME
 
 LOGGER=logging.getLogger('appLogger')
 
@@ -24,9 +23,9 @@ class Base(object):
     __uuid_list__ = {'_creator_user_id'}
     __wo_fields__ = set()
     __table_args__ = {'mysql_charset':'utf8'}
-    record_created = Column(DateTime,
+    record_created = Column(DATETIME,
                             server_default=text('CURRENT_TIMESTAMP'))
-    record_updated = Column(DateTime,
+    record_updated = Column(DATETIME,
                             server_default=text('CURRENT_TIMESTAMP'),
                             onupdate=datetime.datetime.now)
     _creator_user_id = Column(BINARY(16))
@@ -50,8 +49,8 @@ class Base(object):
             if column.key in fields:
                 if self.is_uuid(column.key):
                     setattr(self, column.key, uuid.UUID(fields[column.key]).bytes)
-                elif type(column.columns[0].type) == DateTime:
-                    setattr(self, column.key, dateutil.parser.parse(fields[column.key]))
+                elif type(column.columns[0].type) == DATETIME:
+                    setattr(self, column.key, datetime.datetime.fromisoformat(fields[column.key].replace("Z","+00:00")))
                 else:
                     setattr(self, column.key, fields[column.key])
 
@@ -64,9 +63,13 @@ class Base(object):
         ret = {}
         mapper = inspect(type(self))
         for key, value in vars(self).items():
-            if mapper.attrs.get(key) and type(mapper.attrs.get(key)).__name__ == 'RelationshipProperty': continue
+            column = mapper.attrs.get(key)
+            if column and type(column).__name__ == 'RelationshipProperty': continue
             if key in self.__uuid_list__ and value:
                 ret[key] = str(uuid.UUID(bytes=value))
+            elif column and type(column.columns[0].type) == DATETIME:
+                # Hacky way of delivering date in iso format in UTC that aligns with Javascript
+                ret[key] = value.isoformat()[:-3] + "Z"
             elif not key.startswith('_') and not key in self.__wo_fields__:
                 ret[key] = value
         return ret

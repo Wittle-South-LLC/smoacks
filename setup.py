@@ -4,7 +4,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(name='smoacks',
-      version='0.2.41',
+      version='0.2.42',
       description='Simple Microservices with OpenAPI, Connexion, Kubernetes, and SQLAlchemy',
       url='https://github.com/wittlesouth/smoacks',
       author='Wittle South Ventures, LLC',
@@ -51,6 +51,7 @@ setup(name='smoacks',
           'coverage',
           'flask_jwt_extended',
           'jinja2',
+          'mysql-connector-python',
           'nose',
           'openapi-spec-validator',
           'python-dateutil',
