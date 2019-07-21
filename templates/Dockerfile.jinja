@@ -1,7 +1,9 @@
 FROM {{ smoacks_server_base }}
+ARG REGISTRY_USER
+ARG REGISTRY_PWD
 LABEL maintainer="{{ smoacks_app_maintainer }}" project="{{ smoacks_app_name }}"
 COPY requirements.txt app/requirements.txt
-RUN python3.7 -m pip install -i http://pypi.wittlesouth.local/ --trusted-host pypi.wittlesouth.local -r app/requirements.txt
+RUN python3.7 -m pip install --extra-index-url https://${REGISTRY_USER}:${REGISTRY_PWD}@{{ local_registry }}/simple -r app/requirements.txt
 COPY src/api/* app/api/
 COPY src/dm/ app/dm/
 COPY src/spec/* app/spec/
