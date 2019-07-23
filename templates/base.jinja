@@ -67,7 +67,7 @@ class Base(object):
             if column and type(column).__name__ == 'RelationshipProperty': continue
             if key in self.__uuid_list__ and value:
                 ret[key] = str(uuid.UUID(bytes=value))
-            elif column and type(column.columns[0].type) == DATETIME:
+            elif column and value and type(column.columns[0].type) == DATETIME:
                 # Hacky way of delivering date in iso format in UTC that aligns with Javascript
                 ret[key] = value.isoformat()[:-3] + "Z"
             elif not key.startswith('_') and not key in self.__wo_fields__:
