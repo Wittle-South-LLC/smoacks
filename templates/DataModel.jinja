@@ -25,7 +25,7 @@ DB_USER = os.environ['APP_DB_ACCOUNT']
 DB_PWD = os.environ['APP_DB_PASSWORD']
 
 # Assemble the connection string from component parts
-connect_string = "mysql+mysqlconnector://{}:{}@{}:{}/{}?charset=utf8mb4".format(\
+connect_string = "mysql+mysqldb://{}:{}@{}:{}/{}?charset=utf8mb4&binary_prefix=True".format(\
                  DB_USER, DB_PWD, DB_HOST, DB_PORT, DB_NAME)
 LOGGER.info('Using database named {} on host {} on port {}'.format(DB_NAME, DB_HOST, DB_PORT))
 LOGGER.debug('Connect string: {}'.format(connect_string))
