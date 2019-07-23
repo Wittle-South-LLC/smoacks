@@ -26,7 +26,7 @@ env_defaults:
   local_test_db_service_port: 30387
   local_kube_server: wsv-dev.wittlesouth.local
   local_network: kubernetes
-  local_registry: registry.wittlesouth.com
+  local_pypi: pypi.wittlesouth.com
   smoacks_role_list:
   - Owner
   - Editor
