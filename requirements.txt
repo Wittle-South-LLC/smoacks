@@ -15,7 +15,7 @@ pathlib==1.0.1
 pkginfo==1.5.0.1
 Pygments==2.4.0
 pylint==2.3.1
-PyYAML==5.1
+PyYAML==5.4
 readme-renderer==24.0
 requests==2.21.0
 requests-toolbelt==0.9.1
