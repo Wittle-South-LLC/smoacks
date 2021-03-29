@@ -13,7 +13,7 @@ mccabe==0.6.1
 openapi-spec-validator==0.2.6
 pathlib==1.0.1
 pkginfo==1.5.0.1
-Pygments==2.4.0
+Pygments==2.7.4
 pylint==2.3.1
 PyYAML==5.1
 readme-renderer==24.0
